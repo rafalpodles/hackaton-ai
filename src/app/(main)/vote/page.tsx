@@ -31,13 +31,18 @@ export default async function VotePage() {
 
   const projects = await getSubmittedProjects();
 
-  const { data: existingVotes } = await supabase
+  const { data: userVotes } = await supabase
     .from("votes")
-    .select("id")
-    .eq("voter_id", user.id)
-    .limit(1);
+    .select("category, project_id")
+    .eq("voter_id", user.id);
 
-  const hasVoted = (existingVotes?.length ?? 0) > 0;
+  const hasVoted = (userVotes?.length ?? 0) > 0;
+
+  // Build map of category -> project_id for display
+  const votedFor: Record<string, string> = {};
+  for (const v of userVotes ?? []) {
+    votedFor[v.category] = v.project_id;
+  }
 
   return (
     <div className="space-y-6">
@@ -54,6 +59,7 @@ export default async function VotePage() {
         projects={projects}
         ownProjectId={user.project_id}
         hasVoted={hasVoted}
+        votedFor={votedFor}
       />
     </div>
   );

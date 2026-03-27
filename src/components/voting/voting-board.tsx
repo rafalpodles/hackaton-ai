@@ -17,12 +17,14 @@ interface VotingBoardProps {
   projects: ProjectWithTeam[];
   ownProjectId: string | null;
   hasVoted: boolean;
+  votedFor?: Record<string, string>;
 }
 
 export default function VotingBoard({
   projects,
   ownProjectId,
   hasVoted,
+  votedFor = {},
 }: VotingBoardProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
@@ -38,31 +40,84 @@ export default function VotingBoard({
   });
 
   if (hasVoted) {
+    // Build a map of project_id -> project for quick lookup
+    const projectMap = new Map(projects.map((p) => [p.id, p]));
+
     return (
-      <div className="flex min-h-[40vh] flex-col items-center justify-center gap-4">
-        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/15">
-          <svg
-            width="32"
-            height="32"
-            viewBox="0 0 24 24"
-            fill="none"
-            className="text-primary"
-          >
-            <path
-              d="M5 13l4 4L19 7"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
+      <div className="space-y-8">
+        <div className="flex flex-col items-center gap-4">
+          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/15">
+            <svg
+              width="32"
+              height="32"
+              viewBox="0 0 24 24"
+              fill="none"
+              className="text-primary"
+            >
+              <path
+                d="M5 13l4 4L19 7"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </div>
+          <h2 className="font-space-grotesk text-2xl font-bold text-on-surface">
+            Votes Submitted
+          </h2>
+          <p className="text-on-surface-muted">
+            Your votes have been recorded. Results will be revealed soon.
+          </p>
         </div>
-        <h2 className="font-space-grotesk text-2xl font-bold text-on-surface">
-          Votes Submitted
-        </h2>
-        <p className="text-on-surface-muted">
-          Your votes have been recorded. Results will be revealed soon.
-        </p>
+
+        <div className="mx-auto max-w-2xl space-y-4">
+          <h3 className="font-space-grotesk text-sm font-semibold uppercase tracking-wider text-on-surface-muted">
+            Your picks
+          </h3>
+          {CATEGORIES.map((cat) => {
+            const projectId = votedFor[cat.key];
+            const project = projectId ? projectMap.get(projectId) : null;
+
+            return (
+              <div
+                key={cat.key}
+                className="flex items-center gap-4 rounded-xl border border-primary/20 bg-primary/5 px-5 py-4"
+              >
+                <span className="text-xl">{cat.icon}</span>
+                <div className="min-w-0 flex-1">
+                  <p className="text-xs font-medium uppercase tracking-wider text-primary-dim">
+                    {cat.label}
+                  </p>
+                  <p className="truncate font-space-grotesk text-base font-bold text-on-surface">
+                    {project?.name ?? "Unknown project"}
+                  </p>
+                  {project?.team && project.team.length > 0 && (
+                    <p className="truncate text-xs text-on-surface-muted">
+                      {project.team.map((m) => m.display_name).join(", ")}
+                    </p>
+                  )}
+                </div>
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  className="shrink-0 text-primary"
+                >
+                  <circle cx="12" cy="12" r="10" fill="currentColor" />
+                  <path
+                    d="M8 12.5L10.5 15L16 9.5"
+                    stroke="white"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </div>
+            );
+          })}
+        </div>
       </div>
     );
   }
