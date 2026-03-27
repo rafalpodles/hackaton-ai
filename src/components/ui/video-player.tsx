@@ -49,7 +49,7 @@ export function VideoPlayer({
         autoPlay={autoPlay}
         muted={autoPlay}
         playsInline
-        className="h-full w-full object-cover"
+        className="h-full w-full object-contain"
         onEnded={() => setIsPlaying(false)}
         onPlay={() => setIsPlaying(true)}
         onPause={() => setIsPlaying(false)}

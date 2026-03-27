@@ -76,7 +76,7 @@ export function ProjectDetailModal({
           </svg>
         </button>
 
-        <div className="grid flex-1 overflow-hidden md:grid-cols-[3fr,2fr]">
+        <div className="grid flex-1 overflow-hidden md:grid-cols-[7fr,3fr]">
           {/* Left: Video or PDF preview */}
           <div className="flex flex-col bg-surface">
             {/* Segmented toggle */}
@@ -149,7 +149,7 @@ export function ProjectDetailModal({
                     <VideoPlayer
                       src={project.video_url}
                       autoPlay
-                      className="aspect-video w-full max-h-full rounded-lg"
+                      className="h-full w-full rounded-lg bg-black"
                     />
                   ) : (
                     <EmptyState
