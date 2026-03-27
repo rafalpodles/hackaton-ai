@@ -17,7 +17,6 @@ const VALID_CATEGORIES: VoteCategory[] = [
 export async function castVotes(votes: CastVoteInput[]) {
   const supabase = await createClient();
 
-  // Authenticate user
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -25,7 +24,17 @@ export async function castVotes(votes: CastVoteInput[]) {
     return { error: "You must be logged in to vote." };
   }
 
-  // Get voter profile to check own project
+  // Check voting is open
+  const { data: settings } = await supabase
+    .from("app_settings")
+    .select("voting_open")
+    .eq("id", 1)
+    .single();
+
+  if (!settings?.voting_open) {
+    return { error: "Voting is not open yet." };
+  }
+
   const { data: profile } = await supabase
     .from("profiles")
     .select("project_id")
@@ -42,6 +51,8 @@ export async function castVotes(votes: CastVoteInput[]) {
   }
 
   const seenCategories = new Set<string>();
+  const projectIds = new Set<string>();
+
   for (const vote of votes) {
     if (!VALID_CATEGORIES.includes(vote.category)) {
       return { error: `Invalid category: ${vote.category}` };
@@ -50,11 +61,22 @@ export async function castVotes(votes: CastVoteInput[]) {
       return { error: `Duplicate category: ${vote.category}` };
     }
     seenCategories.add(vote.category);
+    projectIds.add(vote.project_id);
 
-    // Cannot vote for own project
     if (profile.project_id && vote.project_id === profile.project_id) {
       return { error: "You cannot vote for your own project." };
     }
+  }
+
+  // Validate all project_ids exist and are submitted
+  const { data: validProjects } = await supabase
+    .from("projects")
+    .select("id")
+    .in("id", Array.from(projectIds))
+    .eq("is_submitted", true);
+
+  if (!validProjects || validProjects.length !== projectIds.size) {
+    return { error: "One or more selected projects are invalid." };
   }
 
   // Check for existing votes
@@ -68,7 +90,6 @@ export async function castVotes(votes: CastVoteInput[]) {
     return { error: "You have already submitted your votes." };
   }
 
-  // Insert all votes atomically
   const rows = votes.map((v) => ({
     voter_id: user.id,
     project_id: v.project_id,
@@ -78,6 +99,9 @@ export async function castVotes(votes: CastVoteInput[]) {
   const { error: insertError } = await supabase.from("votes").insert(rows);
 
   if (insertError) {
+    if (insertError.code === "23505") {
+      return { error: "You have already submitted your votes." };
+    }
     return { error: "Failed to submit votes. Please try again." };
   }
 

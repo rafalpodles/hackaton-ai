@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import StatsCards from "@/components/admin/stats-cards";
 import ProjectsTable from "@/components/admin/projects-table";
+import VotingToggle from "@/components/admin/voting-toggle";
 import type { ProjectWithTeam } from "@/lib/types";
 
 export default async function AdminDashboardPage() {
@@ -11,6 +12,7 @@ export default async function AdminDashboardPage() {
     { count: participantCount },
     { count: voteCount },
     { data: projectsRaw },
+    { data: settings },
   ] = await Promise.all([
     supabase
       .from("projects")
@@ -25,6 +27,11 @@ export default async function AdminDashboardPage() {
     supabase
       .from("projects")
       .select("*, team:profiles!project_id(id, display_name, avatar_url)"),
+    supabase
+      .from("app_settings")
+      .select("voting_open")
+      .eq("id", 1)
+      .single(),
   ]);
 
   const projects = (projectsRaw ?? []) as ProjectWithTeam[];
@@ -48,6 +55,7 @@ export default async function AdminDashboardPage() {
         <h1 className="font-space-grotesk text-3xl font-bold text-on-surface">
           Admin Dashboard
         </h1>
+        <VotingToggle isOpen={settings?.voting_open ?? false} />
       </div>
 
       <StatsCards stats={stats} />

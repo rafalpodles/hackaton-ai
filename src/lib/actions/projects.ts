@@ -5,28 +5,39 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 
 export async function createProject(name: string) {
+  if (!name?.trim()) throw new Error("Project name is required");
+
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) throw new Error("Not authenticated");
 
-  // Generate UUID server-side to avoid insert+select RLS race condition:
-  // PostgREST checks both INSERT and SELECT policy simultaneously when using
-  // .select() after .insert(). The newly created project has no team member yet
-  // so the SELECT policy fails. By generating the ID upfront we skip .select().
+  // Check user doesn't already have a project
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("project_id")
+    .eq("id", user.id)
+    .single();
+
+  if (profile?.project_id) {
+    throw new Error("You are already in a project");
+  }
+
   const projectId = crypto.randomUUID();
 
   const { error } = await supabase
     .from("projects")
-    .insert({ id: projectId, name, description: "", idea_origin: "", journey: "" });
+    .insert({ id: projectId, name: name.trim(), description: "", idea_origin: "", journey: "" });
 
   if (error) throw new Error(`Failed to create project: ${error.message}`);
 
-  await supabase
+  const { error: updateError } = await supabase
     .from("profiles")
     .update({ project_id: projectId })
     .eq("id", user.id);
+
+  if (updateError) throw new Error("Failed to assign you to the project");
 
   revalidatePath("/");
   redirect("/my-project");
@@ -39,10 +50,33 @@ export async function joinProject(projectId: string) {
   } = await supabase.auth.getUser();
   if (!user) throw new Error("Not authenticated");
 
-  await supabase
+  // Check user doesn't already have a project
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("project_id")
+    .eq("id", user.id)
+    .single();
+
+  if (profile?.project_id) {
+    throw new Error("You are already in a project. Leave it first.");
+  }
+
+  // Check project exists and is not yet submitted (open for joining)
+  const { data: project } = await supabase
+    .from("projects")
+    .select("id, is_submitted")
+    .eq("id", projectId)
+    .single();
+
+  if (!project) throw new Error("Project not found");
+  if (project.is_submitted) throw new Error("Cannot join a submitted project");
+
+  const { error } = await supabase
     .from("profiles")
     .update({ project_id: projectId })
     .eq("id", user.id);
+
+  if (error) throw new Error("Failed to join project");
 
   revalidatePath("/");
   redirect("/my-project");
@@ -68,7 +102,6 @@ export async function updateProject(
   } = await supabase.auth.getUser();
   if (!user) throw new Error("Not authenticated");
 
-  // Verify ownership — user must be a member of this project
   const { data: profile } = await supabase
     .from("profiles")
     .select("project_id")
@@ -89,7 +122,25 @@ export async function updateProject(
     throw new Error("Cannot update a submitted project");
   }
 
-  await supabase.from("projects").update(data).eq("id", projectId);
+  // Only allow known fields
+  const allowed = {
+    ...(data.name !== undefined && { name: data.name }),
+    ...(data.description !== undefined && { description: data.description }),
+    ...(data.idea_origin !== undefined && { idea_origin: data.idea_origin }),
+    ...(data.journey !== undefined && { journey: data.journey }),
+    ...(data.tech_stack !== undefined && { tech_stack: data.tech_stack }),
+    ...(data.video_url !== undefined && { video_url: data.video_url }),
+    ...(data.video_duration !== undefined && { video_duration: data.video_duration }),
+    ...(data.pdf_url !== undefined && { pdf_url: data.pdf_url }),
+    ...(data.thumbnail_url !== undefined && { thumbnail_url: data.thumbnail_url }),
+  };
+
+  const { error } = await supabase
+    .from("projects")
+    .update(allowed)
+    .eq("id", projectId);
+
+  if (error) throw new Error("Failed to update project");
 
   revalidatePath("/my-project");
 }
@@ -101,7 +152,6 @@ export async function submitProject(projectId: string) {
   } = await supabase.auth.getUser();
   if (!user) throw new Error("Not authenticated");
 
-  // Verify ownership
   const { data: profile } = await supabase
     .from("profiles")
     .select("project_id")
@@ -114,22 +164,25 @@ export async function submitProject(projectId: string) {
 
   const { data: project } = await supabase
     .from("projects")
-    .select("name, description, video_url")
+    .select("name, description, video_url, is_submitted")
     .eq("id", projectId)
     .single();
 
   if (!project) throw new Error("Project not found");
+  if (project.is_submitted) throw new Error("Project already submitted");
 
   if (!project.name || !project.description || !project.video_url) {
     throw new Error(
-      "Missing required fields: name, description, and video_url are required"
+      "Missing required fields: name, description, and video are required"
     );
   }
 
-  await supabase
+  const { error } = await supabase
     .from("projects")
     .update({ is_submitted: true })
     .eq("id", projectId);
+
+  if (error) throw new Error("Failed to submit project");
 
   revalidatePath("/");
   revalidatePath("/my-project");
@@ -143,10 +196,31 @@ export async function leaveProject() {
   } = await supabase.auth.getUser();
   if (!user) throw new Error("Not authenticated");
 
-  await supabase
+  // Check project isn't submitted
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("project_id")
+    .eq("id", user.id)
+    .single();
+
+  if (profile?.project_id) {
+    const { data: project } = await supabase
+      .from("projects")
+      .select("is_submitted")
+      .eq("id", profile.project_id)
+      .single();
+
+    if (project?.is_submitted) {
+      throw new Error("Cannot leave a submitted project");
+    }
+  }
+
+  const { error } = await supabase
     .from("profiles")
     .update({ project_id: null })
     .eq("id", user.id);
+
+  if (error) throw new Error("Failed to leave project");
 
   revalidatePath("/");
   redirect("/onboarding");

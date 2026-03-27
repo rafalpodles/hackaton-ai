@@ -2,25 +2,36 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { getCurrentUser } from "@/lib/utils";
 import ExcelJS from "exceljs";
 
-export async function deleteProject(projectId: string) {
+async function requireAdmin() {
+  const user = await getCurrentUser();
+  if (!user || user.role !== "admin") throw new Error("Forbidden");
+  return user;
+}
+
+export async function toggleVoting(open: boolean) {
+  await requireAdmin();
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) throw new Error("Not authenticated");
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("role")
-    .eq("id", user.id)
-    .single();
+  const { error } = await supabase
+    .from("app_settings")
+    .update({ voting_open: open })
+    .eq("id", 1);
 
-  if (profile?.role !== "admin") throw new Error("Forbidden");
+  if (error) throw new Error("Failed to update voting status");
+
+  revalidatePath("/admin");
+  revalidatePath("/vote");
+}
+
+export async function deleteProject(projectId: string) {
+  await requireAdmin();
+  const supabase = await createClient();
 
   // Remove files from storage buckets
-  const buckets = ["videos", "pdfs", "thumbnails"];
+  const buckets = ["videos", "presentations", "thumbnails"];
   for (const bucket of buckets) {
     const { data: files } = await supabase.storage
       .from(bucket)
@@ -32,10 +43,12 @@ export async function deleteProject(projectId: string) {
   }
 
   // Unlink profiles
-  await supabase
+  const { error: unlinkError } = await supabase
     .from("profiles")
     .update({ project_id: null })
     .eq("project_id", projectId);
+
+  if (unlinkError) throw new Error("Failed to unlink team members");
 
   // Delete project (cascades votes)
   const { error: deleteError } = await supabase
@@ -51,24 +64,51 @@ export async function deleteProject(projectId: string) {
 }
 
 export async function exportResults(): Promise<string> {
+  await requireAdmin();
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) throw new Error("Not authenticated");
-
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("role")
-    .eq("id", user.id)
-    .single();
-
-  if (profile?.role !== "admin") throw new Error("Forbidden");
 
   const workbook = new ExcelJS.Workbook();
 
-  // Sheet 1: Results
-  const { data: results } = await supabase.rpc("get_vote_results");
+  // Sheet 1: Results — direct query instead of RPC
+  const { data: votes } = await supabase
+    .from("votes")
+    .select("category, project_id, projects!project_id(name, id), profiles!voter_id(email)");
+
+  const { data: allProfiles } = await supabase
+    .from("profiles")
+    .select("display_name, project_id")
+    .not("project_id", "is", null);
+
+  // Build team members map
+  const teamMap: Record<string, string[]> = {};
+  for (const p of allProfiles ?? []) {
+    if (p.project_id) {
+      if (!teamMap[p.project_id]) teamMap[p.project_id] = [];
+      teamMap[p.project_id].push(p.display_name);
+    }
+  }
+
+  // Aggregate vote counts
+  const countMap: Record<string, { project_id: string; project_name: string; category: string; vote_count: number }> = {};
+  for (const v of votes ?? []) {
+    const proj = v.projects as unknown as { id: string; name: string };
+    const key = `${proj.id}_${v.category}`;
+    if (!countMap[key]) {
+      countMap[key] = {
+        project_id: proj.id,
+        project_name: proj.name,
+        category: v.category,
+        vote_count: 0,
+      };
+    }
+    countMap[key].vote_count++;
+  }
+
+  const results = Object.values(countMap).sort((a, b) => {
+    if (a.category !== b.category) return a.category.localeCompare(b.category);
+    return b.vote_count - a.vote_count;
+  });
+
   const resultsSheet = workbook.addWorksheet("Results");
   resultsSheet.columns = [
     { header: "Category", key: "category", width: 20 },
@@ -78,42 +118,25 @@ export async function exportResults(): Promise<string> {
     { header: "Vote Count", key: "vote_count", width: 12 },
   ];
 
-  const grouped: Record<string, typeof results> = {};
-  for (const r of results ?? []) {
-    if (!grouped[r.category]) grouped[r.category] = [];
-    grouped[r.category].push(r);
-  }
-  for (const cat of Object.keys(grouped)) {
-    grouped[cat].sort(
-      (a: { vote_count: number }, b: { vote_count: number }) =>
-        b.vote_count - a.vote_count
-    );
-    grouped[cat].forEach(
-      (
-        r: {
-          category: string;
-          project_name: string;
-          team_members: string[];
-          vote_count: number;
-        },
-        i: number
-      ) => {
-        resultsSheet.addRow({
-          category: r.category,
-          rank: i + 1,
-          project_name: r.project_name,
-          team: r.team_members.join(", "),
-          vote_count: r.vote_count,
-        });
-      }
-    );
+  let currentCategory = "";
+  let rank = 0;
+  for (const r of results) {
+    if (r.category !== currentCategory) {
+      currentCategory = r.category;
+      rank = 1;
+    } else {
+      rank++;
+    }
+    resultsSheet.addRow({
+      category: r.category,
+      rank,
+      project_name: r.project_name,
+      team: (teamMap[r.project_id] ?? []).join(", "),
+      vote_count: r.vote_count,
+    });
   }
 
   // Sheet 2: All Votes
-  const { data: votes } = await supabase
-    .from("votes")
-    .select("category, profiles!voter_id(email), projects!project_id(name)");
-
   const votesSheet = workbook.addWorksheet("All Votes");
   votesSheet.columns = [
     { header: "Voter Email", key: "voter_email", width: 30 },

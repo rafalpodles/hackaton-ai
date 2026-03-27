@@ -21,8 +21,44 @@ export default async function ResultsPage() {
   if (user.role !== "admin") redirect("/");
 
   const supabase = await createClient();
-  const { data: results } = await supabase.rpc("get_vote_results");
-  const voteResults = (results ?? []) as VoteResult[];
+
+  // Direct query instead of RPC
+  const { data: votes } = await supabase
+    .from("votes")
+    .select("category, project_id, projects!project_id(id, name)");
+
+  const { data: profiles } = await supabase
+    .from("profiles")
+    .select("display_name, project_id")
+    .not("project_id", "is", null);
+
+  // Build team map
+  const teamMap: Record<string, string[]> = {};
+  for (const p of profiles ?? []) {
+    if (p.project_id) {
+      if (!teamMap[p.project_id]) teamMap[p.project_id] = [];
+      teamMap[p.project_id].push(p.display_name);
+    }
+  }
+
+  // Aggregate
+  const countMap: Record<string, VoteResult> = {};
+  for (const v of votes ?? []) {
+    const proj = v.projects as unknown as { id: string; name: string };
+    const key = `${proj.id}_${v.category}`;
+    if (!countMap[key]) {
+      countMap[key] = {
+        project_id: proj.id,
+        project_name: proj.name,
+        team_members: teamMap[proj.id] ?? [],
+        category: v.category as VoteCategory,
+        vote_count: 0,
+      };
+    }
+    countMap[key].vote_count++;
+  }
+
+  const voteResults = Object.values(countMap);
 
   const grouped: Record<VoteCategory, VoteResult[]> = {
     best_overall: [],

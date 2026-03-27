@@ -9,6 +9,26 @@ export default async function VotePage() {
 
   const supabase = await createClient();
 
+  // Check if voting is open
+  const { data: settings } = await supabase
+    .from("app_settings")
+    .select("voting_open")
+    .eq("id", 1)
+    .single();
+
+  if (!settings?.voting_open) {
+    return (
+      <div className="flex flex-col items-center justify-center py-20">
+        <h1 className="font-space-grotesk text-3xl font-bold text-on-surface">
+          Voting is not open yet
+        </h1>
+        <p className="mt-2 text-on-surface-muted">
+          The admin will open voting when all projects are submitted.
+        </p>
+      </div>
+    );
+  }
+
   const { data: projects } = await supabase
     .from("projects")
     .select("*, team:profiles!profiles_project_id_fkey(id, display_name, avatar_url)")
