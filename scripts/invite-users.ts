@@ -1,7 +1,10 @@
 import { createClient } from "@supabase/supabase-js";
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const SERVICE_ROLE_KEY = process.env.SUPABASE_SECRET_DEFAULT_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
+const SERVICE_ROLE_KEY =
+  process.env.SUPABASE_SECRET_DEFAULT_KEY ||
+  process.env.SUPABASE_SERVICE_ROLE_KEY ||
+  process.env.SECRET_KEY;
 
 if (!SUPABASE_URL || !SERVICE_ROLE_KEY) {
   console.error("Missing SUPABASE_URL or SUPABASE_SECRET_DEFAULT_KEY env vars");
@@ -11,9 +14,7 @@ if (!SUPABASE_URL || !SERVICE_ROLE_KEY) {
 const supabase = createClient(SUPABASE_URL, SERVICE_ROLE_KEY);
 
 const emails: string[] = [
-  // Add participant emails here, one per line:
-  // "jan.kowalski@spyrosoft.com",
-  // "anna.nowak@spyrosoft.com",
+  "rpo@spyro-soft.com",
 ];
 
 async function main() {
@@ -29,7 +30,7 @@ async function main() {
 
   for (const email of emails) {
     const { error } = await supabase.auth.admin.inviteUserByEmail(email, {
-      redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"}/auth/callback`,
+      redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL || "https://spyrosoft-ai-hackaton.up.railway.app"}/auth/callback`,
     });
 
     if (error) {
