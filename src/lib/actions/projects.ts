@@ -11,17 +11,21 @@ export async function createProject(name: string) {
   } = await supabase.auth.getUser();
   if (!user) throw new Error("Not authenticated");
 
-  const { data: project, error } = await supabase
-    .from("projects")
-    .insert({ name, description: "", idea_origin: "", journey: "" })
-    .select("id")
-    .single();
+  // Generate UUID server-side to avoid insert+select RLS race condition:
+  // PostgREST checks both INSERT and SELECT policy simultaneously when using
+  // .select() after .insert(). The newly created project has no team member yet
+  // so the SELECT policy fails. By generating the ID upfront we skip .select().
+  const projectId = crypto.randomUUID();
 
-  if (error || !project) throw new Error(`Failed to create project: ${error?.message} | code: ${error?.code} | details: ${error?.details}`);
+  const { error } = await supabase
+    .from("projects")
+    .insert({ id: projectId, name, description: "", idea_origin: "", journey: "" });
+
+  if (error) throw new Error(`Failed to create project: ${error.message}`);
 
   await supabase
     .from("profiles")
-    .update({ project_id: project.id })
+    .update({ project_id: projectId })
     .eq("id", user.id);
 
   revalidatePath("/");
