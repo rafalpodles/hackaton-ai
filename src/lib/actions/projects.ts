@@ -64,7 +64,17 @@ export async function updateProject(
   } = await supabase.auth.getUser();
   if (!user) throw new Error("Not authenticated");
 
-  // Gate: only allow updates if not yet submitted
+  // Verify ownership — user must be a member of this project
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("project_id")
+    .eq("id", user.id)
+    .single();
+
+  if (profile?.project_id !== projectId) {
+    throw new Error("You are not a member of this project");
+  }
+
   const { data: project } = await supabase
     .from("projects")
     .select("is_submitted")
@@ -86,6 +96,17 @@ export async function submitProject(projectId: string) {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) throw new Error("Not authenticated");
+
+  // Verify ownership
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("project_id")
+    .eq("id", user.id)
+    .single();
+
+  if (profile?.project_id !== projectId) {
+    throw new Error("You are not a member of this project");
+  }
 
   const { data: project } = await supabase
     .from("projects")

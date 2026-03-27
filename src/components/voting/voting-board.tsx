@@ -88,17 +88,20 @@ export default function VotingBoard({
     setSubmitting(true);
     setError(null);
 
-    const result = await castVotes(votes);
+    try {
+      const result = await castVotes(votes);
 
-    if (result.error) {
-      setError(result.error);
+      if (result.error) {
+        setError(result.error);
+        return;
+      }
+
+      startTransition(() => {
+        router.refresh();
+      });
+    } finally {
       setSubmitting(false);
-      return;
     }
-
-    startTransition(() => {
-      router.refresh();
-    });
   }
 
   return (
