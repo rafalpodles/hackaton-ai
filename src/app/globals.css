@@ -1,0 +1,26 @@
+@import "tailwindcss";
+
+@theme {
+  --color-surface: #0e0e13;
+  --color-surface-low: #131318;
+  --color-surface-high: #1f1f26;
+  --color-surface-bright: #2c2b33;
+  --color-primary: #4646CC;
+  --color-primary-dim: #a4a5ff;
+  --color-secondary: #FF4D29;
+  --color-secondary-dim: #ff7255;
+  --color-on-surface: #f8f5fd;
+  --color-on-surface-muted: #9896a3;
+  --color-outline: rgba(166, 165, 255, 0.15);
+
+  --font-space-grotesk: var(--font-space-grotesk);
+  --font-manrope: var(--font-manrope);
+}
+
+body {
+  font-family: var(--font-manrope), sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6, .font-display {
+  font-family: var(--font-space-grotesk), sans-serif;
+}
