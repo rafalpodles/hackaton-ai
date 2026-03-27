@@ -11,6 +11,7 @@ interface JoinProjectListProps {
 
 export function JoinProjectList({ projects }: JoinProjectListProps) {
   const [loadingId, setLoadingId] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   if (projects.length === 0) {
     return (
@@ -22,14 +23,22 @@ export function JoinProjectList({ projects }: JoinProjectListProps) {
 
   async function handleJoin(projectId: string) {
     setLoadingId(projectId);
+    setError(null);
     try {
       await joinProject(projectId);
-    } catch {
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to join project");
       setLoadingId(null);
     }
   }
 
   return (
+    <div>
+      {error && (
+        <p className="mb-4 rounded-lg border border-secondary/30 bg-secondary/5 px-4 py-2 text-sm text-secondary">
+          {error}
+        </p>
+      )}
     <ul className="space-y-4">
       {projects.map((project) => (
         <li
@@ -56,5 +65,6 @@ export function JoinProjectList({ projects }: JoinProjectListProps) {
         </li>
       ))}
     </ul>
+    </div>
   );
 }

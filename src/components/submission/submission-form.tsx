@@ -20,9 +20,9 @@ export function SubmissionForm({ project }: SubmissionFormProps) {
 
   // Local form state
   const [name, setName] = useState(project.name);
-  const [description, setDescription] = useState(project.description);
-  const [ideaOrigin, setIdeaOrigin] = useState(project.idea_origin);
-  const [journey, setJourney] = useState(project.journey);
+  const [description, setDescription] = useState(project.description ?? "");
+  const [ideaOrigin, setIdeaOrigin] = useState(project.idea_origin ?? "");
+  const [journey, setJourney] = useState(project.journey ?? "");
   const [techStack, setTechStack] = useState<string[]>(
     project.tech_stack ?? []
   );

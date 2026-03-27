@@ -18,7 +18,7 @@ export default function VoteSubmitBar({
   const allSelected = count === 3;
 
   return (
-    <div className="fixed bottom-0 left-60 right-0 z-40 border-t border-outline bg-surface-low/80 backdrop-blur-md">
+    <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-outline bg-surface-low/80 backdrop-blur-md lg:left-60">
       <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
         {/* Counter */}
         <div className="flex items-center gap-3">

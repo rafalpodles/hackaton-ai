@@ -20,7 +20,7 @@ export function VideoPlayer({
     const v = videoRef.current;
     if (!v) return;
     if (v.paused) {
-      v.play();
+      v.play().catch(() => {});
       setIsPlaying(true);
     } else {
       v.pause();
@@ -28,10 +28,21 @@ export function VideoPlayer({
     }
   }
 
+  function handleKeyDown(e: React.KeyboardEvent) {
+    if (e.key === " " || e.key === "Enter") {
+      e.preventDefault();
+      toggle();
+    }
+  }
+
   return (
     <div
       className={`relative cursor-pointer overflow-hidden rounded-lg ${className}`}
       onClick={toggle}
+      onKeyDown={handleKeyDown}
+      role="button"
+      tabIndex={0}
+      aria-label={isPlaying ? "Pause video" : "Play video"}
     >
       <video
         ref={videoRef}
@@ -51,6 +62,7 @@ export function VideoPlayer({
               className="ml-1 h-7 w-7 text-white"
               fill="currentColor"
               viewBox="0 0 24 24"
+              aria-hidden="true"
             >
               <path d="M8 5v14l11-7z" />
             </svg>

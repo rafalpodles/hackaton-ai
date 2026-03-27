@@ -44,7 +44,7 @@ export function VideoFeedItem({
   return (
     <div
       ref={containerRef}
-      className="flex h-screen snap-start flex-col items-center justify-center px-6"
+      className="relative flex h-screen snap-start flex-col items-center justify-center px-6"
     >
       {/* Counter */}
       <div className="absolute right-6 top-6 rounded-full bg-surface-high/80 px-3 py-1 text-sm font-medium text-on-surface-muted backdrop-blur-sm">

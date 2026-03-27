@@ -28,6 +28,9 @@ export function ProjectDetailModal({
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="project-detail-title"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
@@ -83,14 +86,14 @@ export function ProjectDetailModal({
 
           {/* Right: Info */}
           <div className="flex flex-col gap-4 p-6">
-            <h2 className="font-space-grotesk text-2xl font-bold text-on-surface">
+            <h2 id="project-detail-title" className="font-space-grotesk text-2xl font-bold text-on-surface">
               {project.name}
             </h2>
 
             {/* Tech tags */}
-            {project.tech_stack.length > 0 && (
+            {(project.tech_stack ?? []).length > 0 && (
               <div className="flex flex-wrap gap-2">
-                {project.tech_stack.map((tag) => (
+                {(project.tech_stack ?? []).map((tag) => (
                   <span
                     key={tag}
                     className="rounded-full border border-outline bg-surface-high px-3 py-1 text-xs font-medium text-primary-dim"
