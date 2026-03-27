@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Neon Syndicate - Projects</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Manrope:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-tertiary-container": "#ffffff",
+              "primary-fixed-dim": "#8486ff",
+              "on-tertiary-fixed": "#1c0055",
+              "surface-bright": "#2c2b33",
+              "error-container": "#a70138",
+              "background": "#0e0e13",
+              "primary-dim": "#6264e9",
+              "inverse-primary": "#4c4cd2",
+              "on-secondary": "#460700",
+              "on-primary-fixed": "#000000",
+              "error-dim": "#d73357",
+              "surface-container-high": "#1f1f26",
+              "on-primary": "#1200a3",
+              "tertiary-fixed": "#b8a3ff",
+              "secondary": "#ff7255",
+              "on-surface-variant": "#acaab1",
+              "outline-variant": "#48474d",
+              "on-secondary-fixed": "#6b0f00",
+              "on-error": "#490013",
+              "on-tertiary": "#25006b",
+              "secondary-fixed": "#ffc4b7",
+              "primary-container": "#9496ff",
+              "surface-container": "#19191f",
+              "tertiary": "#a68cff",
+              "surface": "#0e0e13",
+              "surface-tint": "#a4a5ff",
+              "on-primary-container": "#0c0081",
+              "on-error-container": "#ffb2b9",
+              "tertiary-dim": "#7e51ff",
+              "primary": "#a4a5ff",
+              "error": "#ff6e84",
+              "outline": "#76747b",
+              "tertiary-container": "#7c4dff",
+              "surface-container-low": "#131318",
+              "on-secondary-fixed-variant": "#9f1b00",
+              "on-surface": "#f8f5fd",
+              "inverse-on-surface": "#55545a",
+              "surface-dim": "#0e0e13",
+              "secondary-fixed-dim": "#ffb09f",
+              "surface-variant": "#25252c",
+              "primary-fixed": "#9496ff",
+              "on-primary-fixed-variant": "#11009c",
+              "secondary-container": "#b82100",
+              "on-secondary-container": "#fff6f4",
+              "tertiary-fixed-dim": "#ab93ff",
+              "on-tertiary-fixed-variant": "#4000ad",
+              "surface-container-highest": "#25252c",
+              "on-background": "#f8f5fd",
+              "surface-container-lowest": "#000000",
+              "secondary-dim": "#db3411",
+              "inverse-surface": "#fbf8ff"
+            },
+            fontFamily: {
+              "headline": ["Space Grotesk"],
+              "body": ["Manrope"],
+              "label": ["Space Grotesk"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .glass-card {
+            background: rgba(31, 31, 38, 0.4);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #a4a5ff 0%, #ff7255 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .cta-gradient {
+            background: linear-gradient(135deg, #6264e9 0%, #db3411 100%);
+        }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface min-h-screen selection:bg-primary/30">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-surface-800/40 backdrop-blur-xl flex items-center justify-between px-8 h-20 w-full shadow-[0_0_20px_rgba(70,70,204,0.1)]">
+<div class="flex items-center gap-12">
+<span class="text-2xl font-bold tracking-tighter text-[#a4a5ff] uppercase font-['Space_Grotesk']">NEON SYNDICATE</span>
+<div class="hidden md:flex items-center gap-8 font-['Space_Grotesk'] tracking-tight">
+<a class="text-[#ff7255] border-b-2 border-[#ff7255] pb-1" href="#">Projects</a>
+<a class="text-[#a4a5ff]/70 hover:text-[#a4a5ff] transition-colors" href="#">Live Feed</a>
+<a class="text-[#a4a5ff]/70 hover:text-[#a4a5ff] transition-colors" href="#">Voting</a>
+<a class="text-[#a4a5ff]/70 hover:text-[#a4a5ff] transition-colors" href="#">Submit</a>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative group">
+<span class="material-symbols-outlined text-primary cursor-pointer hover:bg-white/5 p-2 rounded-full transition-all">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-secondary rounded-full"></span>
+</div>
+<span class="material-symbols-outlined text-primary cursor-pointer hover:bg-white/5 p-2 rounded-full transition-all">settings</span>
+<div class="w-10 h-10 rounded-full bg-surface-container-highest overflow-hidden border border-primary/20">
+<img alt="User Profile" data-alt="Close up portrait of a young tech professional in a neon lit environment with violet and teal highlights" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBHnDmUJaocsQIyCPjI0f6FkR328fY23TPx7l4NC8eSTalebfpHXLRGAkqXO8u7_1uWRoirkJnZKH22DXNtDzUNMShkG7HevbyOwu2N9f6ZyyWOhN-zBJgdkVfVLrKuIKlvIBE0v9v5oKUuZQM8-1DZnZ_6zDzfjLktD7_o1PNkuPN1bVX-kdmCi-2BqXGzqO17aFr0oC-Xb3pVTg6upWaqJ5qjpFybdtos5uTB73d4aXcF-a07SKyUosEZ0qAGZPWKHls2t8-9zfDV"/>
+</div>
+</div>
+</nav>
+<!-- SideNavBar (Hidden on Mobile) -->
+<aside class="fixed left-0 top-20 h-[calc(100vh-5rem)] w-64 bg-[#131318]/60 backdrop-blur-lg flex flex-col py-6 border-r border-white/5 hidden lg:flex font-['Space_Grotesk'] text-sm uppercase tracking-widest">
+<div class="px-6 mb-10">
+<div class="flex items-center gap-3 mb-2">
+<div class="w-8 h-8 rounded bg-primary-dim flex items-center justify-center">
+<span class="material-symbols-outlined text-xs text-white" style="font-variation-settings: 'FILL' 1;">terminal</span>
+</div>
+<div>
+<h3 class="text-on-surface font-bold tracking-normal leading-none">Terminal Alpha</h3>
+<p class="text-[10px] text-primary/60 tracking-widest">Superuser Node</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 flex flex-col gap-1">
+<a class="flex items-center gap-4 px-6 py-3 text-[#a4a5ff]/60 hover:text-[#a4a5ff] hover:bg-white/5 hover:translate-x-1 transition-all" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-4 px-6 py-3 text-[#a4a5ff]/60 hover:text-[#a4a5ff] hover:bg-white/5 hover:translate-x-1 transition-all" href="#">
+<span class="material-symbols-outlined">monitoring</span>
+<span>Analytics</span>
+</a>
+<a class="flex items-center gap-4 px-6 py-3 text-[#a4a5ff]/60 hover:text-[#a4a5ff] hover:bg-white/5 hover:translate-x-1 transition-all" href="#">
+<span class="material-symbols-outlined">group</span>
+<span>Team</span>
+</a>
+<a class="flex items-center gap-4 px-6 py-3 text-[#ff7255] bg-gradient-to-r from-[#ff7255]/10 to-transparent border-r-4 border-[#ff7255] translate-x-1" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">gavel</span>
+<span>Judging</span>
+</a>
+<a class="flex items-center gap-4 px-6 py-3 text-[#a4a5ff]/60 hover:text-[#a4a5ff] hover:bg-white/5 hover:translate-x-1 transition-all" href="#">
+<span class="material-symbols-outlined">description</span>
+<span>Submissions</span>
+</a>
+</nav>
+<div class="px-6 mt-auto flex flex-col gap-6">
+<button class="w-full py-3 cta-gradient text-white font-bold rounded-lg shadow-[0_0_15px_rgba(255,114,85,0.3)] active:scale-95 transition-all">
+                VOTE NOW
+            </button>
+<a class="flex items-center gap-4 py-3 text-[#a4a5ff]/60 hover:text-[#a4a5ff] transition-colors" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span>Logout</span>
+</a>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="lg:ml-64 pt-32 pb-20 px-8 max-w-[1600px] mx-auto">
+<!-- Hero Header Section -->
+<header class="mb-16 flex flex-col md:flex-row md:items-end justify-between gap-8">
+<div class="max-w-3xl">
+<h1 class="text-5xl md:text-7xl font-headline font-extrabold tracking-tighter mb-4 leading-none">
+                    SPYROSOFT AI <span class="gradient-text">HACKATHON</span>
+</h1>
+<p class="text-xl text-on-surface-variant font-light max-w-2xl">
+                    Witness the convergence of neural networks and creative engineering. Explore the vanguard of automated problem solving.
+                </p>
+</div>
+<div class="flex flex-col gap-4">
+<button class="px-8 py-4 cta-gradient text-white font-headline font-bold text-lg rounded hover:shadow-[0_0_30px_rgba(164,165,255,0.4)] transition-all flex items-center gap-3 active:scale-95 group">
+                    WATCH ALL DEMOS
+                    <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">play_circle</span>
+</button>
+<div class="flex items-center gap-4 self-end">
+<nav class="flex bg-surface-container p-1 rounded-lg">
+<button class="px-6 py-2 bg-primary/20 text-primary font-headline font-bold rounded">Projects</button>
+<button class="px-6 py-2 text-on-surface-variant hover:text-on-surface font-headline font-bold transition-colors">Vote</button>
+<button class="px-6 py-2 text-on-surface-variant hover:text-on-surface font-headline font-bold transition-colors">My Project</button>
+</nav>
+</div>
+</div>
+</header>
+<!-- Bento Grid / Project Cards -->
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+<!-- Project Card 1 -->
+<div class="glass-card rounded-xl overflow-hidden border border-outline-variant/15 hover:border-primary/50 group transition-all duration-500 flex flex-col">
+<div class="relative h-48 overflow-hidden">
+<img alt="AI Neural Art" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="Abstract visualization of a neural network with glowing blue and violet connections in a dark digital space" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDokGObfnirdPnCkXxTi_xE2eboHwHPCSU3h8mW5WVFYr626eoiSTo-aFp4RoY9xXatTvujpnPkUg0X4aiCdcwkGE2ytv3NMX--9GNi8nxd43w3x4hNIbQHNiZsUSG-gMnH9wkdmEXYvzJgKPqJRLpQ0ndhW0EpsF392hHU9DtXg95iy2sCAven-juvHxhK6jS322VHp07tdlVDsuip7Q_RfV-94z594CVTXX6zpd4-j32V7PQvtiVFCQ0nXILg-LlSTo0k5evXcMo6"/>
+<div class="absolute top-4 left-4">
+<span class="px-3 py-1 bg-surface-container-highest/80 backdrop-blur-md text-[10px] font-headline font-bold text-primary tracking-widest uppercase rounded">Generative AI</span>
+</div>
+</div>
+<div class="p-6 flex flex-col flex-1">
+<h3 class="text-xl font-headline font-bold text-on-surface mb-2 group-hover:text-primary transition-colors">Lumina-Sync Engine</h3>
+<p class="text-sm text-on-surface-variant line-clamp-2 mb-6 font-light">Real-time synchronized lighting environments generated through auditory frequency analysis.</p>
+<div class="mt-auto flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-surface-container overflow-hidden">
+<img alt="Team Lead" data-alt="Portrait of a developer wearing a dark hoodie in a minimal tech studio setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCtc5EC7PeE29HT1dR2rexjT5bBM76xkvSa_qciWpbowl4amXDAPzJoDF_QM9LPrTbogBUQW-8gmuBRoon0-tCO1ZghhtZGpbRNiRr4bSQQrpz3tHsuCAfVrYkfbU01ISDyA-vo0EGpZeRgvdDJWKq69HYmnWKvdC1MQTkiDtn1vqMsyFE_n07-Qlh92HeKaWda42pj0Dal9eH5QX4m7hlJmIbu0RNIfkzvmJxamfsJKydQyDbbpJOl2JTmuSVQshGdNZg_oKb6jpSD"/>
+</div>
+<span class="text-xs font-headline font-medium text-on-surface/80">CyberForge Team</span>
+</div>
+<span class="material-symbols-outlined text-primary/40 group-hover:text-secondary transition-colors">arrow_forward_ios</span>
+</div>
+</div>
+</div>
+<!-- Project Card 2 -->
+<div class="glass-card rounded-xl overflow-hidden border border-outline-variant/15 hover:border-primary/50 group transition-all duration-500 flex flex-col">
+<div class="relative h-48 overflow-hidden">
+<img alt="Cybersecurity Hub" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="Macro view of computer circuit board with neon green and purple light traces and glowing data paths" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDPfw8O01Uh0JHnMKAGQvtnj7P7QDcKXt9fLHuwqilfRl3JQ7OPCLgXBFFkaOdQaakWf8JrCCtGd3kcWL-45NnLOvmdFBotzcTDrXyNLDbKQTXwUGHw_xKxG4kyaxTzr_w1ei703VXsIDLmcVsDkC0oMFcVDIYsM7Sd3yD4JbAOjw3-H32hvZkYGJpW8eFEx8xAk5w9rmsnmcgW446RUzxCa4T9OPTIvoqlKRNXBahUDtu_1cX8oAOO1Rnk0fdZMv-1hci9xH9tUgMd"/>
+<div class="absolute top-4 left-4">
+<span class="px-3 py-1 bg-surface-container-highest/80 backdrop-blur-md text-[10px] font-headline font-bold text-primary tracking-widest uppercase rounded">CyberSec</span>
+</div>
+</div>
+<div class="p-6 flex flex-col flex-1">
+<h3 class="text-xl font-headline font-bold text-on-surface mb-2 group-hover:text-primary transition-colors">Ghost-Protocol v2</h3>
+<p class="text-sm text-on-surface-variant line-clamp-2 mb-6 font-light">Autonomous threat detection and mitigation system for decentralized cloud nodes.</p>
+<div class="mt-auto flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-surface-container overflow-hidden">
+<img alt="Team Lead" data-alt="Professional woman with a focused expression in a dimly lit office with cool color temperatures" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDplnEGdvT6WbD1F_pNsyv0LrgKlnWiggHSiwjvbPRABfkNG-XR-6YKD9Fjry26LliTBRdKWFvsyoBgz3yqTFwaSOJPdzuK3Cy2CGqK4Ku729nCn13g7EZkziMiYzk-0AduUW9mBwB_8zMmo0gtyQ-p_0fgjKrDEpn-Th99pkVwDAVcNtm31-eeMyn9x4A3qpWfvqc2ndirvM0-2aeZbJAEyLpZc--Yjyl-RxPAvCxS6mCRKGTte4ey-U283edyMo_2VI1PvLjHpK6e"/>
+</div>
+<span class="text-xs font-headline font-medium text-on-surface/80">ZeroDay Squad</span>
+</div>
+<span class="material-symbols-outlined text-primary/40 group-hover:text-secondary transition-colors">arrow_forward_ios</span>
+</div>
+</div>
+</div>
+<!-- Project Card 3 -->
+<div class="glass-card rounded-xl overflow-hidden border border-outline-variant/15 hover:border-primary/50 group transition-all duration-500 flex flex-col">
+<div class="relative h-48 overflow-hidden">
+<img alt="Space Interface" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="Futuristic user interface overlay on top of an image of a galaxy with data points and glowing vectors" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAHnl8lNd8AhN46L3koTCF3gCgA8jIHyr5swVlI3JaoNlQhHpxJp1XjaWorsMoIZVkAfuBA092rVDJNXGsGip_lDZ67mra2RANo3nmNGQuNZoc5omGAblUvm8ezQRVDnJDVYbDzJbXy0rkKTGO4_HJS5DjftS4esITH3YirxxcAekJneZRDghWdJAxesidQcDYlVmpNTJh6ATgRD8nnQhfMfxq5Doc0tWO-bKtUryMoGcymSHu4haZacofU9v7ZK4z_1yqkOM01byJh"/>
+<div class="absolute top-4 left-4">
+<span class="px-3 py-1 bg-surface-container-highest/80 backdrop-blur-md text-[10px] font-headline font-bold text-primary tracking-widest uppercase rounded">UI/UX</span>
+</div>
+</div>
+<div class="p-6 flex flex-col flex-1">
+<h3 class="text-xl font-headline font-bold text-on-surface mb-2 group-hover:text-primary transition-colors">Nebula Interface</h3>
+<p class="text-sm text-on-surface-variant line-clamp-2 mb-6 font-light">Adaptive UI system that uses biometric feedback to adjust visual density and color.</p>
+<div class="mt-auto flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-surface-container overflow-hidden">
+<img alt="Team Lead" data-alt="Portrait of a creative designer with glasses looking thoughtfully at a computer screen off-camera" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBsoucaKIPRIqFVnBNvjd2ZozvHa9EDITS3Cr6kTGe101yJsYatfFhBpwukLK0mrg4813ohlUQDetgjt0oiupQyh6LwZsTov_2OZ0g5oZ82Bt0GrAOwZn5eIHOYLyX-QTJQhElV8wNcElhmcS-iWslJdm5AFQCIQ2967gaIe1WBejw76gq2jrA9q9AKn-fFasbNiMSTY66q6ULS7ECLY89gHHC_aiM-YWg2EZDKN8iXu324b6TT_XhmiW8LTOMA90rJiykpBl-jb5wb"/>
+</div>
+<span class="text-xs font-headline font-medium text-on-surface/80">Void Logic</span>
+</div>
+<span class="material-symbols-outlined text-primary/40 group-hover:text-secondary transition-colors">arrow_forward_ios</span>
+</div>
+</div>
+</div>
+<!-- Project Card 4 -->
+<div class="glass-card rounded-xl overflow-hidden border border-outline-variant/15 hover:border-primary/50 group transition-all duration-500 flex flex-col">
+<div class="relative h-48 overflow-hidden">
+<img alt="Robotics" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="Close up of a robotic hand with complex joints and wires in a sterile workshop with warm ambient light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDDWMyAiffhB2rmQYJ1Bov-6jTE7GhITxlVLku8mICcCoKe7MchHpOZNGAuEwwZMZehhdoSTVfX2_XHtuwGUHQN15ye2i4JOeXqLIDB0kb-8myRBXDu3eecqEXRksUbuOiw1tcgn4pE5Q1wUxr5srQKh9-7nB8SrC-A6s_CEJmNQ8ahUYJG9kyO8CT5e12jNh8mkTZHcI5plIi-JarevrR2mKMgVbRiCSOu_BaiHGmKuM5u4QdWiAQbxEKRMyesFxLoej2Lzany_8K5"/>
+<div class="absolute top-4 left-4">
+<span class="px-3 py-1 bg-surface-container-highest/80 backdrop-blur-md text-[10px] font-headline font-bold text-primary tracking-widest uppercase rounded">Robotics</span>
+</div>
+</div>
+<div class="p-6 flex flex-col flex-1">
+<h3 class="text-xl font-headline font-bold text-on-surface mb-2 group-hover:text-primary transition-colors">Kinetic-Soul</h3>
+<p class="text-sm text-on-surface-variant line-clamp-2 mb-6 font-light">Machine learning algorithm for natural, human-like motion in quadruped robotics.</p>
+<div class="mt-auto flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-surface-container overflow-hidden">
+<img alt="Team Lead" data-alt="Portrait of a young black woman engineer in a modern tech workshop with blue accent lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB4TGtrfpRnTrZf8PzjR7eGdlM5kWwSYIm7ochMxg0IlUZAz7JgBtYCKfdVJT0jGsOIc_dakTQgDJ9_toIDDtlnj8MeQEwjlW9bI6fgw9opbJgA5xZGTxQ9Aii-28nIAzDj-2pSa1HdhTuTJ25p4LjT9XM7i3vpLfKL4RI2emc4zcXF66Es_JXt_hMgLSpVLx-h4h2cEXTiOx6PaPxrW5pNGjN-jtvWj_3ZRhn-pOcMLGq5cy6zuTVsBIwvrcaSsDZRo4EZ_XGH5AQL"/>
+</div>
+<span class="text-xs font-headline font-medium text-on-surface/80">Motion Lab</span>
+</div>
+<span class="material-symbols-outlined text-primary/40 group-hover:text-secondary transition-colors">arrow_forward_ios</span>
+</div>
+</div>
+</div>
+<!-- Project Card 5 -->
+<div class="glass-card rounded-xl overflow-hidden border border-outline-variant/15 hover:border-primary/50 group transition-all duration-500 flex flex-col">
+<div class="relative h-48 overflow-hidden">
+<img alt="Abstract Data" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="Waves of purple and pink digital energy flowing in a dark space representing high-speed data transfer" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB26v4GwLM50wECI9_pQVWTMfRje-wPmm1UlAEhSFFQUx3UH-rROqJywcGLENC979EO0-PwIb3DvsyoUuPCRy2FpzZXirlHxU1Xs2yCf1veMS6_T5RXDhyoptZ6_V0WrCHFb7Tp2788r1WY2h50KCqfv5RRIy9mYztxJGad17EsrpP44GqvEe3YXGdsZOAzVtqTMoLMHbzlf1oa9j68yd3AvJq8o3i3GuKByd1pTpOMtktK53eAYbftfQeEUexDDy0pmjbZ7lotoxxc"/>
+<div class="absolute top-4 left-4">
+<span class="px-3 py-1 bg-surface-container-highest/80 backdrop-blur-md text-[10px] font-headline font-bold text-primary tracking-widest uppercase rounded">Big Data</span>
+</div>
+</div>
+<div class="p-6 flex flex-col flex-1">
+<h3 class="text-xl font-headline font-bold text-on-surface mb-2 group-hover:text-primary transition-colors">Prism-Query</h3>
+<p class="text-sm text-on-surface-variant line-clamp-2 mb-6 font-light">A visual data exploration tool using 3D spatial mapping for multi-dimensional datasets.</p>
+<div class="mt-auto flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-surface-container overflow-hidden">
+<img alt="Team Lead" data-alt="Male executive in a sharp suit standing in a futuristic office lobby with glass walls" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDOWrWtFOdwv8CQSBOHIfq4jr7XxZJqoDylBf7zMDxhoCdzEArFXXOKAlfgYpmWcr6TKdBgCciQ_fU_lhETw-vlM-N55kC_YdB5Dsx4T2ZDzqpWk_VIdubHakavvF5clyK_cdGoNX0BNX-xbBRgGUVkOq0eEHYgd74sVO_3NO1uuG_FA1fdVFzkaT_gp5nozKyQzJX1ZLzfKhvacELiUop3sAieBwfF9KN9iJy2zJg6obYQiaou24alQFChSW1tQrpHecJrSCj5beaR"/>
+</div>
+<span class="text-xs font-headline font-medium text-on-surface/80">Data Drifters</span>
+</div>
+<span class="material-symbols-outlined text-primary/40 group-hover:text-secondary transition-colors">arrow_forward_ios</span>
+</div>
+</div>
+</div>
+<!-- Project Card 6 -->
+<div class="glass-card rounded-xl overflow-hidden border border-outline-variant/15 hover:border-primary/50 group transition-all duration-500 flex flex-col">
+<div class="relative h-48 overflow-hidden">
+<img alt="Server Room" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="Modern server room with glowing blue LED indicator lights on rows of powerful computer racks" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDLjNjxHVzM7AODuyvxzDzXxUVER-y-t82xtsLWqXLV7yQTbgAbfba80OZgA12hgEhfH6Xg5q3j3KGppFzDhvEjedHenEOGMF5ndHgjb60j-WF8if_0P6KC8Fn2p3GyiqYGoN0pBp3w4TKhhlK4OYb1njU1gdAXHa9s9z0fVQoKJqCL5ahw1nO3EbPH__L3WxkTL5qchXZImoGLr3920Gxr85CEfG_wNaDhz-bnJDT1fZBLI8daY3W8uT_g_1SlBMYXKeZI2Cfru8XG"/>
+<div class="absolute top-4 left-4">
+<span class="px-3 py-1 bg-surface-container-highest/80 backdrop-blur-md text-[10px] font-headline font-bold text-primary tracking-widest uppercase rounded">Compute</span>
+</div>
+</div>
+<div class="p-6 flex flex-col flex-1">
+<h3 class="text-xl font-headline font-bold text-on-surface mb-2 group-hover:text-primary transition-colors">Edge-Core Node</h3>
+<p class="text-sm text-on-surface-variant line-clamp-2 mb-6 font-light">Optimized compute layering for low-latency AI processing on wearable hardware.</p>
+<div class="mt-auto flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-surface-container overflow-hidden">
+<img alt="Team Lead" data-alt="Portrait of a female engineer wearing safety glasses in a tech production facility" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDZ_2I5THkRfN_XaTzjhMn-HpGukO6L1Tlc2lI0cH_YkhpS0WPlpd-kSdxmvT1_9-1L9FlJjOaAZShcvKxCtuFz9s0l8Atf7jSpogPWrbQFpSPBoPUVceiOrXTsZNHFSP-a2DlGb-0AXjFceOEDSTBhuu1qQKz7WVPrNraP0fm5la1yZX-bI2a4ZVhmjVsyx4ViLcg8WO3jUpxR-b1J8d2UmYPRbglO6Aeni_OXadmoOGc1jiuK3zYsFhvZhDVgnLHgganjfIZqT8R5"/>
+</div>
+<span class="text-xs font-headline font-medium text-on-surface/80">Static Pulse</span>
+</div>
+<span class="material-symbols-outlined text-primary/40 group-hover:text-secondary transition-colors">arrow_forward_ios</span>
+</div>
+</div>
+</div>
+<!-- Project Card 7 -->
+<div class="glass-card rounded-xl overflow-hidden border border-outline-variant/15 hover:border-primary/50 group transition-all duration-500 flex flex-col">
+<div class="relative h-48 overflow-hidden">
+<img alt="Neural Link" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="Close up of digital human eye with glowing HUD elements and scanning patterns integrated into the iris" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB7SkCV0Y7WsNBKCVpS640dkmKNmLQKZwZgRRo4_rPwQ8otVt0itFhAjek_1zVegQQ18BP0iGQivqUAS-Xgd-qshKZFjwZshvsMUM-BlSNRFJZNveB5CUFcrvDJDSeiIkvZKA72TI4qEKfOL9Ej0X4XYcJOisO-MukmPvA9G-Rj92w1DBOToMK9eMmUsofoo6y_FfZZTcET1Y6N6LMrKLJwRAkUWwDLrtk34b_YBE1VMI2Uzgj8ZmRQavG9rwHG7TAprquBMGdvBh8p"/>
+<div class="absolute top-4 left-4">
+<span class="px-3 py-1 bg-surface-container-highest/80 backdrop-blur-md text-[10px] font-headline font-bold text-primary tracking-widest uppercase rounded">Bio-Tech</span>
+</div>
+</div>
+<div class="p-6 flex flex-col flex-1">
+<h3 class="text-xl font-headline font-bold text-on-surface mb-2 group-hover:text-primary transition-colors">Visionary-OS</h3>
+<p class="text-sm text-on-surface-variant line-clamp-2 mb-6 font-light">An accessibility-first operating system controlled entirely via eye-tracking and neural pulses.</p>
+<div class="mt-auto flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-surface-container overflow-hidden">
+<img alt="Team Lead" data-alt="Friendly male developer in a bright co-working space with large windows" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB8lGEN6ik1HA8_HFdFtl_zb5RRG7jPvnp10RGxiPNlURRn_dFvdBqlbzSyhX8YNXmuq_25NeTxu7Q2UKSGwSN-3H5V391Bmzc9S2LjVyu6tYIe6cwg1Y1Pl0V9rAeGMud6zOt9wEpKM9Te-zVQSI9Qn07cIMJ-A0HB6p_t_uoguXgNeuvUzfu8d4RkKYjCXuMfVy2EZFwlH3czVPIFxFbWCCEaXEp9asu6Jn9eXIJYdEBaQvRDt71Q9frI1jSti4oyziBuqeYvi6uI"/>
+</div>
+<span class="text-xs font-headline font-medium text-on-surface/80">Visionary Inc</span>
+</div>
+<span class="material-symbols-outlined text-primary/40 group-hover:text-secondary transition-colors">arrow_forward_ios</span>
+</div>
+</div>
+</div>
+<!-- Project Card 8 -->
+<div class="glass-card rounded-xl overflow-hidden border border-outline-variant/15 hover:border-primary/50 group transition-all duration-500 flex flex-col">
+<div class="relative h-48 overflow-hidden">
+<img alt="Satellite Network" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="View of earth from space at night with glowing network connections and satellite paths over continents" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBDMSG7pWTHErYuXdE3hCSyNCXw1D8oKTRQGdPbA0TiI-IVhNp5KdXmK7jh2SaVOb1k69llx70pRuVeLIxxc0DnNR0IUz2yHgMx3CIUJdIoLptaPSFLScCpqoXe35xKrn5UTOmRqTP0v6HgjEieYS3SKTeLrby4BzshVAMDDOpo0M6CyPhoIbooLDx6R56dbRHCTdmLptBRmRiqsD9Vo0K8apT11vzPSKpHhieB9EUrftWS9u_tejtnlxpi53l7UlEwlE_xYJkWb9wg"/>
+<div class="absolute top-4 left-4">
+<span class="px-3 py-1 bg-surface-container-highest/80 backdrop-blur-md text-[10px] font-headline font-bold text-primary tracking-widest uppercase rounded">Networking</span>
+</div>
+</div>
+<div class="p-6 flex flex-col flex-1">
+<h3 class="text-xl font-headline font-bold text-on-surface mb-2 group-hover:text-primary transition-colors">Atlas Mesh-Net</h3>
+<p class="text-sm text-on-surface-variant line-clamp-2 mb-6 font-light">Global decentralized internet mesh that utilizes low-orbit satellite relays.</p>
+<div class="mt-auto flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-surface-container overflow-hidden">
+<img alt="Team Lead" data-alt="Senior male executive looking confident in a high-tech boardroom setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAvB5BOAkg-j11iVcKi-EVHNuQaQOMzjzGSL4am7vSQp3OXxe8pq7okBvVqqire2r7pDiOse5SASoAsdxJohlTQQeApIxt4rESU-6-m82Q2cLeHTvE6Nx7trTAlgZGmlUWy9hBtXkwdDR5ywudFGcfXosvEIcIKUps2ghN61uI5ZZA8mSkWIdVGvKY5V95XsC2OG0_tZrPfDt8Hc2L_7NJw7KLiVDuWfqEfK_wtGF_dTgUfxZGwGnEOH1sBrnf2sFVtRLxc3ytq8DwM"/>
+</div>
+<span class="text-xs font-headline font-medium text-on-surface/80">Sky-Link Team</span>
+</div>
+<span class="material-symbols-outlined text-primary/40 group-hover:text-secondary transition-colors">arrow_forward_ios</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Pagination / Load More (Asymmetric Layout) -->
+<div class="mt-20 flex flex-col md:flex-row items-center justify-between gap-12 border-t border-white/5 pt-12">
+<div class="flex flex-col gap-2">
+<span class="text-6xl font-headline font-black text-white/5 select-none leading-none">01 / 12</span>
+<p class="text-on-surface-variant tracking-widest uppercase text-xs">Page Navigation Cluster</p>
+</div>
+<div class="flex items-center gap-2">
+<button class="w-12 h-12 flex items-center justify-center rounded border border-white/10 hover:bg-white/5 transition-all">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="w-12 h-12 flex items-center justify-center rounded bg-primary text-on-primary font-bold">1</button>
+<button class="w-12 h-12 flex items-center justify-center rounded border border-white/10 hover:bg-white/5 transition-all">2</button>
+<button class="w-12 h-12 flex items-center justify-center rounded border border-white/10 hover:bg-white/5 transition-all">3</button>
+<span class="px-4 text-on-surface-variant">...</span>
+<button class="w-12 h-12 flex items-center justify-center rounded border border-white/10 hover:bg-white/5 transition-all">12</button>
+<button class="w-12 h-12 flex items-center justify-center rounded border border-white/10 hover:bg-white/5 transition-all">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+<div class="hidden xl:block">
+<div class="flex flex-col items-end gap-1">
+<span class="text-[10px] text-primary tracking-[0.3em] font-headline font-bold">NODE STATUS</span>
+<div class="flex gap-1">
+<div class="w-4 h-1 bg-primary"></div>
+<div class="w-4 h-1 bg-primary"></div>
+<div class="w-4 h-1 bg-primary/20"></div>
+<div class="w-4 h-1 bg-primary/20"></div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Floating Background Elements for Depth -->
+<div class="fixed top-1/4 -right-20 w-96 h-96 bg-primary/10 rounded-full blur-[120px] -z-10"></div>
+<div class="fixed bottom-0 -left-20 w-[500px] h-[500px] bg-secondary/5 rounded-full blur-[150px] -z-10"></div>
+</body></html>

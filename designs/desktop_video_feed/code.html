@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>NEON SYNDICATE - Video Feed</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Manrope:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-tertiary-container": "#ffffff",
+                        "primary-fixed-dim": "#8486ff",
+                        "on-tertiary-fixed": "#1c0055",
+                        "surface-bright": "#2c2b33",
+                        "error-container": "#a70138",
+                        "background": "#0e0e13",
+                        "primary-dim": "#6264e9",
+                        "inverse-primary": "#4c4cd2",
+                        "on-secondary": "#460700",
+                        "on-primary-fixed": "#000000",
+                        "error-dim": "#d73357",
+                        "surface-container-high": "#1f1f26",
+                        "on-primary": "#1200a3",
+                        "tertiary-fixed": "#b8a3ff",
+                        "secondary": "#ff7255",
+                        "on-surface-variant": "#acaab1",
+                        "outline-variant": "#48474d",
+                        "on-secondary-fixed": "#6b0f00",
+                        "on-error": "#490013",
+                        "on-tertiary": "#25006b",
+                        "secondary-fixed": "#ffc4b7",
+                        "primary-container": "#9496ff",
+                        "surface-container": "#19191f",
+                        "tertiary": "#a68cff",
+                        "surface": "#0e0e13",
+                        "surface-tint": "#a4a5ff",
+                        "on-primary-container": "#0c0081",
+                        "on-error-container": "#ffb2b9",
+                        "tertiary-dim": "#7e51ff",
+                        "primary": "#a4a5ff",
+                        "error": "#ff6e84",
+                        "outline": "#76747b",
+                        "tertiary-container": "#7c4dff",
+                        "surface-container-low": "#131318",
+                        "on-secondary-fixed-variant": "#9f1b00",
+                        "on-surface": "#f8f5fd",
+                        "inverse-on-surface": "#55545a",
+                        "surface-dim": "#0e0e13",
+                        "secondary-fixed-dim": "#ffb09f",
+                        "surface-variant": "#25252c",
+                        "primary-fixed": "#9496ff",
+                        "on-primary-fixed-variant": "#11009c",
+                        "secondary-container": "#b82100",
+                        "on-secondary-container": "#fff6f4",
+                        "tertiary-fixed-dim": "#ab93ff",
+                        "on-tertiary-fixed-variant": "#4000ad",
+                        "surface-container-highest": "#25252c",
+                        "on-background": "#f8f5fd",
+                        "secondary-dim": "#db3411",
+                        "inverse-surface": "#fbf8ff"
+                    },
+                    fontFamily: {
+                        "headline": ["Space Grotesk"],
+                        "body": ["Manrope"],
+                        "label": ["Space Grotesk"]
+                    },
+                    borderRadius: { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(31, 31, 38, 0.4);
+            backdrop-filter: blur(20px);
+        }
+        .video-glow {
+            box-shadow: 0 0 50px rgba(164, 165, 255, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body selection:bg-secondary/30">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-surface-800/40 backdrop-blur-xl flex items-center justify-between px-8 h-20 w-full shadow-[0_0_20px_rgba(70,70,204,0.1)]">
+<div class="flex items-center gap-8">
+<span class="text-2xl font-bold tracking-tighter text-[#a4a5ff] uppercase font-headline">NEON SYNDICATE</span>
+<div class="hidden md:flex items-center gap-6 font-headline tracking-tight">
+<a class="text-[#a4a5ff]/70 hover:text-[#a4a5ff] transition-colors active:scale-95 duration-200" href="#">Projects</a>
+<a class="text-[#ff7255] border-b-2 border-[#ff7255] pb-1 active:scale-95 duration-200" href="#">Live Feed</a>
+<a class="text-[#a4a5ff]/70 hover:text-[#a4a5ff] transition-colors active:scale-95 duration-200" href="#">Voting</a>
+<a class="text-[#a4a5ff]/70 hover:text-[#a4a5ff] transition-colors active:scale-95 duration-200" href="#">Submit</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-[#a4a5ff] hover:bg-white/5 transition-all duration-300 rounded-full">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-2 text-[#a4a5ff] hover:bg-white/5 transition-all duration-300 rounded-full">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<div class="w-10 h-10 rounded-full overflow-hidden border border-outline-variant/30">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="close-up portrait of a digital artist in a neon-lit studio environment with purple and blue rim lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAZD26gRiAS7YVD8kotRqw-kESGDdSswYpEY99T9-aMKoWSudgTLdm2ze-JhSNmvNK1NZCfXVLu27xOw7yuYzxgv3WEjd_Uy7WOUSNqtqMyIlmlWDin5CK0ApoRxzR6VTrYhNApqFwjBsN39fkC2UqzqyfSMMftNmb9EjhXtWgqsX8pnFdSSrxjsV04RRKxB_JVgCSoYkxr171tZJ949V4lDWQxtmX6hb0t3UdKI7YNsL1xxa9xdBrZYQTyVa-CeYlnL-UXiAHv11Ah"/>
+</div>
+</div>
+</nav>
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-20 h-[calc(100vh-5rem)] w-64 bg-[#131318]/60 backdrop-blur-lg flex flex-col py-6 border-r border-white/5 z-40 hidden md:flex">
+<div class="px-6 mb-8">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">terminal</span>
+</div>
+<div>
+<p class="font-headline text-sm uppercase tracking-widest text-[#a4a5ff]">Terminal Alpha</p>
+<p class="text-[10px] text-on-surface-variant uppercase tracking-tighter">Superuser Node</p>
+</div>
+</div>
+</div>
+<div class="flex-1 space-y-1">
+<a class="flex items-center gap-4 px-6 py-3 text-[#a4a5ff]/60 hover:text-[#a4a5ff] hover:bg-white/5 hover:translate-x-1 transition-transform group" href="#">
+<span class="material-symbols-outlined text-xl">dashboard</span>
+<span class="font-headline text-sm uppercase tracking-widest">Dashboard</span>
+</a>
+<a class="flex items-center gap-4 px-6 py-3 text-[#a4a5ff]/60 hover:text-[#a4a5ff] hover:bg-white/5 hover:translate-x-1 transition-transform" href="#">
+<span class="material-symbols-outlined text-xl">monitoring</span>
+<span class="font-headline text-sm uppercase tracking-widest">Analytics</span>
+</a>
+<a class="flex items-center gap-4 px-6 py-3 text-[#a4a5ff]/60 hover:text-[#a4a5ff] hover:bg-white/5 hover:translate-x-1 transition-transform" href="#">
+<span class="material-symbols-outlined text-xl">group</span>
+<span class="font-headline text-sm uppercase tracking-widest">Team</span>
+</a>
+<a class="flex items-center gap-4 px-6 py-3 text-[#a4a5ff]/60 hover:text-[#a4a5ff] hover:bg-white/5 hover:translate-x-1 transition-transform" href="#">
+<span class="material-symbols-outlined text-xl">gavel</span>
+<span class="font-headline text-sm uppercase tracking-widest">Judging</span>
+</a>
+<a class="flex items-center gap-4 px-6 py-3 text-[#ff7255] bg-gradient-to-r from-[#ff7255]/10 to-transparent border-r-4 border-[#ff7255] active:scale-98 transition-all" href="#">
+<span class="material-symbols-outlined text-xl">description</span>
+<span class="font-headline text-sm uppercase tracking-widest">Submissions</span>
+</a>
+</div>
+<div class="px-6 mt-auto space-y-4">
+<button class="w-full py-3 bg-gradient-to-r from-primary-dim to-secondary-dim rounded-md text-on-surface font-headline text-sm font-bold tracking-widest hover:shadow-[0_0_15px_rgba(164,165,255,0.4)] transition-all">
+                VOTE NOW
+            </button>
+<a class="flex items-center gap-4 py-3 text-[#a4a5ff]/60 hover:text-error transition-colors" href="#">
+<span class="material-symbols-outlined text-xl">logout</span>
+<span class="font-headline text-sm uppercase tracking-widest">Logout</span>
+</a>
+</div>
+</aside>
+<!-- Main Content: Theater Layout -->
+<main class="pt-20 md:pl-64 min-h-screen flex flex-col items-center justify-center bg-surface relative overflow-hidden">
+<!-- Background decorative glow -->
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/5 rounded-full blur-[120px] pointer-events-none"></div>
+<!-- Feed Navigation Controls (Sides) -->
+<div class="fixed right-12 top-1/2 -translate-y-1/2 flex flex-col gap-4 z-30">
+<button class="w-12 h-12 rounded-full glass-panel flex items-center justify-center border border-white/10 hover:border-primary/50 text-primary transition-all active:scale-90">
+<span class="material-symbols-outlined">expand_less</span>
+</button>
+<button class="w-12 h-12 rounded-full glass-panel flex items-center justify-center border border-white/10 hover:border-secondary/50 text-secondary transition-all active:scale-90">
+<span class="material-symbols-outlined">expand_more</span>
+</button>
+</div>
+<div class="w-full max-w-6xl px-8 py-12 flex flex-col items-center relative z-10">
+<!-- Counter Top -->
+<div class="mb-6 flex items-center justify-between w-full">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+<span class="font-headline text-on-surface-variant uppercase tracking-[0.2em] text-xs">Live Submission Stream</span>
+</div>
+<div class="glass-panel px-4 py-1.5 rounded-full border border-white/5">
+<span class="font-headline text-primary font-bold tracking-widest">3 / 20</span>
+</div>
+</div>
+<!-- Video Player Theater -->
+<div class="w-full aspect-video bg-surface-container-lowest rounded-xl overflow-hidden border border-white/5 video-glow relative group">
+<img alt="Video Frame" class="w-full h-full object-cover opacity-80" data-alt="cinematic wide shot of a futuristic cyberpunk city with neon holograms and flying vehicles in a rainy night setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAaGij5Ww9ZJKTbAyr052WgzcFeTKexfacV9sq7UVWyIIDJKtAzo1C4B-owJ-BtQB8F1oGmEPQ7MASPwY7gCLQDwfVW599u0e8kvEOqO_DNkj_LTajM8FO-eKj-bTh1OHFqs6uhRFPbknBaoh-ro8tXzNPGW0q-JdT9TTHhgr-0UHLkgCDuUUwXpBSD1P_RSss_9rjQntbCzehfqhW9R0pRXO0to8LfdyRVNH-wGvJz7OUMoXsKGhWl4k87v_L3cqQphT6fHwIQ94sB"/>
+<!-- Play Overlay -->
+<div class="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/40 transition-all cursor-pointer">
+<div class="w-20 h-20 rounded-full border-2 border-primary/30 flex items-center justify-center bg-primary/10 backdrop-blur-sm group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-4xl text-on-surface" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</div>
+</div>
+<!-- Video Progress Bar -->
+<div class="absolute bottom-0 left-0 w-full h-1 bg-white/10">
+<div class="h-full bg-gradient-to-r from-primary to-secondary w-1/3 shadow-[0_0_10px_#ff7255]"></div>
+</div>
+</div>
+<!-- Project Info -->
+<div class="mt-8 w-full flex flex-col md:flex-row justify-between items-start gap-8">
+<div class="flex-1 space-y-4">
+<div class="space-y-1">
+<p class="font-headline text-xs text-secondary font-bold uppercase tracking-[0.3em]">Project Alpha-09</p>
+<h1 class="font-headline text-4xl font-extrabold tracking-tighter text-on-surface uppercase italic">NEURAL OVERLINK INTERFACE</h1>
+</div>
+<p class="text-on-surface-variant leading-relaxed max-w-2xl font-body">
+                        A decentralized bio-metric synchronization layer designed for the next generation of neural-link hardware. 
+                        Integrating real-time encryption with low-latency signal processing for seamless cognitive expansion.
+                    </p>
+<div class="flex items-center gap-4 pt-2">
+<div class="flex -space-x-3">
+<img alt="team member" class="w-8 h-8 rounded-full border-2 border-surface-container" data-alt="portrait of a young man with glasses and short dark hair in high-key lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDsH05CjWbyoDNMzwQ3_-VaGUyDGV79qZhfip5guIcQcN3PgTc9enA2Vjx2USK40O69AB0GKWgzMYSzkp0e1l8rUkljiRL9LfaaNCmhzK-ralReO_4WmYn-PUb2xFfJO_p3Fa5lRGK0s728gJcUQOsV5OWvGSqIwYQXQqkwMs6oK7pjGGuArafY8MomZ-zFZU6BpnwPKkD_vO52iShwjBch4cU7rkKvUKF_0VbRrsgoNPko_FRvGbVx5O4jX8LPOvhGLiSM65z_ZCLC"/>
+<img alt="team member" class="w-8 h-8 rounded-full border-2 border-surface-container" data-alt="smiling woman with long brown hair in a bright studio environment" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDLw9osLhMXY0p2ZqaZA6HuM8NxX4OujduyoUsLGOJ0F6GPT1fHFH_KRIPucUXXYvdM3lD0OURyPdcWJeGjcoTh65xuc92xa-cPSPYQ18sH-mCLXa8Pj0pVD-_EqTcSsfD04wBjXcBnDOvva9fvuBs18zUPuhwjIQI_lNeCuyfc73of3H-1cChpvjMoAGbVgJ1sdlkiQmUPLqDjxh1jzADKvCSpcaUHramiFk4SwBI-6RFqExn57H6q76hDMj2TO-DxU7PzYJ9ZSXU7"/>
+<div class="w-8 h-8 rounded-full border-2 border-surface-container bg-surface-container-highest flex items-center justify-center text-[10px] font-bold">+4</div>
+</div>
+<span class="font-headline text-xs uppercase tracking-widest text-primary/80">Developed by <span class="text-primary font-bold">Xenon Labs</span></span>
+</div>
+</div>
+<div class="flex flex-col items-end gap-6 min-w-[240px]">
+<div class="glass-panel p-6 rounded-xl border border-white/5 w-full">
+<div class="flex justify-between items-center mb-4">
+<span class="text-xs font-headline uppercase tracking-widest text-on-surface-variant">Voting Score</span>
+<span class="text-secondary font-bold">9.4</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container-highest rounded-full overflow-hidden mb-6">
+<div class="h-full bg-secondary w-[94%] shadow-[0_0_8px_rgba(255,114,85,0.4)]"></div>
+</div>
+<button class="w-full py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-md transition-all text-sm font-headline uppercase tracking-widest">
+                            Cast Vote
+                        </button>
+</div>
+<a class="group flex items-center gap-2 text-xs font-headline uppercase tracking-widest text-primary/60 hover:text-primary transition-colors" href="#">
+                        View full project details
+                        <span class="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</a>
+</div>
+</div>
+</div>
+</main>
+<!-- Background Elements -->
+<div class="fixed inset-0 pointer-events-none z-0">
+<div class="absolute top-[15%] right-[10%] w-px h-64 bg-gradient-to-b from-transparent via-primary/20 to-transparent"></div>
+<div class="absolute bottom-[20%] left-[5%] w-px h-32 bg-gradient-to-b from-transparent via-secondary/20 to-transparent"></div>
+<div class="absolute top-1/4 left-1/4 w-[1px] h-[1px] shadow-[0_0_100px_40px_rgba(164,165,255,0.03)]"></div>
+</div>
+</body></html>

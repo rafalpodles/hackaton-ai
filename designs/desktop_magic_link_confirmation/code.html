@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Manrope:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-tertiary-container": "#ffffff",
+              "primary-fixed-dim": "#8486ff",
+              "on-tertiary-fixed": "#1c0055",
+              "surface-bright": "#2c2b33",
+              "error-container": "#a70138",
+              "background": "#0e0e13",
+              "primary-dim": "#6264e9",
+              "inverse-primary": "#4c4cd2",
+              "on-secondary": "#460700",
+              "on-primary-fixed": "#000000",
+              "error-dim": "#d73357",
+              "surface-container-high": "#1f1f26",
+              "on-primary": "#1200a3",
+              "tertiary-fixed": "#b8a3ff",
+              "secondary": "#ff7255",
+              "on-surface-variant": "#acaab1",
+              "outline-variant": "#48474d",
+              "on-secondary-fixed": "#6b0f00",
+              "on-error": "#490013",
+              "on-tertiary": "#25006b",
+              "secondary-fixed": "#ffc4b7",
+              "primary-container": "#9496ff",
+              "surface-container": "#19191f",
+              "tertiary": "#a68cff",
+              "surface": "#0e0e13",
+              "surface-tint": "#a4a5ff",
+              "on-primary-container": "#0c0081",
+              "on-error-container": "#ffb2b9",
+              "tertiary-dim": "#7e51ff",
+              "primary": "#a4a5ff",
+              "error": "#ff6e84",
+              "outline": "#76747b",
+              "tertiary-container": "#7c4dff",
+              "surface-container-low": "#131318",
+              "on-secondary-fixed-variant": "#9f1b00",
+              "on-surface": "#f8f5fd",
+              "inverse-on-surface": "#55545a",
+              "surface-dim": "#0e0e13",
+              "secondary-fixed-dim": "#ffb09f",
+              "surface-variant": "#25252c",
+              "primary-fixed": "#9496ff",
+              "on-primary-fixed-variant": "#11009c",
+              "secondary-container": "#b82100",
+              "on-secondary-container": "#fff6f4",
+              "tertiary-fixed-dim": "#ab93ff",
+              "on-tertiary-fixed-variant": "#4000ad",
+              "surface-container-highest": "#25252c",
+              "on-background": "#f8f5fd",
+              "surface-container-lowest": "#000000",
+              "secondary-dim": "#db3411",
+              "inverse-surface": "#fbf8ff"
+            },
+            fontFamily: {
+              "headline": ["Space Grotesk"],
+              "body": ["Manrope"],
+              "label": ["Space Grotesk"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(37, 37, 44, 0.4);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        .neon-glow-primary {
+            box-shadow: 0 0 40px rgba(164, 165, 255, 0.1);
+        }
+        .text-gradient {
+            background: linear-gradient(135deg, #a4a5ff 0%, #ff7255 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface selection:bg-primary/30 min-h-screen overflow-hidden">
+<!-- Background Ambient Glows -->
+<div class="fixed inset-0 z-0 overflow-hidden pointer-events-none">
+<div class="absolute -top-[10%] -left-[5%] w-[40%] h-[40%] bg-primary/10 blur-[120px] rounded-full"></div>
+<div class="absolute top-[40%] -right-[10%] w-[50%] h-[50%] bg-secondary/5 blur-[150px] rounded-full"></div>
+<div class="absolute -bottom-[10%] left-[20%] w-[30%] h-[30%] bg-tertiary/10 blur-[100px] rounded-full"></div>
+</div>
+<!-- Main Navigation Shell (Suppressed context: Transactional/Focus task) -->
+<!-- Navigation is hidden for magic link confirmation to focus the user on the mailbox task -->
+<main class="relative z-10 flex flex-col items-center justify-center min-h-screen px-6">
+<!-- Header Brand Anchor -->
+<div class="absolute top-12 left-1/2 -translate-x-1/2">
+<h1 class="font-headline text-2xl font-bold tracking-tighter text-primary uppercase">
+                NEON SYNDICATE
+            </h1>
+</div>
+<!-- Magic Link Confirmation Card -->
+<div class="glass-panel w-full max-w-[540px] p-12 rounded-xl neon-glow-primary border border-outline-variant/15 flex flex-col items-center text-center">
+<!-- Animated Icon Section -->
+<div class="relative mb-10 group">
+<div class="absolute inset-0 bg-primary-dim/20 blur-2xl rounded-full scale-150 transition-transform group-hover:scale-110"></div>
+<div class="relative w-24 h-24 flex items-center justify-center bg-surface-container-highest rounded-full border border-primary/20">
+<span class="material-symbols-outlined text-5xl text-primary" style="font-variation-settings: 'FILL' 0, 'wght' 300;">
+                        mail
+                    </span>
+<!-- Accent element for "Magic" feel -->
+<div class="absolute -top-1 -right-1">
+<span class="material-symbols-outlined text-secondary text-2xl" style="font-variation-settings: 'FILL' 1;">
+                            auto_awesome
+                        </span>
+</div>
+</div>
+</div>
+<!-- Content Area -->
+<div class="space-y-6">
+<h2 class="font-headline text-4xl font-bold tracking-tight text-on-surface">
+                    Check your email!
+                </h2>
+<div class="space-y-4">
+<p class="text-on-surface-variant text-lg leading-relaxed">
+                        We sent a magic link to <span class="text-primary font-medium">jan.kowalski@spyrosoft.com</span>
+</p>
+<div class="py-4 px-6 bg-surface-container-lowest rounded-lg border-l-2 border-secondary/50">
+<p class="text-on-surface/80 text-sm font-label tracking-wide">
+                            Click the link in your email to log in. <br/>
+                            It expires in <span class="text-secondary font-bold">15 minutes</span>.
+                        </p>
+</div>
+</div>
+</div>
+<!-- Action Area -->
+<div class="mt-12 w-full pt-8 border-t border-outline-variant/10 flex flex-col gap-4">
+<button class="w-full h-14 bg-gradient-to-br from-primary-dim to-secondary-dim text-on-primary-container font-label font-bold tracking-widest uppercase rounded-lg shadow-lg hover:shadow-primary/20 active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2">
+                    Open Mail App
+                    <span class="material-symbols-outlined text-xl">open_in_new</span>
+</button>
+<div class="flex flex-col gap-3 mt-4">
+<button class="text-on-surface-variant hover:text-primary transition-colors text-sm font-label uppercase tracking-wider flex items-center justify-center gap-2 group">
+                        Didn't get it? <span class="underline decoration-primary/30 group-hover:decoration-primary transition-all">Send again</span>
+</button>
+<button class="text-on-surface-variant/60 hover:text-on-surface transition-colors text-xs font-label uppercase tracking-widest">
+                        Use a different email
+                    </button>
+</div>
+</div>
+</div>
+<!-- Tech Footer Decoration -->
+<div class="mt-12 opacity-30 flex items-center gap-4">
+<div class="h-[1px] w-12 bg-outline-variant"></div>
+<span class="font-label text-[10px] tracking-[0.3em] uppercase">Security Protocol Alpha-9</span>
+<div class="h-[1px] w-12 bg-outline-variant"></div>
+</div>
+</main>
+<!-- Decorative Corner Elements -->
+<div class="fixed top-0 right-0 p-8 opacity-20 pointer-events-none hidden lg:block">
+<div class="font-label text-right text-[10px] leading-relaxed tracking-tighter">
+            NODE_ST_018<br/>
+            AUTH_TYPE: MAGIC_LINK<br/>
+            LATENCY: 14MS
+        </div>
+</div>
+<div class="fixed bottom-0 left-0 p-8 opacity-20 pointer-events-none hidden lg:block">
+<div class="w-32 h-32 border-l border-b border-outline-variant"></div>
+</div>
+</body></html>

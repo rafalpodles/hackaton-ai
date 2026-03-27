@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Vote for your favorites - NEON SYNDICATE</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Manrope:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-tertiary-container": "#ffffff",
+              "primary-fixed-dim": "#8486ff",
+              "on-tertiary-fixed": "#1c0055",
+              "surface-bright": "#2c2b33",
+              "error-container": "#a70138",
+              "background": "#0e0e13",
+              "primary-dim": "#6264e9",
+              "inverse-primary": "#4c4cd2",
+              "on-secondary": "#460700",
+              "on-primary-fixed": "#000000",
+              "error-dim": "#d73357",
+              "surface-container-high": "#1f1f26",
+              "on-primary": "#1200a3",
+              "tertiary-fixed": "#b8a3ff",
+              "secondary": "#ff7255",
+              "on-surface-variant": "#acaab1",
+              "outline-variant": "#48474d",
+              "on-secondary-fixed": "#6b0f00",
+              "on-error": "#490013",
+              "on-tertiary": "#25006b",
+              "secondary-fixed": "#ffc4b7",
+              "primary-container": "#9496ff",
+              "surface-container": "#19191f",
+              "tertiary": "#a68cff",
+              "surface": "#0e0e13",
+              "surface-tint": "#a4a5ff",
+              "on-primary-container": "#0c0081",
+              "on-error-container": "#ffb2b9",
+              "tertiary-dim": "#7e51ff",
+              "primary": "#a4a5ff",
+              "error": "#ff6e84",
+              "outline": "#76747b",
+              "tertiary-container": "#7c4dff",
+              "surface-container-low": "#131318",
+              "on-secondary-fixed-variant": "#9f1b00",
+              "on-surface": "#f8f5fd",
+              "inverse-on-surface": "#55545a",
+              "surface-dim": "#0e0e13",
+              "secondary-fixed-dim": "#ffb09f",
+              "surface-variant": "#25252c",
+              "primary-fixed": "#9496ff",
+              "on-primary-fixed-variant": "#11009c",
+              "secondary-container": "#b82100",
+              "on-secondary-container": "#fff6f4",
+              "tertiary-fixed-dim": "#ab93ff",
+              "on-tertiary-fixed-variant": "#4000ad",
+              "surface-container-highest": "#25252c",
+              "on-background": "#f8f5fd",
+              "secondary-dim": "#db3411",
+              "inverse-surface": "#fbf8ff"
+            },
+            fontFamily: {
+              "headline": ["Space Grotesk"],
+              "body": ["Manrope"],
+              "label": ["Space Grotesk"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body selection:bg-primary/30">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-surface-800/40 backdrop-blur-xl flex items-center justify-between px-8 h-20 w-full shadow-[0_0_20px_rgba(70,70,204,0.1)]">
+<div class="flex items-center gap-12">
+<span class="text-2xl font-bold tracking-tighter text-[#a4a5ff] uppercase font-headline">NEON SYNDICATE</span>
+<div class="hidden md:flex items-center gap-8 font-label text-sm uppercase tracking-widest">
+<a class="text-[#a4a5ff]/70 hover:text-[#a4a5ff] transition-colors hover:bg-white/5 transition-all duration-300 px-2 py-1" href="#">Projects</a>
+<a class="text-[#a4a5ff]/70 hover:text-[#a4a5ff] transition-colors hover:bg-white/5 transition-all duration-300 px-2 py-1" href="#">Live Feed</a>
+<a class="text-[#ff7255] border-b-2 border-[#ff7255] pb-1" href="#">Voting</a>
+<a class="text-[#a4a5ff]/70 hover:text-[#a4a5ff] transition-colors hover:bg-white/5 transition-all duration-300 px-2 py-1" href="#">Submit</a>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<button class="material-symbols-outlined text-[#a4a5ff]/70 hover:text-[#a4a5ff] active:scale-95 duration-200" data-icon="notifications">notifications</button>
+<button class="material-symbols-outlined text-[#a4a5ff]/70 hover:text-[#a4a5ff] active:scale-95 duration-200" data-icon="settings">settings</button>
+<img alt="User Profile" class="w-10 h-10 rounded-full border border-primary/20" data-alt="close-up portrait of a professional male with short dark hair and clean-shaven face against a minimalist dark studio background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBmGIVCDye3MkUGadrUagMmZ1K_Wff5IDExKAr7INGD4DaN42LWy08bCw_3MpCFG3ZnUAMNTo6s86RlDhU1GhDbTl3F_zYCJqWuLc5KJWX0PGQaJNSqGd7DonxIPfLJw0JQ0a0LcWSHY9mng8_tZp2IkKj9SrXa2EZK1-66dyy-M2fBrY4jpCk_krYt7iSZHZLMQpFEpsJIbvy7hGXQhIdBJ4O3pDOS6F134iUya8xQGHzQfx7hOdJuTkpV288JiFFH9bmNBH7MmHEJ"/>
+</div>
+</nav>
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-20 h-[calc(100vh-5rem)] w-64 bg-[#131318]/60 backdrop-blur-lg flex flex-col py-6 border-r border-white/5 font-label text-sm uppercase tracking-widest hidden md:flex">
+<div class="flex flex-col gap-2 flex-grow">
+<a class="flex items-center gap-4 px-6 py-4 text-[#a4a5ff]/60 hover:text-[#a4a5ff] hover:bg-white/5 hover:translate-x-1 transition-transform active:scale-98" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-4 px-6 py-4 text-[#a4a5ff]/60 hover:text-[#a4a5ff] hover:bg-white/5 hover:translate-x-1 transition-transform active:scale-98" href="#">
+<span class="material-symbols-outlined" data-icon="monitoring">monitoring</span>
+<span>Analytics</span>
+</a>
+<a class="flex items-center gap-4 px-6 py-4 text-[#a4a5ff]/60 hover:text-[#a4a5ff] hover:bg-white/5 hover:translate-x-1 transition-transform active:scale-98" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span>Team</span>
+</a>
+<a class="flex items-center gap-4 px-6 py-4 text-[#ff7255] bg-gradient-to-r from-[#ff7255]/10 to-transparent border-r-4 border-[#ff7255] hover:translate-x-1 transition-transform active:scale-98" href="#">
+<span class="material-symbols-outlined" data-icon="gavel">gavel</span>
+<span>Judging</span>
+</a>
+<a class="flex items-center gap-4 px-6 py-4 text-[#a4a5ff]/60 hover:text-[#a4a5ff] hover:bg-white/5 hover:translate-x-1 transition-transform active:scale-98" href="#">
+<span class="material-symbols-outlined" data-icon="description">description</span>
+<span>Submissions</span>
+</a>
+</div>
+<div class="px-6 py-4">
+<button class="w-full bg-gradient-to-br from-primary-dim to-secondary-dim text-on-surface font-bold py-3 rounded-lg shadow-[0_0_15px_rgba(164,165,255,0.3)] hover:scale-[1.02] active:scale-95 transition-all">
+                VOTE NOW
+            </button>
+</div>
+<div class="mt-auto border-t border-white/5">
+<a class="flex items-center gap-4 px-6 py-4 text-[#a4a5ff]/60 hover:text-[#a4a5ff] hover:bg-white/5 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span>Logout</span>
+</a>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="ml-64 mt-20 p-12 min-h-screen">
+<header class="mb-12 flex justify-between items-end">
+<div>
+<h1 class="text-5xl font-extrabold font-headline tracking-tighter mb-4 text-on-surface">Vote for your favorites</h1>
+<p class="text-on-surface-variant max-w-2xl text-lg font-light leading-relaxed">Cast your final ballot for the Syndicate Alpha awards. Your decision shapes the future of the neon-verse. One vote per category.</p>
+</div>
+<div class="flex items-center gap-4 text-sm font-label uppercase tracking-tighter bg-surface-container-high px-4 py-2 rounded-full border border-outline-variant/10">
+<span class="text-secondary">Ends in:</span>
+<span class="text-primary font-bold">14h : 22m : 05s</span>
+</div>
+</header>
+<!-- Voting Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8 h-[calc(100vh-28rem)]">
+<!-- Category: Best Overall -->
+<section class="flex flex-col bg-surface-container-low rounded-xl overflow-hidden shadow-2xl">
+<div class="p-6 bg-surface-container flex items-center justify-between">
+<h2 class="font-headline font-bold text-xl uppercase tracking-widest text-primary">Best Overall</h2>
+<span class="material-symbols-outlined text-primary/40" data-icon="stars">stars</span>
+</div>
+<div class="flex-grow overflow-y-auto p-4 space-y-4 hide-scrollbar">
+<!-- Project Card: Selected -->
+<div class="group relative bg-surface-container-high p-4 rounded-lg border-2 border-primary shadow-[0_0_20px_rgba(164,165,255,0.2)] cursor-pointer transition-all duration-300">
+<div class="flex items-start gap-4">
+<div class="w-16 h-16 rounded bg-surface-container-lowest overflow-hidden flex-shrink-0">
+<img alt="Cyber Grid Logo" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" data-alt="vibrant abstract digital interface with neon grid lines and glowing data points in deep purple and cyan" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCqRbfxH4EAowDxt5wNCeIKjWoZ7D735vhbso4xNbwry0shr83d1qDwdyOl3um8VeATVaceCJ_konGhdEpbfmTCgx9ZD94PBpVARi6PCpbvYhN8QYWjpZUszlZCBnGUzknFZspQ367Q3bqzCbMofHPCSejB9O8-_-3usrRwBYaHGbm-COJaWKzZ2380xUaN3eZPTed7S39sQ_hFmiQu6ZkykK_JwgMBcFoViDKBgOC1c5k5WvOR6bMjDxdXvvgVtLtEZ3o-5sAvboQE"/>
+</div>
+<div class="flex-grow">
+<h3 class="font-headline font-bold text-on-surface">Project: NEON GRID</h3>
+<p class="text-xs text-on-surface-variant mt-1 line-clamp-2">Decentralized logistics for megacity resource management.</p>
+</div>
+<span class="material-symbols-outlined text-primary text-2xl" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+</div>
+<!-- Project Card: Regular -->
+<div class="group relative bg-surface-container-low p-4 rounded-lg border border-outline-variant/10 hover:border-primary/50 cursor-pointer transition-all duration-300">
+<div class="flex items-start gap-4">
+<div class="w-16 h-16 rounded bg-surface-container-lowest overflow-hidden flex-shrink-0">
+<img alt="Aether UI Logo" class="w-full h-full object-cover grayscale opacity-50 group-hover:opacity-100 group-hover:grayscale-0 transition-all duration-500" data-alt="minimalist architectural rendering of a brutalist concrete structure with sharp shadows and violet neon light accents" src="https://lh3.googleusercontent.com/aida-public/AB6AXuADOSTc9dz7HqcvPff9a9FNnpnLHXuMfWxjW-Sdi29oVF64Vc_p-QPw1ThJ5UyuuDclih7UUCq9hHeFI6xXox6FUQt2uI0QHbqV64AiTX0zCVIVank_7xQ9lezx3MYKroPEbf1KqvgiDyWQn4hC8JAC0eWw6Z9kHFtSjWPWVuaPGz32-8BQN4D7w6-_lGofUQx-RVQoJsYlV7tuumMl8XFtSpPnJ0s_cw44uyg3IjaYw-XCINdWlvUfqJhZ1WUD1whjlIBRDvT1DLdn"/>
+</div>
+<div class="flex-grow">
+<h3 class="font-headline font-bold text-on-surface/80 group-hover:text-on-surface">Aether UI</h3>
+<p class="text-xs text-on-surface-variant mt-1 line-clamp-2">The first biometric navigation system for neural links.</p>
+</div>
+</div>
+</div>
+<!-- More cards for scrolling -->
+<div class="group relative bg-surface-container-low p-4 rounded-lg border border-outline-variant/10 hover:border-primary/50 cursor-pointer transition-all duration-300">
+<div class="flex items-start gap-4">
+<div class="w-16 h-16 rounded bg-surface-container-lowest overflow-hidden flex-shrink-0">
+<img alt="Specter Tech Logo" class="w-full h-full object-cover grayscale opacity-50 group-hover:opacity-100 group-hover:grayscale-0 transition-all duration-500" data-alt="close-up of complex circuit board with glowing blue pathways and microchips in dark tech atmosphere" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDOexWyc1L94dKN5-xpnJUGpz8qEEwaAvuyv-HXgndiMPfhamUnnfk7r_fUebG8rOBcaUWOwSTjZvUT0r6qextENbS2sEF_JX6cDfyuqn1YBkUH4NmGKbh5Qxp9nxJ58TP9KmUL1mHAzIs_DAVUjf205gFIuazXLEOWPOGtrFerCpQ-0IaoY8NYYq20onRNVpMmG4RDuhwXtzfwVau8vgrPnYysiaVx2cYmq22C4OkYnhMGk-tV5d-kq3_b_jTuhqfr1D9_80hEhptR"/>
+</div>
+<div class="flex-grow">
+<h3 class="font-headline font-bold text-on-surface/80 group-hover:text-on-surface">Specter Protocol</h3>
+<p class="text-xs text-on-surface-variant mt-1 line-clamp-2">Privacy-first communication layer for underground syndicates.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Category: Best Demo/UX -->
+<section class="flex flex-col bg-surface-container-low rounded-xl overflow-hidden shadow-2xl">
+<div class="p-6 bg-surface-container flex items-center justify-between">
+<h2 class="font-headline font-bold text-xl uppercase tracking-widest text-primary">Best Demo/UX</h2>
+<span class="material-symbols-outlined text-primary/40" data-icon="gesture">gesture</span>
+</div>
+<div class="flex-grow overflow-y-auto p-4 space-y-4 hide-scrollbar">
+<!-- Project Card -->
+<div class="group relative bg-surface-container-low p-4 rounded-lg border border-outline-variant/10 hover:border-primary/50 cursor-pointer transition-all duration-300">
+<div class="flex items-start gap-4">
+<div class="w-16 h-16 rounded bg-surface-container-lowest overflow-hidden flex-shrink-0">
+<img alt="Fluid Motion Logo" class="w-full h-full object-cover grayscale opacity-50 group-hover:opacity-100 group-hover:grayscale-0 transition-all duration-500" data-alt="liquid metal surface reflecting pink and blue neon lights with ripples and smooth textures" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA_aqf49PTibO4liqbk2hzu8J7OMludOfxJ136Tg9a7E8POR08PwDJOv2seK2Ga2x3M2UuvGxj-xWQAGAsTq00HSncljbypCnw89O_5wgjYp-VmbwaxI-8-tOOKjFzKXTcvS_5yI4UeCzdpHkFYup-E9m_G-Z-8JOY2Pvx_vyDrNrbTOAdrBXvBoF9dhpov-AmQb54M1Nx94MA8DkG69TJysLJvNgkYSSCrP0Kh4hxwqXb0jybdGMwRDqLBJdqyxyjZ2djRZv5uAFlL"/>
+</div>
+<div class="flex-grow">
+<h3 class="font-headline font-bold text-on-surface/80 group-hover:text-on-surface">Fluid Motion</h3>
+<p class="text-xs text-on-surface-variant mt-1 line-clamp-2">Ultra-smooth animation engine for low-latency displays.</p>
+</div>
+</div>
+</div>
+<!-- Selected Card -->
+<div class="group relative bg-surface-container-high p-4 rounded-lg border-2 border-primary shadow-[0_0_20px_rgba(164,165,255,0.2)] cursor-pointer transition-all duration-300">
+<div class="flex items-start gap-4">
+<div class="w-16 h-16 rounded bg-surface-container-lowest overflow-hidden flex-shrink-0">
+<img alt="Oculus OS Logo" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" data-alt="futuristic heads-up display with circular menus and technical data overlays in cyan light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5smqmWEotOcba9iLPX0YElIZKzlk_rG9trQ8e6jjr5p6aoBvZyWTI5XNOwnVzaMcWhcQ5yXIDlFunhoQTcpSinr9fn__D-TkPfH2DvCfZHJ6_-vkPDcZBOXqnuuaIlFQ0fk_rsneU9nGnBnH2_uAGre7a8SeM4PKJJBX3Zd8Ly5s_f_cWN9rgBdnbOq8wvBITnIhXnAJ9FFqNpMDeBhigytfUbLvhoFbkN0vAijC3OMO565XzjMNSJlXVPaD8tmIXyiQuD3aWTOJX"/>
+</div>
+<div class="flex-grow">
+<h3 class="font-headline font-bold text-on-surface">Oculus OS</h3>
+<p class="text-xs text-on-surface-variant mt-1 line-clamp-2">Spatial operating system for immersive workstations.</p>
+</div>
+<span class="material-symbols-outlined text-primary text-2xl" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+</div>
+<div class="group relative bg-surface-container-low p-4 rounded-lg border border-outline-variant/10 hover:border-primary/50 cursor-pointer transition-all duration-300">
+<div class="flex items-start gap-4">
+<div class="w-16 h-16 rounded bg-surface-container-lowest overflow-hidden flex-shrink-0">
+<img alt="Vortex UX Logo" class="w-full h-full object-cover grayscale opacity-50 group-hover:opacity-100 group-hover:grayscale-0 transition-all duration-500" data-alt="high-tech central processing unit with glowing orange cores and complex cooling pipes" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBc5mV9bq4_sL6bUfooyL9n7ndxqjIKW89DShlzhlKFDGmsfUw9xB2jWH7w4yRKwJk3S0UV8T-t75l2vCzURyja0yU21ePk-3TpyDGbuYe5UQESfvPIrkLkn3aicfXJLTDljrNfJEo6g6jOKWdCYmqd1uTIbibPgVW2oRFYxf5aFqcdJQZZ-t4dNEHnL26VlMJTPcyLkrnbQK1z5YSUxXSJaQo87O0hlMp81h10FggsN16_WQAdYB93eYPWVjufIkC8CinWDW8bXw1a"/>
+</div>
+<div class="flex-grow">
+<h3 class="font-headline font-bold text-on-surface/80 group-hover:text-on-surface">Vortex UX</h3>
+<p class="text-xs text-on-surface-variant mt-1 line-clamp-2">A revolutionary take on data visualization and tactile feedback.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Category: Most Creative -->
+<section class="flex flex-col bg-surface-container-low rounded-xl overflow-hidden shadow-2xl">
+<div class="p-6 bg-surface-container flex items-center justify-between">
+<h2 class="font-headline font-bold text-xl uppercase tracking-widest text-primary">Most Creative</h2>
+<span class="material-symbols-outlined text-primary/40" data-icon="palette">palette</span>
+</div>
+<div class="flex-grow overflow-y-auto p-4 space-y-4 hide-scrollbar">
+<div class="group relative bg-surface-container-low p-4 rounded-lg border border-outline-variant/10 hover:border-primary/50 cursor-pointer transition-all duration-300">
+<div class="flex items-start gap-4">
+<div class="w-16 h-16 rounded bg-surface-container-lowest overflow-hidden flex-shrink-0">
+<img alt="Ghost Notes Logo" class="w-full h-full object-cover grayscale opacity-50 group-hover:opacity-100 group-hover:grayscale-0 transition-all duration-500" data-alt="ethereal sound wave visualization with floating particles and soft lavender glow against dark void" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAnmvmwD1o7YQvQPLL5DOrhCWo-I1nLkKTfQRKb5dPrF-VxsGUCAuh-lsBb3Hx0hlO51OVEHSD3Nqg6aCap7YGenZZ1PbixZs3LBq3RCYUnjezWrdwyDT6e3pqRhkru3oqKBJjZDcLBsVuWRBGW5wfxkmBI1yTsUpkVlAMdm9dP_DzhTP2RahBb9gWvX-WrqVQ_zWBoSfTIq5TpB5R9NxPBDYG9JT_W3a0YIHViG3UTobtJICyVGnGcfYbpGXh7OZK6ZcoF9r7TdX-l"/>
+</div>
+<div class="flex-grow">
+<h3 class="font-headline font-bold text-on-surface/80 group-hover:text-on-surface">Ghost Notes</h3>
+<p class="text-xs text-on-surface-variant mt-1 line-clamp-2">Generative audio synthesis based on urban heat signatures.</p>
+</div>
+</div>
+</div>
+<div class="group relative bg-surface-container-low p-4 rounded-lg border border-outline-variant/10 hover:border-primary/50 cursor-pointer transition-all duration-300">
+<div class="flex items-start gap-4">
+<div class="w-16 h-16 rounded bg-surface-container-lowest overflow-hidden flex-shrink-0">
+<img alt="Prism Logo" class="w-full h-full object-cover grayscale opacity-50 group-hover:opacity-100 group-hover:grayscale-0 transition-all duration-500" data-alt="geometric glass prism refracting a single beam of light into a spectrum of vibrant colors on black background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCbs7leIn18mUDRU0UepIC9ae_z4hYVIJ7s6LA-TL8pd9Ys0YgZQ7ugkCApxHKLqKWsIgta9blSMVNRJ1t2b5Yldp7OnmIzPt84-QfkpAdkUN9e6v8HsMccF8jTZVNXl4K-ZZLztaCzqj8fKEiuB5yCRbJsU8jGyt0u2IcIw2vOVW6H0XPXqmRD9mQ5gq72w-OONMTx0zbaVOxA-5eDK0kx61Mfe9NzlYoNTbVmecne_9OL58hFE_s0pIK6LgZl_jViCi0RyFYX4v9E"/>
+</div>
+<div class="flex-grow">
+<h3 class="font-headline font-bold text-on-surface/80 group-hover:text-on-surface">Prism Engine</h3>
+<p class="text-xs text-on-surface-variant mt-1 line-clamp-2">Lighting engine that mimics the biological eye's light scatter.</p>
+</div>
+</div>
+</div>
+<!-- Selected Card -->
+<div class="group relative bg-surface-container-high p-4 rounded-lg border-2 border-primary shadow-[0_0_20px_rgba(164,165,255,0.2)] cursor-pointer transition-all duration-300">
+<div class="flex items-start gap-4">
+<div class="w-16 h-16 rounded bg-surface-container-lowest overflow-hidden flex-shrink-0">
+<img alt="Neon Flora Logo" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" data-alt="glowing biomechanical flower with crystalline petals and electric blue veins illuminated in a dark forest" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCvtTo1XyaD7LfZvvrMarS8knGmRq7A8Cj2InTRXIkqKr6OyLtM1a1gfn7qwR8bggC3Rf8puJq73dstU6kb_PZG4U3GAoHzQ6Un5lEmdfMtgE37JcXvIRBjc4J2IGDY7lVXI2j6vyzJN5y9QBlosjE4m_sePsx6qWoovU6J1QGmoWGPYS0Cpg48UoikIkBREjNsX-ZoCtX0zQ03hPAp_JY6y7nV7aMRho6CdTjaZ6TLn83UcuXuSMxlBbd_snfsMH74N8rohU4OqCmI"/>
+</div>
+<div class="flex-grow">
+<h3 class="font-headline font-bold text-on-surface">Neon Flora</h3>
+<p class="text-xs text-on-surface-variant mt-1 line-clamp-2">Algorithmic plant growth simulator for virtual ecologies.</p>
+</div>
+<span class="material-symbols-outlined text-primary text-2xl" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Footer Action -->
+<footer class="mt-12 flex items-center justify-between bg-surface-container-low p-8 rounded-2xl border border-white/5">
+<div class="flex gap-8">
+<div class="flex flex-col">
+<span class="text-xs font-label uppercase text-on-surface-variant tracking-widest mb-1">Selections Made</span>
+<span class="text-2xl font-headline font-bold text-on-surface">03 / 03</span>
+</div>
+<div class="h-10 w-[1px] bg-white/10 self-center"></div>
+<div class="flex flex-col">
+<span class="text-xs font-label uppercase text-on-surface-variant tracking-widest mb-1">Status</span>
+<span class="text-sm font-headline font-medium text-primary flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+                        READY TO TRANSMIT
+                    </span>
+</div>
+</div>
+<button class="px-12 py-4 bg-gradient-to-r from-primary-dim to-secondary-dim rounded-lg font-headline font-extrabold text-on-surface uppercase tracking-widest shadow-[0_0_30px_rgba(255,114,85,0.3)] hover:shadow-[0_0_50px_rgba(255,114,85,0.5)] hover:scale-[1.05] active:scale-95 transition-all duration-300 flex items-center gap-4">
+                Submit Votes
+                <span class="material-symbols-outlined" data-icon="send">send</span>
+</button>
+</footer>
+</main>
+<!-- Floating Background Elements for Texture -->
+<div class="fixed top-1/4 -right-24 w-96 h-96 bg-primary/10 rounded-full blur-[120px] pointer-events-none -z-10"></div>
+<div class="fixed bottom-0 -left-24 w-[500px] h-[500px] bg-secondary/5 rounded-full blur-[150px] pointer-events-none -z-10"></div>
+</body></html>

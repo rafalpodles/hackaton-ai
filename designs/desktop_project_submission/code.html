@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Project Submission - NEON SYNDICATE</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Manrope:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-tertiary-container": "#ffffff",
+              "primary-fixed-dim": "#8486ff",
+              "on-tertiary-fixed": "#1c0055",
+              "surface-bright": "#2c2b33",
+              "error-container": "#a70138",
+              "background": "#0e0e13",
+              "primary-dim": "#6264e9",
+              "inverse-primary": "#4c4cd2",
+              "on-secondary": "#460700",
+              "on-primary-fixed": "#000000",
+              "error-dim": "#d73357",
+              "surface-container-high": "#1f1f26",
+              "on-primary": "#1200a3",
+              "tertiary-fixed": "#b8a3ff",
+              "secondary": "#ff7255",
+              "on-surface-variant": "#acaab1",
+              "outline-variant": "#48474d",
+              "on-secondary-fixed": "#6b0f00",
+              "on-error": "#490013",
+              "on-tertiary": "#25006b",
+              "secondary-fixed": "#ffc4b7",
+              "primary-container": "#9496ff",
+              "surface-container": "#19191f",
+              "tertiary": "#a68cff",
+              "surface": "#0e0e13",
+              "surface-tint": "#a4a5ff",
+              "on-primary-container": "#0c0081",
+              "on-error-container": "#ffb2b9",
+              "tertiary-dim": "#7e51ff",
+              "primary": "#a4a5ff",
+              "error": "#ff6e84",
+              "outline": "#76747b",
+              "tertiary-container": "#7c4dff",
+              "surface-container-low": "#131318",
+              "on-secondary-fixed-variant": "#9f1b00",
+              "on-surface": "#f8f5fd",
+              "inverse-on-surface": "#55545a",
+              "surface-dim": "#0e0e13",
+              "secondary-fixed-dim": "#ffb09f",
+              "surface-variant": "#25252c",
+              "primary-fixed": "#9496ff",
+              "on-primary-fixed-variant": "#11009c",
+              "secondary-container": "#b82100",
+              "on-secondary-container": "#fff6f4",
+              "tertiary-fixed-dim": "#ab93ff",
+              "on-tertiary-fixed-variant": "#4000ad",
+              "surface-container-highest": "#25252c",
+              "on-background": "#f8f5fd",
+              "surface-container-lowest": "#000000",
+              "secondary-dim": "#db3411",
+              "inverse-surface": "#fbf8ff"
+            },
+            fontFamily: {
+              "headline": ["Space Grotesk"],
+              "body": ["Manrope"],
+              "label": ["Space Grotesk"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0e0e13; }
+        ::-webkit-scrollbar-thumb { background: #1f1f26; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #4646CC; }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body selection:bg-secondary selection:text-on-secondary">
+<!-- TopNavBar Shell -->
+<nav class="fixed top-0 w-full z-50 bg-surface-800/40 backdrop-blur-xl flex items-center justify-between px-8 h-20 w-full shadow-[0_0_20px_rgba(70,70,204,0.1)]">
+<div class="flex items-center gap-8">
+<span class="text-2xl font-bold tracking-tighter text-[#a4a5ff] uppercase font-headline">NEON SYNDICATE</span>
+<div class="hidden md:flex gap-6 items-center">
+<a class="font-headline tracking-tight text-[#a4a5ff]/70 hover:text-[#a4a5ff] transition-colors" href="#">Projects</a>
+<a class="font-headline tracking-tight text-[#a4a5ff]/70 hover:text-[#a4a5ff] transition-colors" href="#">Live Feed</a>
+<a class="font-headline tracking-tight text-[#a4a5ff]/70 hover:text-[#a4a5ff] transition-colors" href="#">Voting</a>
+<a class="font-headline tracking-tight text-[#ff7255] border-b-2 border-[#ff7255] pb-1" href="#">Submit</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 hover:bg-white/5 transition-all duration-300 rounded-full active:scale-95 text-[#a4a5ff]">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-2 hover:bg-white/5 transition-all duration-300 rounded-full active:scale-95 text-[#a4a5ff]">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<img alt="User Profile" class="w-10 h-10 rounded-full border border-primary/20" data-alt="close-up portrait of a young man with sharp features looking directly at camera with neutral expression, high fashion lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCrPm6TY93Jdsa51nrTY9caDy_yV2PyojCJBrV7MTRI_cLqS_paT0k86sWnSUwKIe8Mh0pD5lthJdE2Kj0HueLLNocDA9TPs-ksZ1EmpwVGcOKv1xw0RsTQfKXgeD2rnCdz__RK3HNJgRRV8O_MQz-frJ-BUjV387CWeNg68LfgGww2SgdVDRqDnAjtioh2CrYmgeUTgNDnRsMyeWUCtHiDXRIjIC0U5ItcFUGlyMYa98FubwWwx9l29Cm8XVtl8lUo-dQ0MPjiMBzG"/>
+</div>
+</nav>
+<!-- SideNavBar Shell -->
+<aside class="fixed left-0 top-20 h-[calc(100vh-5rem)] w-64 flex flex-col py-6 border-r border-white/5 bg-[#131318]/60 backdrop-blur-lg">
+<div class="px-6 mb-8">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-primary/20 rounded flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">terminal</span>
+</div>
+<div>
+<p class="font-headline text-sm uppercase tracking-widest text-primary font-bold">Terminal Alpha</p>
+<p class="text-[10px] text-primary/60 uppercase tracking-tighter">Superuser Node</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-4 px-6 py-4 text-[#a4a5ff]/60 hover:text-[#a4a5ff] hover:bg-white/5 hover:translate-x-1 transition-all duration-300 group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">dashboard</span>
+<span class="font-headline text-sm uppercase tracking-widest">Dashboard</span>
+</a>
+<a class="flex items-center gap-4 px-6 py-4 text-[#a4a5ff]/60 hover:text-[#a4a5ff] hover:bg-white/5 hover:translate-x-1 transition-all duration-300 group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">monitoring</span>
+<span class="font-headline text-sm uppercase tracking-widest">Analytics</span>
+</a>
+<a class="flex items-center gap-4 px-6 py-4 text-[#a4a5ff]/60 hover:text-[#a4a5ff] hover:bg-white/5 hover:translate-x-1 transition-all duration-300 group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">group</span>
+<span class="font-headline text-sm uppercase tracking-widest">Team</span>
+</a>
+<a class="flex items-center gap-4 px-6 py-4 text-[#a4a5ff]/60 hover:text-[#a4a5ff] hover:bg-white/5 hover:translate-x-1 transition-all duration-300 group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">gavel</span>
+<span class="font-headline text-sm uppercase tracking-widest">Judging</span>
+</a>
+<a class="flex items-center gap-4 px-6 py-4 text-[#ff7255] bg-gradient-to-r from-[#ff7255]/10 to-transparent border-r-4 border-[#ff7255] active:scale-98 transition-all" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">description</span>
+<span class="font-headline text-sm uppercase tracking-widest">Submissions</span>
+</a>
+</nav>
+<div class="px-6 mt-auto">
+<button class="w-full py-4 bg-gradient-to-r from-primary-dim to-secondary-dim rounded-md font-headline text-sm font-bold tracking-widest text-on-primary-container hover:shadow-[0_0_20px_rgba(164,165,255,0.3)] transition-all active:scale-95">
+                VOTE NOW
+            </button>
+<button class="flex items-center gap-4 py-6 text-[#a4a5ff]/60 hover:text-[#a4a5ff] transition-colors">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-headline text-sm uppercase tracking-widest">Logout</span>
+</button>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="ml-64 mt-20 p-12 max-w-6xl mx-auto">
+<!-- Header Section -->
+<header class="mb-12">
+<h1 class="font-headline text-5xl font-extrabold tracking-tighter text-on-surface mb-2">PROJECT SUBMISSION</h1>
+<p class="text-on-surface-variant text-lg max-w-2xl font-light">Document your build, showcase your journey, and submit your node to the syndicate for validation.</p>
+</header>
+<!-- Tech Stepper -->
+<div class="mb-16 flex items-center gap-2">
+<div class="h-1 flex-1 bg-secondary shadow-[0_0_10px_rgba(255,114,85,0.4)]"></div>
+<div class="h-1 flex-1 bg-secondary shadow-[0_0_10px_rgba(255,114,85,0.4)]"></div>
+<div class="h-1 flex-1 bg-surface-container-highest"></div>
+<div class="h-1 flex-1 bg-surface-container-highest"></div>
+<span class="ml-4 font-headline text-xs tracking-[0.3em] text-secondary font-bold">STEP 02 / 04</span>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+<!-- Form Side -->
+<div class="lg:col-span-7 space-y-10">
+<section class="space-y-8">
+<div class="space-y-2">
+<label class="font-headline text-[10px] tracking-[0.2em] text-primary uppercase font-bold">Deep Dive</label>
+<h2 class="font-headline text-2xl font-bold">What does your project do?</h2>
+<div class="relative group">
+<textarea class="w-full bg-surface-container-lowest border-none focus:ring-0 min-h-[140px] text-on-surface p-6 font-body text-lg leading-relaxed placeholder:text-on-surface-variant/30" placeholder="Describe the core utility and problem solved..."></textarea>
+<div class="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-primary to-secondary transform scale-x-0 group-focus-within:scale-x-100 transition-transform duration-500 origin-left"></div>
+</div>
+</div>
+<div class="space-y-2">
+<h2 class="font-headline text-2xl font-bold">How did you get the idea?</h2>
+<div class="relative group">
+<textarea class="w-full bg-surface-container-lowest border-none focus:ring-0 min-h-[140px] text-on-surface p-6 font-body text-lg leading-relaxed placeholder:text-on-surface-variant/30" placeholder="Tell us about the 'Eureka' moment..."></textarea>
+<div class="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-primary to-secondary transform scale-x-0 group-focus-within:scale-x-100 transition-transform duration-500 origin-left"></div>
+</div>
+</div>
+<div class="space-y-2">
+<h2 class="font-headline text-2xl font-bold">What was your journey?</h2>
+<div class="relative group">
+<textarea class="w-full bg-surface-container-lowest border-none focus:ring-0 min-h-[140px] text-on-surface p-6 font-body text-lg leading-relaxed placeholder:text-on-surface-variant/30" placeholder="Challenges, pivots, and breakthroughs..."></textarea>
+<div class="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-primary to-secondary transform scale-x-0 group-focus-within:scale-x-100 transition-transform duration-500 origin-left"></div>
+</div>
+</div>
+<div class="space-y-4">
+<h2 class="font-headline text-2xl font-bold">Tech stack used</h2>
+<div class="bg-surface-container-lowest p-6 flex flex-wrap gap-3">
+<span class="px-3 py-1 bg-primary/10 text-primary font-headline text-xs tracking-wider border border-primary/20 rounded-full flex items-center gap-2">
+                                NEXT.JS <span class="material-symbols-outlined text-[14px] cursor-pointer">close</span>
+</span>
+<span class="px-3 py-1 bg-primary/10 text-primary font-headline text-xs tracking-wider border border-primary/20 rounded-full flex items-center gap-2">
+                                TAILWIND <span class="material-symbols-outlined text-[14px] cursor-pointer">close</span>
+</span>
+<span class="px-3 py-1 bg-primary/10 text-primary font-headline text-xs tracking-wider border border-primary/20 rounded-full flex items-center gap-2">
+                                SUPABASE <span class="material-symbols-outlined text-[14px] cursor-pointer">close</span>
+</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm font-headline tracking-widest text-on-surface-variant w-32" placeholder="Add tech..." type="text"/>
+</div>
+</div>
+</section>
+</div>
+<!-- Asset Upload Side -->
+<div class="lg:col-span-5 space-y-8">
+<div class="space-y-6">
+<label class="font-headline text-[10px] tracking-[0.2em] text-primary uppercase font-bold">Proof of Build</label>
+<!-- Video Upload Zone -->
+<div class="group relative overflow-hidden bg-surface-container-low border-2 border-dashed border-outline-variant/30 hover:border-primary/50 transition-all duration-500 rounded-lg aspect-video flex flex-col items-center justify-center cursor-pointer">
+<div class="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<span class="material-symbols-outlined text-4xl text-primary-dim mb-4 group-hover:scale-110 transition-transform">videocam</span>
+<p class="font-headline text-sm font-bold tracking-widest mb-1">UPLOAD DEMO VIDEO</p>
+<p class="text-xs text-on-surface-variant font-light">MP4, MOV up to 250MB</p>
+</div>
+<!-- PDF Upload Zone -->
+<div class="group relative overflow-hidden bg-surface-container-low border-2 border-dashed border-outline-variant/30 hover:border-primary/50 transition-all duration-500 rounded-lg p-10 flex flex-col items-center justify-center cursor-pointer">
+<div class="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<span class="material-symbols-outlined text-4xl text-primary-dim mb-4 group-hover:scale-110 transition-transform">description</span>
+<p class="font-headline text-sm font-bold tracking-widest mb-1">TECHNICAL WHITE PAPER</p>
+<p class="text-xs text-on-surface-variant font-light">PDF up to 50MB</p>
+</div>
+<!-- Info Box -->
+<div class="bg-surface-container-high/50 p-6 rounded-lg flex gap-4">
+<span class="material-symbols-outlined text-secondary">info</span>
+<div>
+<p class="text-sm font-bold font-headline tracking-tight text-on-surface mb-1">SYNDICATE GUIDELINE</p>
+<p class="text-xs text-on-surface-variant leading-relaxed">Ensure your video shows the live interaction. Static mockups will be rejected during validation phase.</p>
+</div>
+</div>
+</div>
+<!-- Action Button -->
+<div class="pt-8">
+<button class="w-full h-20 bg-gradient-to-br from-primary via-primary-dim to-secondary flex items-center justify-center gap-4 group hover:shadow-[0_0_40px_rgba(164,165,255,0.2)] transition-all active:scale-[0.98]">
+<span class="font-headline text-xl font-extrabold tracking-[0.2em] text-on-primary-container">SUBMIT PROJECT</span>
+<span class="material-symbols-outlined text-on-primary-container group-hover:translate-x-2 transition-transform">bolt</span>
+</button>
+<p class="text-center mt-4 text-[10px] tracking-widest text-on-surface-variant font-headline uppercase">By submitting, you agree to the Syndicate protocol.</p>
+</div>
+</div>
+</div>
+<!-- Background Kinetic Texture -->
+<div class="fixed -bottom-40 -right-40 w-96 h-96 bg-primary/10 blur-[120px] rounded-full pointer-events-none"></div>
+<div class="fixed top-40 -left-20 w-80 h-80 bg-secondary/5 blur-[100px] rounded-full pointer-events-none"></div>
+</main>
+</body></html>

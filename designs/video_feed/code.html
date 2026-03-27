@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Manrope:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary-container": "#9496ff",
+              "on-primary-fixed": "#000000",
+              "on-secondary": "#460700",
+              "on-tertiary-fixed": "#1c0055",
+              "outline-variant": "#48474d",
+              "on-error-container": "#ffb2b9",
+              "on-error": "#490013",
+              "surface-container-high": "#1f1f26",
+              "on-tertiary-container": "#ffffff",
+              "error-container": "#a70138",
+              "tertiary-container": "#7c4dff",
+              "secondary": "#ff7255",
+              "surface-tint": "#a4a5ff",
+              "primary-fixed-dim": "#8486ff",
+              "secondary-fixed-dim": "#ffb09f",
+              "error": "#ff6e84",
+              "secondary-dim": "#db3411",
+              "on-surface-variant": "#acaab1",
+              "surface": "#0e0e13",
+              "tertiary-fixed": "#b8a3ff",
+              "surface-bright": "#2c2b33",
+              "primary-fixed": "#9496ff",
+              "surface-dim": "#0e0e13",
+              "secondary-fixed": "#ffc4b7",
+              "inverse-primary": "#4c4cd2",
+              "surface-container-highest": "#25252c",
+              "outline": "#76747b",
+              "on-primary": "#1200a3",
+              "surface-container": "#19191f",
+              "secondary-container": "#b82100",
+              "inverse-surface": "#fbf8ff",
+              "tertiary-dim": "#7e51ff",
+              "primary": "#a4a5ff",
+              "on-background": "#f8f5fd",
+              "tertiary": "#a68cff",
+              "on-secondary-fixed-variant": "#9f1b00",
+              "on-secondary-container": "#fff6f4",
+              "on-surface": "#f8f5fd",
+              "on-primary-container": "#0c0081",
+              "background": "#0e0e13",
+              "inverse-on-surface": "#55545a",
+              "on-secondary-fixed": "#6b0f00",
+              "error-dim": "#d73357",
+              "surface-container-low": "#131318",
+              "on-primary-fixed-variant": "#11009c",
+              "on-tertiary": "#25006b",
+              "tertiary-fixed-dim": "#ab93ff",
+              "surface-container-lowest": "#000000",
+              "surface-variant": "#25252c",
+              "primary-dim": "#6264e9",
+              "on-tertiary-fixed-variant": "#4000ad"
+            },
+            fontFamily: {
+              "headline": ["Space Grotesk"],
+              "body": ["Manrope"],
+              "label": ["Space Grotesk"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .video-container {
+            height: 100dvh;
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+        }
+        .glass-overlay {
+            background: linear-gradient(0deg, rgba(14,14,19,0.95) 0%, rgba(14,14,19,0.4) 40%, rgba(14,14,19,0) 100%);
+        }
+        .top-gradient {
+            background: linear-gradient(180deg, rgba(14,14,19,0.8) 0%, rgba(14,14,19,0) 100%);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface font-body selection:bg-primary-container selection:text-on-primary-container">
+<!-- Top Navigation Anchor (Manual suppression of default TopAppBar for full-screen focus, but maintaining identity) -->
+<header class="fixed top-0 w-full z-50 h-16 flex justify-between items-center px-6 top-gradient">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">terminal</span>
+<h1 class="font-headline font-bold tracking-tighter text-xl text-primary uppercase">SPYROSOFT AI</h1>
+</div>
+<div class="bg-surface-container-highest/40 backdrop-blur-md px-4 py-1.5 rounded-full border border-outline-variant/20 shadow-lg">
+<span class="font-label text-sm font-medium tracking-widest text-on-surface">3 / 20</span>
+</div>
+</header>
+<!-- Main Video Feed Canvas -->
+<main class="video-container flex flex-col items-center justify-center bg-surface-container-lowest">
+<!-- Video Center Stage -->
+<div class="relative w-full aspect-video md:max-w-4xl shadow-[0_0_100px_rgba(70,70,204,0.2)]">
+<div class="absolute inset-0 bg-primary/10 rounded-xl overflow-hidden group cursor-pointer">
+<!-- Video Placeholder with detailed prompt -->
+<img class="w-full h-full object-cover grayscale-[0.2] contrast-125" data-alt="Cinematic high-tech digital visualization of a neural network with glowing purple and orange light particles flowing through dark space" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBzehDu5S94r7t5poGKQvDwwJ4g322JThkRjd4WWGrFVVPC-eSNW8r9Zmc2ZpkYkL-66vXyKIApdPkpuuHId2HbhAb33Xw16XbzS2j_SWmxyyW2nE7U6BDd0EJ8OAxvat-atdvKnl-iVmDs8iytFpQCON7_KXt8tsDCV3SJ973ORVV_iTwk3VjUfOWJHrrfCYUx1BqVua-juyJLvWWXf30pMxTQgO1IfNOCT9D8-s22n6ZF8dw0JZbfCBE6J6C5LAdiKcRHJBwRswa6"/>
+<!-- Play Button Overlay -->
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="w-16 h-16 rounded-full bg-primary/20 backdrop-blur-xl border border-primary/30 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+<span class="material-symbols-outlined text-4xl text-on-surface" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</div>
+</div>
+<!-- Live Indicator -->
+<div class="absolute top-4 left-4 flex items-center gap-2 px-3 py-1 bg-secondary rounded-full">
+<span class="w-2 h-2 rounded-full bg-white animate-pulse"></span>
+<span class="font-label text-[10px] font-bold tracking-widest uppercase text-white">Project Showcase</span>
+</div>
+</div>
+</div>
+<!-- Right Side Vertical Actions (Social/Control) -->
+<div class="absolute right-4 bottom-32 flex flex-col gap-6 items-center z-30">
+<button class="flex flex-col items-center gap-1 group">
+<div class="w-12 h-12 rounded-full bg-surface-container-high/60 backdrop-blur-md border border-outline-variant/20 flex items-center justify-center group-active:scale-90 transition-all">
+<span class="material-symbols-outlined text-on-surface group-hover:text-primary transition-colors">favorite</span>
+</div>
+<span class="font-label text-[10px] text-on-surface-variant font-bold">1.2K</span>
+</button>
+<button class="flex flex-col items-center gap-1 group">
+<div class="w-12 h-12 rounded-full bg-surface-container-high/60 backdrop-blur-md border border-outline-variant/20 flex items-center justify-center group-active:scale-90 transition-all">
+<span class="material-symbols-outlined text-on-surface group-hover:text-primary transition-colors">chat_bubble</span>
+</div>
+<span class="font-label text-[10px] text-on-surface-variant font-bold">48</span>
+</button>
+<button class="flex flex-col items-center gap-1 group">
+<div class="w-12 h-12 rounded-full bg-surface-container-high/60 backdrop-blur-md border border-outline-variant/20 flex items-center justify-center group-active:scale-90 transition-all">
+<span class="material-symbols-outlined text-on-surface group-hover:text-primary transition-colors">share</span>
+</div>
+<span class="font-label text-[10px] text-on-surface-variant font-bold">Share</span>
+</button>
+</div>
+<!-- Navigation Arrows (Floating Control) -->
+<div class="absolute left-4 top-1/2 -translate-y-1/2 flex flex-col gap-4 z-30">
+<button class="w-10 h-10 rounded-full bg-white/5 backdrop-blur-sm border border-white/10 flex items-center justify-center hover:bg-white/10 transition-all active:scale-90">
+<span class="material-symbols-outlined text-primary">arrow_upward</span>
+</button>
+<button class="w-10 h-10 rounded-full bg-white/5 backdrop-blur-sm border border-white/10 flex items-center justify-center hover:bg-white/10 transition-all active:scale-90">
+<span class="material-symbols-outlined text-primary">arrow_downward</span>
+</button>
+</div>
+<!-- Information Overlay (Bottom) -->
+<section class="absolute bottom-0 left-0 w-full px-6 pb-28 glass-overlay z-20">
+<div class="space-y-4 max-w-lg">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl overflow-hidden border border-primary/40 p-0.5">
+<img class="w-full h-full object-cover rounded-lg" data-alt="Modern geometric avatar of a tech-focused professional in soft purple studio lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC0MhVCDMFgdnE_XmgIrD3J6wBcSGGM-HEaWd5NQGmnPzZBwFc2hJSA7ApQlEEdPilNB-Oyj_Bz2ygzBPhmTo1wOUTmWTfZTjjpCyocDJVB3CRYZlylBDwHH-RVYjv2__PAZWbDUfEIj6QjQvPRZ3a-MWdwC5IoXer5plVnAeokj-ZqSb0vsYRGyQCkYA0L1yhhNpZi-UwEdOMrh_ElqGs7VWB3E8qJb1KJUGlYRhsm_rKvAzCuH2Yh3KCQ0pMe-jaFVFjBAj7KPZdr"/>
+</div>
+<div>
+<h3 class="font-headline font-bold text-on-surface tracking-tight text-lg">CyberPulse Engine</h3>
+<p class="font-label text-xs text-primary font-semibold uppercase tracking-widest">Team Neon Labs</p>
+</div>
+</div>
+<p class="text-on-surface-variant text-sm leading-relaxed line-clamp-2 font-body">
+                    A revolutionary real-time data visualization framework built for massive parallel processing of neural link telemetry.
+                </p>
+<div class="flex items-center gap-4 pt-2">
+<button class="flex items-center gap-2 group">
+<span class="font-label text-xs font-bold uppercase tracking-widest text-secondary group-hover:underline">View full project</span>
+<span class="material-symbols-outlined text-sm text-secondary group-hover:translate-x-1 transition-transform">open_in_new</span>
+</button>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation (Shared Component Integration) -->
+<!-- Determined active item: "Projects" (Index 0) based on context of project browsing -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center pb-6 pt-3 px-4 bg-[#131318]/40 backdrop-blur-2xl z-50 rounded-t-2xl shadow-[0_-4px_20px_rgba(70,70,204,0.15)]">
+<!-- Projects Tab (Active) -->
+<a class="flex flex-col items-center justify-center bg-gradient-to-br from-[#4646CC] to-[#FF4D29] text-white rounded-xl px-4 py-1 scale-90 duration-150" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">grid_view</span>
+<span class="font-['Space_Grotesk'] text-[10px] uppercase tracking-widest mt-1">Projects</span>
+</a>
+<!-- Vote Tab -->
+<a class="flex flex-col items-center justify-center text-slate-500 hover:text-[#a4a5ff] transition-all" href="#">
+<span class="material-symbols-outlined">how_to_vote</span>
+<span class="font-['Space_Grotesk'] text-[10px] uppercase tracking-widest mt-1">Vote</span>
+</a>
+<!-- My Project Tab -->
+<a class="flex flex-col items-center justify-center text-slate-500 hover:text-[#a4a5ff] transition-all" href="#">
+<span class="material-symbols-outlined">rocket_launch</span>
+<span class="font-['Space_Grotesk'] text-[10px] uppercase tracking-widest mt-1">My Project</span>
+</a>
+</nav>
+<!-- Visual Polish: Ambient Glows -->
+<div class="fixed top-1/4 -left-20 w-64 h-64 bg-primary/10 blur-[120px] rounded-full pointer-events-none z-0"></div>
+<div class="fixed bottom-1/4 -right-20 w-64 h-64 bg-secondary/10 blur-[120px] rounded-full pointer-events-none z-0"></div>
+</body></html>

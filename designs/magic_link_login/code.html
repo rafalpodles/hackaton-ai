@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Manrope:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary-container": "#9496ff",
+              "on-primary-fixed": "#000000",
+              "on-secondary": "#460700",
+              "on-tertiary-fixed": "#1c0055",
+              "outline-variant": "#48474d",
+              "on-error-container": "#ffb2b9",
+              "on-error": "#490013",
+              "surface-container-high": "#1f1f26",
+              "on-tertiary-container": "#ffffff",
+              "error-container": "#a70138",
+              "tertiary-container": "#7c4dff",
+              "secondary": "#ff7255",
+              "surface-tint": "#a4a5ff",
+              "primary-fixed-dim": "#8486ff",
+              "secondary-fixed-dim": "#ffb09f",
+              "error": "#ff6e84",
+              "secondary-dim": "#db3411",
+              "on-surface-variant": "#acaab1",
+              "surface": "#0e0e13",
+              "tertiary-fixed": "#b8a3ff",
+              "surface-bright": "#2c2b33",
+              "primary-fixed": "#9496ff",
+              "surface-dim": "#0e0e13",
+              "secondary-fixed": "#ffc4b7",
+              "inverse-primary": "#4c4cd2",
+              "surface-container-highest": "#25252c",
+              "outline": "#76747b",
+              "on-primary": "#1200a3",
+              "surface-container": "#19191f",
+              "secondary-container": "#b82100",
+              "inverse-surface": "#fbf8ff",
+              "tertiary-dim": "#7e51ff",
+              "primary": "#a4a5ff",
+              "on-background": "#f8f5fd",
+              "tertiary": "#a68cff",
+              "on-secondary-fixed-variant": "#9f1b00",
+              "on-secondary-container": "#fff6f4",
+              "on-surface": "#f8f5fd",
+              "on-primary-container": "#0c0081",
+              "background": "#0e0e13",
+              "inverse-on-surface": "#55545a",
+              "on-secondary-fixed": "#6b0f00",
+              "error-dim": "#d73357",
+              "surface-container-low": "#131318",
+              "on-primary-fixed-variant": "#11009c",
+              "on-tertiary": "#25006b",
+              "tertiary-fixed-dim": "#ab93ff",
+              "surface-container-lowest": "#000000",
+              "surface-variant": "#25252c",
+              "primary-dim": "#6264e9",
+              "on-tertiary-fixed-variant": "#4000ad"
+            },
+            fontFamily: {
+              "headline": ["Space Grotesk"],
+              "body": ["Manrope"],
+              "label": ["Space Grotesk"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .glass-card {
+            background: rgba(31, 31, 38, 0.4);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        .kinetic-gradient {
+            background: linear-gradient(135deg, #4646CC 0%, #FF4D29 100%);
+        }
+        .text-gradient {
+            background: linear-gradient(135deg, #a4a5ff 0%, #ff7255 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .bg-mesh {
+            background-color: #0e0e13;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(70, 70, 204, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(255, 77, 41, 0.1) 0px, transparent 50%);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-mesh font-body text-on-surface min-h-screen flex flex-col selection:bg-primary/30">
+<!-- Global Header (Suppressed as per "Destination" Rule for Login pages) -->
+<main class="flex-grow flex items-center justify-center px-6 py-12 relative overflow-hidden">
+<!-- Ambient Glow Elements -->
+<div class="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 blur-[120px] rounded-full pointer-events-none"></div>
+<div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-secondary/10 blur-[120px] rounded-full pointer-events-none"></div>
+<div class="w-full max-w-md z-10">
+<!-- Glassmorphism Card -->
+<div class="glass-card p-8 md:p-12 rounded-xl border border-outline-variant/15 shadow-[0_0_50px_rgba(70,70,204,0.05)] text-center">
+<!-- Logo & Branding -->
+<div class="mb-10 flex flex-col items-center">
+<div class="mb-4 p-3 rounded-full bg-surface-container-highest/50 border border-outline-variant/20 inline-flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-3xl">terminal</span>
+</div>
+<span class="font-headline font-bold text-xl tracking-tighter text-gradient uppercase">
+                        SPYROSOFT AI HACKATHON
+                    </span>
+</div>
+<!-- Form Heading -->
+<div class="mb-8">
+<h1 class="font-headline text-3xl md:text-4xl font-bold tracking-tight text-on-surface mb-3">
+                        Welcome, hacker!
+                    </h1>
+<p class="text-on-surface-variant text-body-lg font-light leading-relaxed">
+                        Enter your email to access the showcase
+                    </p>
+</div>
+<!-- Action Form -->
+<form class="space-y-6 text-left" onsubmit="return false;">
+<div class="space-y-2">
+<label class="font-label text-xs uppercase tracking-[0.2em] text-primary/80 px-1" for="email">
+                            Email Address
+                        </label>
+<div class="relative group">
+<input class="w-full bg-surface-container-lowest border-0 border-b-2 border-outline-variant/30 px-4 py-4 focus:ring-0 focus:border-secondary transition-all text-on-surface placeholder:text-outline font-body rounded-t-lg" id="email" placeholder="name@company.com" required="" type="email"/>
+<!-- Animated Glow Line handled by Tailwind border-secondary focus -->
+</div>
+</div>
+<button class="kinetic-gradient w-full py-4 rounded-lg font-headline font-bold text-on-primary-fixed uppercase tracking-widest text-sm hover:scale-[1.02] active:scale-95 transition-all shadow-[0_10px_30px_rgba(255,77,41,0.2)] flex items-center justify-center gap-3 group" type="submit">
+<span>Send magic link</span>
+<span class="material-symbols-outlined text-xl group-hover:translate-x-1 transition-transform">bolt</span>
+</button>
+</form>
+<!-- Footer Context -->
+<div class="mt-10 pt-8 border-t border-outline-variant/10">
+<p class="text-sm text-outline font-light leading-relaxed">
+                        Check your inbox for the login link — <span class="text-on-surface-variant font-medium">no password needed.</span>
+</p>
+</div>
+</div>
+<!-- Footer Logo -->
+<div class="mt-12 text-center opacity-40 hover:opacity-100 transition-opacity">
+<p class="font-headline text-[10px] uppercase tracking-[0.4em] text-outline flex items-center justify-center gap-2">
+<span class="w-8 h-[1px] bg-outline/30"></span>
+                    SPYROSOFT
+                    <span class="w-8 h-[1px] bg-outline/30"></span>
+</p>
+</div>
+</div>
+</main>
+<!-- Global Footer Decoration (Optional, Minimalist) -->
+<div class="fixed bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/20 to-transparent pointer-events-none"></div>
+</body></html>

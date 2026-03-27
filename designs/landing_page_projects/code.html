@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Spyrosoft AI Hackathon - Projects</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Manrope:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary-container": "#9496ff",
+              "on-primary-fixed": "#000000",
+              "on-secondary": "#460700",
+              "on-tertiary-fixed": "#1c0055",
+              "outline-variant": "#48474d",
+              "on-error-container": "#ffb2b9",
+              "on-error": "#490013",
+              "surface-container-high": "#1f1f26",
+              "on-tertiary-container": "#ffffff",
+              "error-container": "#a70138",
+              "tertiary-container": "#7c4dff",
+              "secondary": "#ff7255",
+              "surface-tint": "#a4a5ff",
+              "primary-fixed-dim": "#8486ff",
+              "secondary-fixed-dim": "#ffb09f",
+              "error": "#ff6e84",
+              "secondary-dim": "#db3411",
+              "on-surface-variant": "#acaab1",
+              "surface": "#0e0e13",
+              "tertiary-fixed": "#b8a3ff",
+              "surface-bright": "#2c2b33",
+              "primary-fixed": "#9496ff",
+              "surface-dim": "#0e0e13",
+              "secondary-fixed": "#ffc4b7",
+              "inverse-primary": "#4c4cd2",
+              "surface-container-highest": "#25252c",
+              "outline": "#76747b",
+              "on-primary": "#1200a3",
+              "surface-container": "#19191f",
+              "secondary-container": "#b82100",
+              "inverse-surface": "#fbf8ff",
+              "tertiary-dim": "#7e51ff",
+              "primary": "#a4a5ff",
+              "on-background": "#f8f5fd",
+              "tertiary": "#a68cff",
+              "on-secondary-fixed-variant": "#9f1b00",
+              "on-secondary-container": "#fff6f4",
+              "on-surface": "#f8f5fd",
+              "on-primary-container": "#0c0081",
+              "background": "#0e0e13",
+              "inverse-on-surface": "#55545a",
+              "on-secondary-fixed": "#6b0f00",
+              "error-dim": "#d73357",
+              "surface-container-low": "#131318",
+              "on-primary-fixed-variant": "#11009c",
+              "on-tertiary": "#25006b",
+              "tertiary-fixed-dim": "#ab93ff",
+              "surface-container-lowest": "#000000",
+              "surface-variant": "#25252c",
+              "primary-dim": "#6264e9",
+              "on-tertiary-fixed-variant": "#4000ad"
+            },
+            fontFamily: {
+              "headline": ["Space Grotesk"],
+              "body": ["Manrope"],
+              "label": ["Space Grotesk"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .glass-card {
+            background: rgba(31, 31, 38, 0.4);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(164, 165, 255, 0.15);
+        }
+        .purple-glow:hover {
+            box-shadow: 0 0 20px rgba(70, 70, 204, 0.3);
+            border-color: rgba(164, 165, 255, 0.4);
+        }
+        .text-gradient {
+            background: linear-gradient(135deg, #a4a5ff 0%, #ff7255 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        body {
+            background-color: #0e0e13;
+            color: #f8f5fd;
+            font-family: 'Manrope', sans-serif;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-slate-950/40 backdrop-blur-xl shadow-[0_0_20px_rgba(70,70,204,0.1)] flex justify-between items-center px-6 h-16 w-full">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[#a4a5ff]" data-icon="terminal">terminal</span>
+<h1 class="text-xl font-bold tracking-tighter text-[#a4a5ff] font-['Space_Grotesk'] tracking-tight uppercase">SPYROSOFT AI</h1>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-slate-400 hover:bg-white/10 transition-all p-2 rounded-full" data-icon="search">search</button>
+<img alt="User profile avatar" class="w-8 h-8 rounded-full border border-primary/20" data-alt="close up headshot of a professional software engineer with a modern tech background and soft cinematic lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDSt9GTJxPFISbZsaTRED-AEt93cfxDSh_xIR89LXU26QhXpOm6rmWohl72BfsAptjN_1qFNe6ZRtyuZTUdsHHtFownFhfiUa5wdIgnGIJGC5mGLHxrEMg1XYWtIFXx5zcJlUSthuokze6O6efQwVw2TDdaF6gB_3MUIewrawSkDtfP1ipHbrtMOHiG_ev6Vr-SnQhlkrsIKh_Q2xZ0vAUnuu1qpqFijzLcS9i2GDHo6MZowBWBja4vmEVDvIPZ8OvDQprEzljRT7gg"/>
+</div>
+</header>
+<main class="pt-24 px-4 max-w-5xl mx-auto">
+<!-- Hero Section -->
+<div class="mb-10 text-center md:text-left">
+<h2 class="text-3xl md:text-5xl font-headline font-bold text-gradient tracking-tight mb-2">
+                HACKATHON 2024
+            </h2>
+<p class="text-on-surface-variant font-body text-sm md:text-base max-w-md">
+                Exploring the boundaries of generative AI and human creativity. 
+            </p>
+</div>
+<!-- Watch Demos CTA -->
+<div class="mb-10">
+<button class="w-full bg-gradient-to-br from-[#4646CC] to-[#FF4D29] text-white font-headline font-bold py-4 rounded-xl shadow-lg shadow-primary/20 flex items-center justify-center gap-3 active:scale-95 transition-all">
+<span class="material-symbols-outlined" data-icon="play_circle" data-weight="fill">play_circle</span>
+                WATCH ALL DEMOS
+            </button>
+</div>
+<!-- Project Grid -->
+<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+<!-- Project Card 1 -->
+<div class="glass-card purple-glow rounded-xl overflow-hidden flex flex-col transition-all duration-300">
+<div class="aspect-video relative overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="abstract neural network visualization with flowing blue and violet data streams in a dark digital space" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAgPrmFOaAX-MBz-STsiP8GGTIEIkrWCHvw39G_GeL01LT2NdEeS1KGDJrvFqHePIHnBZ5gYrA-aeRBOqcOk9a_i-V8sWKTy6zMzjWAPex63krN9xtFqXavHN-tQ0NLC5z5qSS9iEI-T3ThGgPOA2KeME-yP7dVxiHP0kwdUZB_aaIm30YwEUkK--fz1Dcr1h-6_uofvfd9PQ5Vnakztc5Pmn-dImLwl9GBxE6qloOI0E3meuiK6HVuXUCAnWdtiz82CGIof5rau-Mp"/>
+<div class="absolute top-2 right-2 px-2 py-0.5 bg-secondary-container/80 text-[10px] font-headline font-bold text-white rounded-full uppercase tracking-tighter">
+                        ML
+                    </div>
+</div>
+<div class="p-3 flex-1 flex flex-col">
+<h3 class="font-headline font-bold text-primary text-sm line-clamp-1 mb-1">NEURAL SYNC</h3>
+<p class="text-on-surface-variant text-[11px] leading-tight mb-3 line-clamp-2">Real-time brainwave to MIDI translation using LLMs.</p>
+<div class="mt-auto flex items-center gap-1.5 opacity-80">
+<span class="material-symbols-outlined text-[12px]" data-icon="groups">groups</span>
+<span class="text-[10px] font-label text-on-surface tracking-tight uppercase">Cyber Team 7</span>
+</div>
+</div>
+</div>
+<!-- Project Card 2 -->
+<div class="glass-card purple-glow rounded-xl overflow-hidden flex flex-col transition-all duration-300">
+<div class="aspect-video relative overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="liquid metal 3d shapes floating in a void with cinematic pink and purple reflections" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAUIUa4DzxG4nBb0B1bIcJ9mid0FDxyGzEB4cLSo0mbJmIENSVAYjUkO5CinwGyQ8bx7H4ouqKiuqy-NPrVGsg42wG2mI38ceF7nPXW-jgBC3JT7-um_MGcvFRvodCsRLf1-x1xuAtF5lwzKZ20WQAhARQ0MBP3PtxqJz-rJgbxaC7nbaqeZN6aXUQdvNUpy0bTCUdcPuoPnNZ2TE-Q6yd686aJ2j1nPFIbr_HrofLTbMKfst5utmxXijkePW1rmvagZnSdg8xCHzd3"/>
+<div class="absolute top-2 right-2 px-2 py-0.5 bg-primary-container/80 text-[10px] font-headline font-bold text-on-primary-container rounded-full uppercase tracking-tighter">
+                        UX
+                    </div>
+</div>
+<div class="p-3 flex-1 flex flex-col">
+<h3 class="font-headline font-bold text-primary text-sm line-clamp-1 mb-1">MORPH UI</h3>
+<p class="text-on-surface-variant text-[11px] leading-tight mb-3 line-clamp-2">Adaptive interface components that change with user mood.</p>
+<div class="mt-auto flex items-center gap-1.5 opacity-80">
+<span class="material-symbols-outlined text-[12px]" data-icon="groups">groups</span>
+<span class="text-[10px] font-label text-on-surface tracking-tight uppercase">Liquid Logic</span>
+</div>
+</div>
+</div>
+<!-- Project Card 3 -->
+<div class="glass-card purple-glow rounded-xl overflow-hidden flex flex-col transition-all duration-300">
+<div class="aspect-video relative overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="glowing circuit board patterns on a dark surface with neon purple highlights and shallow depth of field" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDUP6YHt7lFEatKcGzBFuGiEPwJRZwOEGRj85iGNsnA1enstPC_F0jMypiCUk4S2NsJe8fL4tGDY0TPJ4ap7TaB5jHKHRq_VDdL6-nYo_wb12iWOr1JB9_evH3mtSuAfEP0XIc8HOZVThBWMQ0wBeBqS19PJ9fRhrnFIsg08PpOHse4WP3gB7R9j6CNoz2QQv4G0JVGngnGMc5q93xpbRKPHPBWyVRgAJbW3nC7N-YtamHvXpl2bmUZJfzkV8SbBKhEA63Cbt2ZLewa"/>
+<div class="absolute top-2 right-2 px-2 py-0.5 bg-secondary-container/80 text-[10px] font-headline font-bold text-white rounded-full uppercase tracking-tighter">
+                        CYBER
+                    </div>
+</div>
+<div class="p-3 flex-1 flex flex-col">
+<h3 class="font-headline font-bold text-primary text-sm line-clamp-1 mb-1">SHIELD AI</h3>
+<p class="text-on-surface-variant text-[11px] leading-tight mb-3 line-clamp-2">Autonomous threat detection for legacy enterprise stacks.</p>
+<div class="mt-auto flex items-center gap-1.5 opacity-80">
+<span class="material-symbols-outlined text-[12px]" data-icon="groups">groups</span>
+<span class="text-[10px] font-label text-on-surface tracking-tight uppercase">Iron Core</span>
+</div>
+</div>
+</div>
+<!-- Project Card 4 -->
+<div class="glass-card purple-glow rounded-xl overflow-hidden flex flex-col transition-all duration-300">
+<div class="aspect-video relative overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="iridescent glass sphere refracting a futuristic city skyline with soft bokeh and neon orange highlights" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCBcuPod4r0kO8mPs1T73EV4lsOIKh7KqjN0ikc7qsWX56fZtMzrdCWT60963G3QJmxlNxAvHW5CEtiTefs3TirHVW-2-RqExR9ymyn7SadSrz-Po_t07Bq_6xvt8T8jCcFhhPspN9KIUTGgTx_a5V6sLYqv3pHXIUrvYAb_RP1u8l_jFay0Q8jRQCUAHx4WdS-CuS-TQ0CzlW1-vdB-9EVDAvGpIUaoTANobTtYUrMY3ApkjzGhJ9L3pd7jIg_D7XSuh8RT2Mvcro8"/>
+<div class="absolute top-2 right-2 px-2 py-0.5 bg-primary-container/80 text-[10px] font-headline font-bold text-on-primary-container rounded-full uppercase tracking-tighter">
+                        WEB3
+                    </div>
+</div>
+<div class="p-3 flex-1 flex flex-col">
+<h3 class="font-headline font-bold text-primary text-sm line-clamp-1 mb-1">PULSE LEDGER</h3>
+<p class="text-on-surface-variant text-[11px] leading-tight mb-3 line-clamp-2">Decentralized storage with AI-powered data deduplication.</p>
+<div class="mt-auto flex items-center gap-1.5 opacity-80">
+<span class="material-symbols-outlined text-[12px]" data-icon="groups">groups</span>
+<span class="text-[10px] font-label text-on-surface tracking-tight uppercase">Chain Masters</span>
+</div>
+</div>
+</div>
+<!-- Project Card 5 -->
+<div class="glass-card purple-glow rounded-xl overflow-hidden flex flex-col transition-all duration-300">
+<div class="aspect-video relative overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="satellite view of earth at night with complex web of glowing blue data connections across continents" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCh98f8fJavwrgw-ayGv6KnrgOMBzMEeqJ1ChoFgMf50kIxaDDb_F8Ne_S8dbXJpt1IXx30kxnSldF923Q4s9MA6eMn4JmZXvh6TUMAk490jEzxgwKc0wgm0xg95Kq6gSyv66xWukq1FlzoPrJ8XRM8cs7nPb3R2F_Wy-n8Tj8s-Tl1bhljjTJgc5RerzrPuEGh5sit4-Z-xk-s0kAoWCDb5VpjkN-lhvt73nKQpapJIr2gMPTr5OE0xO2Z5MCmweNIbRlIIDd21zFk"/>
+<div class="absolute top-2 right-2 px-2 py-0.5 bg-secondary-container/80 text-[10px] font-headline font-bold text-white rounded-full uppercase tracking-tighter">
+                        DEV
+                    </div>
+</div>
+<div class="p-3 flex-1 flex flex-col">
+<h3 class="font-headline font-bold text-primary text-sm line-clamp-1 mb-1">CODE FLOW</h3>
+<p class="text-on-surface-variant text-[11px] leading-tight mb-3 line-clamp-2">Visualizing git commits as a growing 3D organic forest.</p>
+<div class="mt-auto flex items-center gap-1.5 opacity-80">
+<span class="material-symbols-outlined text-[12px]" data-icon="groups">groups</span>
+<span class="text-[10px] font-label text-on-surface tracking-tight uppercase">Dev Green</span>
+</div>
+</div>
+</div>
+<!-- Project Card 6 -->
+<div class="glass-card purple-glow rounded-xl overflow-hidden flex flex-col transition-all duration-300">
+<div class="aspect-video relative overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="close up of a robotic hand touching a holographic interface with soft glowing particles" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCpljSun4SjdYQAqzIuohNKXw_lgopv3DZDB_tJ56orU4jSQPkhAe9vXnMkdxzt4bBiOHqJkoHKvF6V6NGjCHnBqgNLrsF6DbQnUcbA5nXBQ5NABnAD1t1Vvarisbh02YFzXdIYikLUDykDylBESvR6F6DxJhaa8Djs7wWPYs4Oo8PqbesUu9f83SDPZbf6VszZFJ_2hXo-7TO4FutXfpq1KkrOu2jn98z5aPzmgwmDgm4OdIJwK_sQYIvdhHb2rP4_LP87Agoi66O8"/>
+<div class="absolute top-2 right-2 px-2 py-0.5 bg-primary-container/80 text-[10px] font-headline font-bold text-on-primary-container rounded-full uppercase tracking-tighter">
+                        ROBOT
+                    </div>
+</div>
+<div class="p-3 flex-1 flex flex-col">
+<h3 class="font-headline font-bold text-primary text-sm line-clamp-1 mb-1">KINEMATIC AI</h3>
+<p class="text-on-surface-variant text-[11px] leading-tight mb-3 line-clamp-2">Reinforcement learning for smooth bipedal locomotion.</p>
+<div class="mt-auto flex items-center gap-1.5 opacity-80">
+<span class="material-symbols-outlined text-[12px]" data-icon="groups">groups</span>
+<span class="text-[10px] font-label text-on-surface tracking-tight uppercase">Motion Labs</span>
+</div>
+</div>
+</div>
+<!-- Project Card 7 -->
+<div class="glass-card purple-glow rounded-xl overflow-hidden flex flex-col transition-all duration-300">
+<div class="aspect-video relative overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="ethereal cosmic nebula in deep purples and pinks with scattered bright stars and gas clouds" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBwIuaVy0b_Yh-uG-fEwGsFEAzHQ_EFjofy0n-x_4P6O1UMTfyrDSpipEsU7hWAkzfnj9qCJ1RXZEPniTitkvOk8efGnOE2qxdiafZcOF3vH4OtA7haMwPU8D0VsTTSeP8LYgDEYW22FT2JuT3Taa2tqXWQSebopiObO_YynEP4CJmIEw48y2XLcfM3MAiytk-Kno4TUoTJfVJAeuXqfFp3Kh5odG8d7BKBF5A6S2jh0U7ITKsb1iGJO_x9PQXAlsUYvBGnXCqPmp6h"/>
+<div class="absolute top-2 right-2 px-2 py-0.5 bg-secondary-container/80 text-[10px] font-headline font-bold text-white rounded-full uppercase tracking-tighter">
+                        CREATIVE
+                    </div>
+</div>
+<div class="p-3 flex-1 flex flex-col">
+<h3 class="font-headline font-bold text-primary text-sm line-clamp-1 mb-1">AURA PAINT</h3>
+<p class="text-on-surface-variant text-[11px] leading-tight mb-3 line-clamp-2">AI brush that replicates classical masters on digital tablet.</p>
+<div class="mt-auto flex items-center gap-1.5 opacity-80">
+<span class="material-symbols-outlined text-[12px]" data-icon="groups">groups</span>
+<span class="text-[10px] font-label text-on-surface tracking-tight uppercase">Pixel Poets</span>
+</div>
+</div>
+</div>
+<!-- Project Card 8 -->
+<div class="glass-card purple-glow rounded-xl overflow-hidden flex flex-col transition-all duration-300">
+<div class="aspect-video relative overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="macro photograph of a microchip processor with internal lights glowing like a miniature neon city" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBVMNkqVk7aXdvYCJwGyvLT2K9W8Jt4nx0ypHylojh1H1BqchJZE23-ERUMUuNtiMhoR_QdFkhIFgBpRP2046hLEb3kwmc6BaClsxJVs5yXDvyN7oYWruZ199jySKIlB_iyOB7CxzTOPueLx2WcQ9-nUZdbD7Ys4-o3vZWiv7i59NkS7TfEd35y8DKIyPdCZ3UQdZDnaMSyFO9pfKmDO3tCVAVPOTfIZoyXp1VJvc9UDYhPDVGZSqVF19in1_WZyxbM78ZoU1tAbYXU"/>
+<div class="absolute top-2 right-2 px-2 py-0.5 bg-primary-container/80 text-[10px] font-headline font-bold text-on-primary-container rounded-full uppercase tracking-tighter">
+                        CHIP
+                    </div>
+</div>
+<div class="p-3 flex-1 flex flex-col">
+<h3 class="font-headline font-bold text-primary text-sm line-clamp-1 mb-1">SILICON SYNC</h3>
+<p class="text-on-surface-variant text-[11px] leading-tight mb-3 line-clamp-2">Optimizing on-chip interconnects using genetic algorithms.</p>
+<div class="mt-auto flex items-center gap-1.5 opacity-80">
+<span class="material-symbols-outlined text-[12px]" data-icon="groups">groups</span>
+<span class="text-[10px] font-label text-on-surface tracking-tight uppercase">Core Squad</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center pb-6 pt-3 px-4 bg-[#131318]/40 backdrop-blur-2xl z-50 rounded-t-2xl shadow-[0_-4px_20px_rgba(70,70,204,0.15)]">
+<!-- Projects Tab (Active) -->
+<a class="flex flex-col items-center justify-center bg-gradient-to-br from-[#4646CC] to-[#FF4D29] text-white rounded-xl px-4 py-1 active:scale-90 duration-150 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="grid_view" data-weight="fill">grid_view</span>
+<span class="font-['Space_Grotesk'] text-[10px] uppercase tracking-widest mt-1">Projects</span>
+</a>
+<!-- Vote Tab -->
+<a class="flex flex-col items-center justify-center text-slate-500 hover:text-[#a4a5ff] active:scale-90 duration-150 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="how_to_vote">how_to_vote</span>
+<span class="font-['Space_Grotesk'] text-[10px] uppercase tracking-widest mt-1">Vote</span>
+</a>
+<!-- My Project Tab -->
+<a class="flex flex-col items-center justify-center text-slate-500 hover:text-[#a4a5ff] active:scale-90 duration-150 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="rocket_launch">rocket_launch</span>
+<span class="font-['Space_Grotesk'] text-[10px] uppercase tracking-widest mt-1">My Project</span>
+</a>
+</nav>
+</body></html>
