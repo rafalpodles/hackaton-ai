@@ -121,23 +121,29 @@ thumbnails/{project_id}/thumb.jpg
 ## 4. Routing & Pages
 
 ```
-/login                  → Magic link login form
+/login                  → Magic link login form (centered card, glassmorphism)
 /auth/callback          → Supabase auth callback handler
+/auth/confirm           → "Check your email!" confirmation screen
 /onboarding             → Create or join project (if no project_id)
 
 /                       → Landing page — project grid (tiles)
 /projects/{id}          → Project detail (or modal on /)
-/feed                   → TikTok-style video feed
+/feed                   → TikTok-style video feed ("Live Feed")
 /vote                   → Voting screen (3 categories, tiles)
 /results                → Leaderboard (visible only in results phase)
 
 /my-project             → Submission form (stepper) + preview after submit
-/my-project/edit        → Edit before submission (redirects if submitted)
 
-/admin                  → Dashboard (stats, phase switcher)
-/admin/projects         → Project table (edit/delete)
+/admin                  → Dashboard (stats, phase switcher, project table)
 /admin/results          → Leaderboard + Excel export
 ```
+
+**Layout:** Left sidebar navigation (per Stitch designs) with:
+- User identity block (avatar + name) at top
+- Nav items: Projects, Live Feed, Voting, Submit
+- "Vote Now" CTA button in sidebar
+- Logout at bottom
+- Admin users see additional: Dashboard, (admin routes)
 
 **Middleware (`middleware.ts`):**
 - Not authenticated → redirect to `/login`
@@ -146,16 +152,41 @@ thumbnails/{project_id}/thumb.jpg
 - `/vote` → check `phase = 'voting'`
 - `/results` → check `phase = 'results'`
 
-**Phase-aware UI:** Nav shows/hides links based on current phase.
+**Phase-aware UI:** Sidebar shows/hides links based on current phase.
 
 ---
 
-## 5. Components
+## 5. Visual Design (from Stitch mockups)
+
+**Design system:** "Neon-Glass Directive" — see `designs/neon_syndicate/DESIGN.md`
+- Fonts: Space Grotesk (headlines/labels), Manrope (body)
+- No solid borders — use background color shifts and ghost borders (outline at 15% opacity)
+- Glassmorphism for floating elements (modals, nav) — 40% opacity + 20px backdrop-blur
+- CTA buttons: gradient from primary to accent (135deg)
+- Cards: `surface_container_low` bg, ghost border, purple glow on hover, orange glow top-right
+- Elevation via tonal layering, not shadows. Ambient glows use 10% primary color
+- Stepper: gradient horizontal bars instead of circles
+- Surface hierarchy: base `#0e0e13` → sections `#131318` → active `#1f1f26`
+- Text: never `#FFFFFF`, use `#f8f5fd` (on_surface)
+
+**Reference mockups in `designs/` directory:**
+- `desktop_landing_page_projects/` — grid layout with sidebar
+- `desktop_video_feed/` — landscape video player with nav arrows
+- `desktop_voting_screen/` — 3 columns, sticky submit bar
+- `desktop_admin_panel/` — stats cards, phase pills, project table
+- `desktop_project_submission/` — questions + uploads on single view
+- `desktop_magic_link_confirmation/` — glassmorphism card
+- `magic_link_login/` — centered card (adapt for desktop)
+- `project_detail/` — modal with About/Presentation tabs
+
+---
+
+## 6. Components
 
 ```
 Layout & Nav
-├── AppShell              → dark layout, nav bar, phase indicator
-├── NavBar                → "Projects" | "Vote" | "My Project" + avatar
+├── AppShell              → dark layout, LEFT SIDEBAR, phase indicator
+├── Sidebar               → user identity, nav items, "Vote Now" CTA, logout
 └── PhaseGate             → renders children only in correct phase
 
 Landing Page (/)
@@ -175,8 +206,8 @@ Voting (/vote)
 └── VoteSubmitBar         → sticky bottom, submit button + validation
 
 Submission (/my-project)
-├── SubmissionStepper     → 4 steps: Basic Info → Details → Upload → Review
-├── ProjectForm           → name, questions (textareas with char counters)
+├── SubmissionStepper     → gradient bar stepper (4 steps)
+├── SubmissionForm        → questions (left) + uploads (right) on same screen
 ├── FileUploadZone        → drag & drop, progress bar, validation
 ├── JoinProjectList       → list of existing projects with "Join" button
 └── SubmissionPreview     → read-only preview before final submit
@@ -195,7 +226,7 @@ Shared
 
 ---
 
-## 6. Server Actions & API
+## 7. Server Actions & API
 
 ```
 Auth Actions
@@ -232,7 +263,7 @@ Admin Actions
 
 ---
 
-## 7. TikTok-style Video Feed
+## 8. TikTok-style Video Feed
 
 ```
 Mechanics:
@@ -270,7 +301,7 @@ Edge cases:
 
 ---
 
-## 8. Admin & Excel Export
+## 9. Admin & Excel Export
 
 ```
 Dashboard:
