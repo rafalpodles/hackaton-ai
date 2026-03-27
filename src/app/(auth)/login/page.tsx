@@ -1,0 +1,100 @@
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
+import { GlassCard } from "@/components/ui/glass-card";
+import { GradientButton } from "@/components/ui/gradient-button";
+
+export default function LoginPage() {
+  const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setError(null);
+    setLoading(true);
+
+    try {
+      const supabase = createClient();
+      const { error } = await supabase.auth.signInWithOtp({
+        email,
+        options: {
+          emailRedirectTo: window.location.origin + "/auth/callback",
+        },
+      });
+
+      if (error) {
+        setError(error.message);
+        return;
+      }
+
+      router.push(`/auth/confirm?email=${encodeURIComponent(email)}`);
+    } catch {
+      setError("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <div className="min-h-screen bg-surface flex items-center justify-center relative overflow-hidden">
+      {/* Gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-secondary/10 pointer-events-none" />
+
+      <div className="relative z-10 w-full max-w-md px-4">
+        <GlassCard>
+          {/* Title */}
+          <h1 className="font-space-grotesk text-center text-xs tracking-[0.3em] uppercase bg-gradient-to-r from-primary-dim to-secondary-dim bg-clip-text text-transparent mb-6">
+            Spyrosoft AI Hackathon
+          </h1>
+
+          {/* Heading */}
+          <h2 className="font-space-grotesk text-2xl font-bold text-on-surface text-center mb-8">
+            Welcome, hacker!
+          </h2>
+
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div>
+              <label
+                htmlFor="email"
+                className="block font-space-grotesk text-xs tracking-wide uppercase text-on-surface-muted mb-2"
+              >
+                Email
+              </label>
+              <input
+                id="email"
+                type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="you@example.com"
+                className="w-full bg-surface-low text-on-surface placeholder:text-on-surface-muted/40 border-b-2 border-secondary focus:border-primary-dim outline-none px-4 py-3 rounded-t-md transition-colors duration-200"
+              />
+            </div>
+
+            {error && (
+              <p className="text-secondary text-sm text-center">{error}</p>
+            )}
+
+            <GradientButton
+              type="submit"
+              fullWidth
+              disabled={loading || !email}
+            >
+              {loading ? "Sending..." : "Send Magic Link"}
+            </GradientButton>
+          </form>
+
+          {/* Footer text */}
+          <p className="text-on-surface-muted text-sm text-center mt-6">
+            Check your inbox for the login link — no password needed.
+          </p>
+        </GlassCard>
+      </div>
+    </div>
+  );
+}
