@@ -25,17 +25,6 @@ export async function castVotes(votes: CastVoteInput[]) {
     return { error: "You must be logged in to vote." };
   }
 
-  // Check current phase
-  const { data: settings } = await supabase
-    .from("app_settings")
-    .select("current_phase")
-    .eq("id", 1)
-    .single();
-
-  if (!settings || settings.current_phase !== "voting") {
-    return { error: "Voting is not currently open." };
-  }
-
   // Get voter profile to check own project
   const { data: profile } = await supabase
     .from("profiles")

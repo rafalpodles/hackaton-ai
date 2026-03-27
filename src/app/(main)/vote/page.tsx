@@ -1,29 +1,20 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { getCurrentUser, getAppSettings } from "@/lib/utils";
-import PhaseGate from "@/components/layout/phase-gate";
+import { getCurrentUser } from "@/lib/utils";
 import VotingBoard from "@/components/voting/voting-board";
 
 export default async function VotePage() {
-  const [user, settings] = await Promise.all([
-    getCurrentUser(),
-    getAppSettings(),
-  ]);
-
-  if (!user) {
-    redirect("/login");
-  }
+  const user = await getCurrentUser();
+  if (!user) redirect("/login");
 
   const supabase = await createClient();
 
-  // Fetch submitted projects with team members
   const { data: projects } = await supabase
     .from("projects")
     .select("*, team:profiles!profiles_project_id_fkey(id, display_name, avatar_url)")
     .eq("is_submitted", true)
     .order("name");
 
-  // Check if user already voted
   const { data: existingVotes } = await supabase
     .from("votes")
     .select("id")
@@ -43,16 +34,11 @@ export default async function VotePage() {
         </p>
       </div>
 
-      <PhaseGate
-        currentPhase={settings.current_phase}
-        allowedPhases={["voting", "results"]}
-      >
-        <VotingBoard
-          projects={projects ?? []}
-          ownProjectId={user.project_id}
-          hasVoted={hasVoted}
-        />
-      </PhaseGate>
+      <VotingBoard
+        projects={projects ?? []}
+        ownProjectId={user.project_id}
+        hasVoted={hasVoted}
+      />
     </div>
   );
 }

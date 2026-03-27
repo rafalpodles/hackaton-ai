@@ -3,11 +3,10 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import type { Profile, Phase } from "@/lib/types";
+import type { Profile } from "@/lib/types";
 
 interface SidebarProps {
   user: Profile;
-  currentPhase: Phase;
 }
 
 const navItems = [
@@ -21,7 +20,7 @@ const adminItems = [
   { label: "Results", href: "/admin/results" },
 ];
 
-export default function Sidebar({ user, currentPhase }: SidebarProps) {
+export default function Sidebar({ user }: SidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
   const supabase = createClient();
@@ -67,13 +66,8 @@ export default function Sidebar({ user, currentPhase }: SidebarProps) {
           />
         ))}
 
-        {(currentPhase === "voting" || currentPhase === "results") && (
-          <NavLink
-            href="/vote"
-            label="Voting"
-            active={isActive("/vote")}
-          />
-        )}
+        <NavLink href="/vote" label="Voting" active={isActive("/vote")} />
+        <NavLink href="/results" label="Results" active={isActive("/results")} />
 
         {/* Admin section */}
         {user.role === "admin" && (
@@ -94,17 +88,15 @@ export default function Sidebar({ user, currentPhase }: SidebarProps) {
         )}
       </nav>
 
-      {/* Vote CTA */}
-      {currentPhase === "voting" && (
-        <div className="px-3 pb-3">
-          <Link
-            href="/vote"
-            className="block w-full rounded-lg bg-gradient-to-r from-primary to-secondary py-2.5 text-center font-space-grotesk text-sm font-bold uppercase tracking-wider text-white transition-opacity hover:opacity-90"
-          >
-            Vote Now
-          </Link>
-        </div>
-      )}
+      {/* Vote CTA — always visible */}
+      <div className="px-3 pb-3">
+        <Link
+          href="/vote"
+          className="block w-full rounded-lg bg-gradient-to-r from-primary to-secondary py-2.5 text-center font-space-grotesk text-sm font-bold uppercase tracking-wider text-white transition-opacity hover:opacity-90"
+        >
+          Vote Now
+        </Link>
+      </div>
 
       {/* Logout */}
       <div className="border-t border-outline px-3 py-4">
