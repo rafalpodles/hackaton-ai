@@ -8,11 +8,11 @@ export default async function AdminDashboardPage() {
   const supabase = await createClient();
 
   const [
-    { count: projectCount },
-    { count: participantCount },
-    { count: voteCount },
-    { data: projectsRaw },
-    { data: settings },
+    { count: projectCount, error: e1 },
+    { count: participantCount, error: e2 },
+    { count: voteCount, error: e3 },
+    { data: projectsRaw, error: e4 },
+    { data: settings, error: e5 },
   ] = await Promise.all([
     supabase
       .from("projects")
@@ -33,6 +33,18 @@ export default async function AdminDashboardPage() {
       .eq("id", 1)
       .single(),
   ]);
+
+  const queryError = e1 || e2 || e3 || e4 || e5;
+  if (queryError) {
+    return (
+      <div className="rounded-xl border border-secondary/30 bg-secondary/5 p-6">
+        <h2 className="font-space-grotesk text-lg font-bold text-secondary">
+          Failed to load dashboard
+        </h2>
+        <p className="mt-2 text-sm text-on-surface-muted">{queryError.message}</p>
+      </div>
+    );
+  }
 
   const projects = (projectsRaw ?? []) as ProjectWithTeam[];
   const totalProjects = projectCount ?? 0;

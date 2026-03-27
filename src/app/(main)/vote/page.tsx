@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { getCurrentUser } from "@/lib/utils";
+import { getCurrentUser, getSubmittedProjects } from "@/lib/utils";
 import VotingBoard from "@/components/voting/voting-board";
 
 export default async function VotePage() {
@@ -29,11 +29,7 @@ export default async function VotePage() {
     );
   }
 
-  const { data: projects } = await supabase
-    .from("projects")
-    .select("*, team:profiles!profiles_project_id_fkey(id, display_name, avatar_url)")
-    .eq("is_submitted", true)
-    .order("name");
+  const projects = await getSubmittedProjects();
 
   const { data: existingVotes } = await supabase
     .from("votes")
@@ -55,7 +51,7 @@ export default async function VotePage() {
       </div>
 
       <VotingBoard
-        projects={projects ?? []}
+        projects={projects}
         ownProjectId={user.project_id}
         hasVoted={hasVoted}
       />

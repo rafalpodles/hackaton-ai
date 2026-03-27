@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import type { ProjectWithTeam } from "@/lib/types";
 
 interface ProjectCardProps {
@@ -19,10 +20,12 @@ export function ProjectCard({ project, onClick }: ProjectCardProps) {
       {/* Thumbnail */}
       <div className="relative aspect-video w-full overflow-hidden bg-surface-high">
         {project.thumbnail_url ? (
-          <img
+          <Image
             src={project.thumbnail_url}
             alt={project.name}
-            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+            fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            className="object-cover transition-transform duration-300 group-hover:scale-105"
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center">

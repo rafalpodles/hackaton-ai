@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import type { VoteCategory, ProjectWithTeam } from "@/lib/types";
 
 interface VotingCategoryProps {
@@ -47,12 +48,14 @@ export default function VotingCategory({
               }`}
             >
               {/* Thumbnail */}
-              <div className="h-10 w-10 flex-shrink-0 overflow-hidden rounded-md bg-surface-mid">
+              <div className="relative h-10 w-10 flex-shrink-0 overflow-hidden rounded-md bg-surface-mid">
                 {project.thumbnail_url ? (
-                  <img
+                  <Image
                     src={project.thumbnail_url}
                     alt={project.name}
-                    className="h-full w-full object-cover"
+                    fill
+                    sizes="40px"
+                    className="object-cover"
                   />
                 ) : (
                   <div className="flex h-full w-full items-center justify-center text-xs text-on-surface-muted">

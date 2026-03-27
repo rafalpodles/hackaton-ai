@@ -1,23 +1,10 @@
 import Link from "next/link";
-import { createClient } from "@/lib/supabase/server";
+import { getSubmittedProjects } from "@/lib/utils";
 import { GradientButton } from "@/components/ui/gradient-button";
 import { ProjectGrid } from "@/components/projects/project-grid";
-import type { ProjectWithTeam } from "@/lib/types";
 
 export default async function HomePage() {
-  const supabase = await createClient();
-
-  // Fetch submitted projects with team members in a single query
-  const { data: rawProjects } = await supabase
-    .from("projects")
-    .select("*, team:profiles(id, display_name, avatar_url)")
-    .eq("is_submitted", true)
-    .order("created_at", { ascending: false });
-
-  const projectsWithTeam: ProjectWithTeam[] = (rawProjects ?? []).map((p) => ({
-    ...p,
-    team: p.team ?? [],
-  }));
+  const projects = await getSubmittedProjects();
 
   return (
     <div className="flex flex-col gap-10">
@@ -36,8 +23,8 @@ export default async function HomePage() {
       </div>
 
       {/* Project Grid */}
-      {projectsWithTeam.length > 0 ? (
-        <ProjectGrid projects={projectsWithTeam} />
+      {projects.length > 0 ? (
+        <ProjectGrid projects={projects} />
       ) : (
         <p className="text-center text-on-surface-muted">
           No projects submitted yet.
@@ -46,8 +33,8 @@ export default async function HomePage() {
 
       {/* Project count */}
       <p className="text-center text-sm text-on-surface-muted">
-        {projectsWithTeam.length}{" "}
-        {projectsWithTeam.length === 1 ? "project" : "projects"} submitted
+        {projects.length}{" "}
+        {projects.length === 1 ? "project" : "projects"} submitted
       </p>
     </div>
   );

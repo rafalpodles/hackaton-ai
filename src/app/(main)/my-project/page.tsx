@@ -55,8 +55,8 @@ export default async function MyProjectPage() {
           <InfoRow
             label="Tech Stack"
             value={
-              typedProject.tech_stack.length > 0
-                ? typedProject.tech_stack.join(", ")
+              (typedProject.tech_stack ?? []).length > 0
+                ? (typedProject.tech_stack ?? []).join(", ")
                 : "\u2014"
             }
           />
