@@ -17,7 +17,7 @@ export async function createProject(name: string) {
     .select("id")
     .single();
 
-  if (error || !project) throw new Error("Failed to create project");
+  if (error || !project) throw new Error(`Failed to create project: ${error?.message} | code: ${error?.code} | details: ${error?.details}`);
 
   await supabase
     .from("profiles")
