@@ -1,6 +1,13 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
+function getRedirectUrl(request: NextRequest, pathname: string): URL {
+  const proto = request.headers.get("x-forwarded-proto") ?? "https";
+  const host = request.headers.get("x-forwarded-host") ?? request.headers.get("host");
+  const origin = host ? `${proto}://${host}` : new URL(request.url).origin;
+  return new URL(pathname, origin);
+}
+
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request });
 
@@ -35,9 +42,7 @@ export async function updateSession(request: NextRequest) {
   );
 
   if (!user && !isPublicPath) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/login";
-    return NextResponse.redirect(url);
+    return NextResponse.redirect(getRedirectUrl(request, "/login"));
   }
 
   if (user && !isPublicPath) {
@@ -53,17 +58,13 @@ export async function updateSession(request: NextRequest) {
         .single();
 
       if (profile && !profile.project_id && profile.role !== "admin") {
-        const url = request.nextUrl.clone();
-        url.pathname = "/onboarding";
-        return NextResponse.redirect(url);
+        return NextResponse.redirect(getRedirectUrl(request, "/onboarding"));
       }
     }
   }
 
   if (user && request.nextUrl.pathname === "/login") {
-    const url = request.nextUrl.clone();
-    url.pathname = "/";
-    return NextResponse.redirect(url);
+    return NextResponse.redirect(getRedirectUrl(request, "/"));
   }
 
   return supabaseResponse;
