@@ -131,7 +131,9 @@ export async function submitProject(projectId: string) {
     .update({ is_submitted: true })
     .eq("id", projectId);
 
+  revalidatePath("/");
   revalidatePath("/my-project");
+  redirect("/");
 }
 
 export async function leaveProject() {
