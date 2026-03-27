@@ -111,6 +111,21 @@ export function VideoFeedItem({
           View Full Project Details &rarr;
         </button>
       </div>
+
+      {/* Scroll down indicator */}
+      {index < total - 1 && (
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 text-on-surface-muted/50">
+          <span className="text-xs uppercase tracking-widest">Scroll</span>
+          <div className="flex flex-col items-center animate-bounce">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="opacity-60">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+            </svg>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="-mt-2 opacity-30">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+            </svg>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

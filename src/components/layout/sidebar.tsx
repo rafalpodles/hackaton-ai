@@ -7,6 +7,7 @@ import type { Profile } from "@/lib/types";
 
 interface SidebarProps {
   user: Profile;
+  votingOpen: boolean;
 }
 
 const navItems = [
@@ -17,10 +18,10 @@ const navItems = [
 
 const adminItems = [
   { label: "Dashboard", href: "/admin" },
-  { label: "Results", href: "/admin/results" },
+  { label: "Results", href: "/results" },
 ];
 
-export default function Sidebar({ user }: SidebarProps) {
+export default function Sidebar({ user, votingOpen }: SidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
   const supabase = createClient();
@@ -54,9 +55,6 @@ export default function Sidebar({ user }: SidebarProps) {
 
       {/* Navigation */}
       <nav className="flex-1 space-y-1 px-3">
-        <p className="mb-2 px-2 font-space-grotesk text-xs uppercase tracking-wider text-on-surface-muted">
-          Menu
-        </p>
         {navItems.map((item) => (
           <NavLink
             key={item.href}
@@ -65,8 +63,6 @@ export default function Sidebar({ user }: SidebarProps) {
             active={isActive(item.href)}
           />
         ))}
-
-        <NavLink href="/vote" label="Voting" active={isActive("/vote")} />
 
         {/* Admin section */}
         {user.role === "admin" && (
@@ -83,20 +79,21 @@ export default function Sidebar({ user }: SidebarProps) {
                 active={isActive(item.href)}
               />
             ))}
-            <NavLink href="/results" label="Results" active={isActive("/results")} />
           </>
         )}
       </nav>
 
-      {/* Vote CTA — always visible */}
-      <div className="px-3 pb-3">
-        <Link
-          href="/vote"
-          className="block w-full rounded-lg bg-gradient-to-r from-primary to-secondary py-2.5 text-center font-space-grotesk text-sm font-bold uppercase tracking-wider text-white transition-opacity hover:opacity-90"
-        >
-          Vote Now
-        </Link>
-      </div>
+      {/* Vote CTA — only when voting is open */}
+      {votingOpen && (
+        <div className="px-3 pb-3">
+          <Link
+            href="/vote"
+            className="block w-full rounded-lg bg-gradient-to-r from-primary to-secondary py-2.5 text-center font-space-grotesk text-sm font-bold uppercase tracking-wider text-white transition-opacity hover:opacity-90"
+          >
+            Vote Now
+          </Link>
+        </div>
+      )}
 
       {/* Logout */}
       <div className="border-t border-outline px-3 py-4">

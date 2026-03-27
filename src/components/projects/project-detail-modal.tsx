@@ -9,13 +9,13 @@ interface ProjectDetailModalProps {
   onClose: () => void;
 }
 
-type Tab = "about" | "presentation";
+type View = "video" | "presentation";
 
 export function ProjectDetailModal({
   project,
   onClose,
 }: ProjectDetailModalProps) {
-  const [tab, setTab] = useState<Tab>("about");
+  const [view, setView] = useState<View>("video");
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
@@ -35,7 +35,7 @@ export function ProjectDetailModal({
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className="relative mx-4 flex max-h-[90vh] w-full max-w-5xl flex-col overflow-hidden rounded-2xl border border-outline bg-surface-low shadow-2xl">
+      <div className="relative mx-4 flex h-[95vh] w-full max-w-[95vw] flex-col overflow-hidden rounded-2xl border border-outline bg-surface-low shadow-2xl">
         {/* Close button */}
         <button
           type="button"
@@ -57,35 +57,96 @@ export function ProjectDetailModal({
           </svg>
         </button>
 
-        <div className="grid flex-1 overflow-y-auto md:grid-cols-2">
-          {/* Left: Video */}
-          <div className="flex items-center justify-center bg-surface p-6">
-            {project.video_url ? (
-              <VideoPlayer
-                src={project.video_url}
-                className="aspect-video w-full rounded-lg"
-              />
-            ) : (
-              <div className="flex aspect-video w-full items-center justify-center rounded-lg bg-surface-high">
-                <svg
-                  className="h-16 w-16 text-on-surface-muted/30"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth={1.5}
-                  viewBox="0 0 24 24"
+        <div className="grid flex-1 overflow-hidden md:grid-cols-[1fr,400px]">
+          {/* Left: Video or PDF preview */}
+          <div className="flex flex-col bg-surface">
+            {/* View toggle */}
+            <div className="flex items-center gap-2 border-b border-outline px-6 py-3">
+              <div className="flex gap-1 rounded-lg bg-surface-high p-1">
+                <button
+                  type="button"
+                  onClick={() => setView("video")}
+                  className={`rounded-md px-4 py-1.5 text-sm font-medium transition-colors ${
+                    view === "video"
+                      ? "bg-primary/20 text-primary-dim"
+                      : "text-on-surface-muted hover:text-on-surface"
+                  }`}
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="m15.75 10.5 4.72-4.72a.75.75 0 0 1 1.28.53v11.38a.75.75 0 0 1-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 0 0 2.25-2.25v-9A2.25 2.25 0 0 0 13.5 5.25h-9A2.25 2.25 0 0 0 2.25 7.5v9a2.25 2.25 0 0 0 2.25 2.25Z"
-                  />
-                </svg>
+                  Demo Video
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setView("presentation")}
+                  className={`rounded-md px-4 py-1.5 text-sm font-medium transition-colors ${
+                    view === "presentation"
+                      ? "bg-primary/20 text-primary-dim"
+                      : "text-on-surface-muted hover:text-on-surface"
+                  }`}
+                >
+                  Presentation
+                </button>
               </div>
-            )}
+            </div>
+
+            {/* Content area */}
+            <div className="flex flex-1 items-center justify-center p-6">
+              {view === "video" ? (
+                project.video_url ? (
+                  <VideoPlayer
+                    src={project.video_url}
+                    className="aspect-video w-full max-h-full rounded-lg"
+                  />
+                ) : (
+                  <div className="flex aspect-video w-full items-center justify-center rounded-lg bg-surface-high">
+                    <div className="text-center">
+                      <svg
+                        className="mx-auto h-16 w-16 text-on-surface-muted/30"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth={1.5}
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m15.75 10.5 4.72-4.72a.75.75 0 0 1 1.28.53v11.38a.75.75 0 0 1-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 0 0 2.25-2.25v-9A2.25 2.25 0 0 0 13.5 5.25h-9A2.25 2.25 0 0 0 2.25 7.5v9a2.25 2.25 0 0 0 2.25 2.25Z"
+                        />
+                      </svg>
+                      <p className="mt-2 text-sm text-on-surface-muted">No video uploaded</p>
+                    </div>
+                  </div>
+                )
+              ) : project.pdf_url ? (
+                <iframe
+                  src={project.pdf_url}
+                  className="h-full w-full rounded-lg border border-outline"
+                  title={`${project.name} — Presentation`}
+                />
+              ) : (
+                <div className="flex h-full w-full items-center justify-center rounded-lg bg-surface-high">
+                  <div className="text-center">
+                    <svg
+                      className="mx-auto h-16 w-16 text-on-surface-muted/30"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth={1.5}
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"
+                      />
+                    </svg>
+                    <p className="mt-2 text-sm text-on-surface-muted">No presentation uploaded</p>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
 
-          {/* Right: Info */}
-          <div className="flex flex-col gap-4 p-6">
+          {/* Right: Project info */}
+          <div className="flex flex-col gap-4 overflow-y-auto border-l border-outline p-6">
             <h2 id="project-detail-title" className="font-space-grotesk text-2xl font-bold text-on-surface">
               {project.name}
             </h2>
@@ -122,85 +183,64 @@ export function ProjectDetailModal({
               </span>
             </div>
 
-            {/* Tabs */}
-            <div className="flex gap-1 rounded-lg bg-surface-high p-1">
-              {(["about", "presentation"] as const).map((t) => (
-                <button
-                  key={t}
-                  type="button"
-                  onClick={() => setTab(t)}
-                  className={`flex-1 rounded-md px-3 py-1.5 text-sm font-medium capitalize transition-colors ${
-                    tab === t
-                      ? "bg-primary/20 text-primary-dim"
-                      : "text-on-surface-muted hover:text-on-surface"
-                  }`}
-                >
-                  {t}
-                </button>
-              ))}
-            </div>
+            {/* Divider */}
+            <div className="h-px bg-outline" />
 
-            {/* Tab content */}
-            <div className="flex-1 overflow-y-auto pr-1 text-sm leading-relaxed text-on-surface-muted">
-              {tab === "about" ? (
-                <div className="flex flex-col gap-4">
-                  {project.description && (
-                    <div>
-                      <h4 className="mb-1 font-space-grotesk text-xs font-semibold uppercase tracking-wider text-on-surface">
-                        Description
-                      </h4>
-                      <p>{project.description}</p>
-                    </div>
-                  )}
-                  {project.idea_origin && (
-                    <div>
-                      <h4 className="mb-1 font-space-grotesk text-xs font-semibold uppercase tracking-wider text-on-surface">
-                        Idea Origin
-                      </h4>
-                      <p>{project.idea_origin}</p>
-                    </div>
-                  )}
-                  {project.journey && (
-                    <div>
-                      <h4 className="mb-1 font-space-grotesk text-xs font-semibold uppercase tracking-wider text-on-surface">
-                        Journey
-                      </h4>
-                      <p>{project.journey}</p>
-                    </div>
-                  )}
+            {/* Project details */}
+            <div className="flex flex-col gap-4 text-sm leading-relaxed text-on-surface-muted">
+              {project.description && (
+                <div>
+                  <h4 className="mb-1 font-space-grotesk text-xs font-semibold uppercase tracking-wider text-on-surface">
+                    Description
+                  </h4>
+                  <p>{project.description}</p>
                 </div>
-              ) : (
-                <div className="flex flex-col items-center gap-4 py-8">
-                  {project.pdf_url ? (
-                    <a
-                      href={project.pdf_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 rounded-lg bg-primary/20 px-5 py-3 text-sm font-semibold text-primary-dim transition-colors hover:bg-primary/30"
-                    >
-                      <svg
-                        className="h-5 w-5"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth={2}
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"
-                        />
-                      </svg>
-                      Download Presentation (PDF)
-                    </a>
-                  ) : (
-                    <p className="text-on-surface-muted">
-                      No presentation uploaded yet.
-                    </p>
-                  )}
+              )}
+              {project.idea_origin && (
+                <div>
+                  <h4 className="mb-1 font-space-grotesk text-xs font-semibold uppercase tracking-wider text-on-surface">
+                    Idea Origin
+                  </h4>
+                  <p>{project.idea_origin}</p>
+                </div>
+              )}
+              {project.journey && (
+                <div>
+                  <h4 className="mb-1 font-space-grotesk text-xs font-semibold uppercase tracking-wider text-on-surface">
+                    Journey
+                  </h4>
+                  <p>{project.journey}</p>
                 </div>
               )}
             </div>
+
+            {/* Download PDF link if available */}
+            {project.pdf_url && (
+              <>
+                <div className="h-px bg-outline" />
+                <a
+                  href={project.pdf_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 rounded-lg bg-primary/10 px-4 py-2.5 text-sm font-semibold text-primary-dim transition-colors hover:bg-primary/20"
+                >
+                  <svg
+                    className="h-4 w-4"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"
+                    />
+                  </svg>
+                  Download PDF
+                </a>
+              </>
+            )}
           </div>
         </div>
       </div>
