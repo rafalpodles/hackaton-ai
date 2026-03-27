@@ -1,15 +1,18 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { GlassCard } from "@/components/ui/glass-card";
 import { GradientButton } from "@/components/ui/gradient-button";
+import { Suspense } from "react";
 
-export default function LoginPage() {
+function LoginForm() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const searchParams = useSearchParams();
+  const linkExpired = searchParams.get("error") === "link_expired";
   const router = useRouter();
 
   async function handleSubmit(e: React.FormEvent) {
@@ -76,6 +79,11 @@ export default function LoginPage() {
               />
             </div>
 
+            {linkExpired && (
+              <p className="text-secondary text-sm text-center">
+                Your magic link has expired or was already used. Request a new one below.
+              </p>
+            )}
             {error && (
               <p className="text-secondary text-sm text-center">{error}</p>
             )}
@@ -96,5 +104,13 @@ export default function LoginPage() {
         </GlassCard>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense>
+      <LoginForm />
+    </Suspense>
   );
 }

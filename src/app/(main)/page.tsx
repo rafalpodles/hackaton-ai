@@ -18,23 +18,17 @@ export default async function HomePage() {
     createClient(),
   ]);
 
-  // Fetch submitted projects
-  const { data: projects } = await supabase
+  // Fetch submitted projects with team members in a single query
+  const { data: rawProjects } = await supabase
     .from("projects")
-    .select("*")
+    .select("*, team:profiles(id, display_name, avatar_url)")
     .eq("is_submitted", true)
     .order("created_at", { ascending: false });
 
-  // Fetch team members for each project
-  const projectsWithTeam: ProjectWithTeam[] = await Promise.all(
-    (projects ?? []).map(async (project) => {
-      const { data: team } = await supabase
-        .from("profiles")
-        .select("id, display_name, avatar_url")
-        .eq("project_id", project.id);
-      return { ...project, team: team ?? [] };
-    })
-  );
+  const projectsWithTeam: ProjectWithTeam[] = (rawProjects ?? []).map((p) => ({
+    ...p,
+    team: p.team ?? [],
+  }));
 
   return (
     <div className="flex flex-col gap-10">

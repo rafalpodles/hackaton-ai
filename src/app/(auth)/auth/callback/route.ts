@@ -24,7 +24,12 @@ export async function GET(request: NextRequest) {
         },
       }
     );
-    await supabase.auth.exchangeCodeForSession(code);
+    const { error } = await supabase.auth.exchangeCodeForSession(code);
+    if (error) {
+      const errorUrl = new URL("/login", request.url);
+      errorUrl.searchParams.set("error", "link_expired");
+      return NextResponse.redirect(errorUrl);
+    }
     return supabaseResponse;
   }
 

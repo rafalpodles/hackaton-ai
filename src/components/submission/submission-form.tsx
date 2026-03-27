@@ -230,7 +230,7 @@ export function SubmissionForm({ project }: SubmissionFormProps) {
                 accept="video/*"
                 label="Demo Video"
                 hint="Max 60 seconds, drag & drop or click"
-                maxSizeMb={200}
+                maxSizeMb={50}
                 maxDurationSec={60}
                 currentUrl={videoUrl}
                 onUploadComplete={(url, duration) => {
