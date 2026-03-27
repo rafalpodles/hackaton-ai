@@ -1,12 +1,5 @@
-export type Phase = "submission" | "browsing" | "voting" | "results";
 export type Role = "participant" | "admin";
 export type VoteCategory = "best_overall" | "best_demo_ux" | "most_creative";
-
-export interface AppSettings {
-  id: number;
-  current_phase: Phase;
-  updated_at: string;
-}
 
 export interface Profile {
   id: string;

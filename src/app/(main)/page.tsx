@@ -1,22 +1,11 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
-import { getAppSettings } from "@/lib/utils";
 import { GradientButton } from "@/components/ui/gradient-button";
 import { ProjectGrid } from "@/components/projects/project-grid";
 import type { ProjectWithTeam } from "@/lib/types";
 
-const phaseLabels: Record<string, string> = {
-  submission: "Submission",
-  browsing: "Browsing",
-  voting: "Voting",
-  results: "Results",
-};
-
 export default async function HomePage() {
-  const [settings, supabase] = await Promise.all([
-    getAppSettings(),
-    createClient(),
-  ]);
+  const supabase = await createClient();
 
   // Fetch submitted projects with team members in a single query
   const { data: rawProjects } = await supabase
@@ -40,13 +29,6 @@ export default async function HomePage() {
           </span>{" "}
           <span className="text-on-surface">HACKATHON</span>
         </h1>
-
-        <div className="inline-flex items-center gap-2 rounded-full border border-outline bg-surface-high/60 px-4 py-2">
-          <span className="h-2 w-2 rounded-full bg-primary-dim animate-pulse" />
-          <span className="font-space-grotesk text-xs uppercase tracking-wider text-on-surface-muted">
-            Phase: {phaseLabels[settings.current_phase] ?? settings.current_phase}
-          </span>
-        </div>
 
         <Link href="/feed">
           <GradientButton>Watch All Demos</GradientButton>

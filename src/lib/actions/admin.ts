@@ -2,49 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
-import type { Phase } from "@/lib/types";
 import ExcelJS from "exceljs";
-
-const PHASE_ORDER: Phase[] = ["submission", "browsing", "voting", "results"];
-
-export async function setPhase(phase: Phase) {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) throw new Error("Not authenticated");
-
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("role")
-    .eq("id", user.id)
-    .single();
-
-  if (profile?.role !== "admin") throw new Error("Forbidden");
-
-  // Server-side forward-only validation
-  const { data: settings } = await supabase
-    .from("app_settings")
-    .select("current_phase")
-    .eq("id", 1)
-    .single();
-
-  const currentIndex = PHASE_ORDER.indexOf(settings?.current_phase as Phase);
-  const targetIndex = PHASE_ORDER.indexOf(phase);
-
-  if (targetIndex !== currentIndex + 1) {
-    throw new Error("Can only advance to the next phase");
-  }
-
-  const { error } = await supabase
-    .from("app_settings")
-    .update({ current_phase: phase })
-    .eq("id", 1);
-
-  if (error) throw new Error("Failed to update phase");
-
-  revalidatePath("/", "layout");
-}
 
 export async function deleteProject(projectId: string) {
   const supabase = await createClient();

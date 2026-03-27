@@ -1,13 +1,10 @@
 import { createClient } from "@/lib/supabase/server";
-import { getAppSettings } from "@/lib/utils";
 import StatsCards from "@/components/admin/stats-cards";
-import PhaseSwitcher from "@/components/admin/phase-switcher";
 import ProjectsTable from "@/components/admin/projects-table";
 import type { ProjectWithTeam } from "@/lib/types";
 
 export default async function AdminDashboardPage() {
   const supabase = await createClient();
-  const settings = await getAppSettings();
 
   const [
     { count: projectCount },
@@ -51,7 +48,6 @@ export default async function AdminDashboardPage() {
         <h1 className="font-space-grotesk text-3xl font-bold text-on-surface">
           Admin Dashboard
         </h1>
-        <PhaseSwitcher currentPhase={settings.current_phase} />
       </div>
 
       <StatsCards stats={stats} />
