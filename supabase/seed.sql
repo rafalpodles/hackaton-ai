@@ -1,0 +1,2 @@
+-- Admin user must be created via Supabase dashboard or invite script.
+-- For local dev, create test users via dashboard and they'll get profiles automatically.
