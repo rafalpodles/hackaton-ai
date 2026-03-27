@@ -67,7 +67,6 @@ export default function Sidebar({ user }: SidebarProps) {
         ))}
 
         <NavLink href="/vote" label="Voting" active={isActive("/vote")} />
-        <NavLink href="/results" label="Results" active={isActive("/results")} />
 
         {/* Admin section */}
         {user.role === "admin" && (
@@ -84,6 +83,7 @@ export default function Sidebar({ user }: SidebarProps) {
                 active={isActive(item.href)}
               />
             ))}
+            <NavLink href="/results" label="Results" active={isActive("/results")} />
           </>
         )}
       </nav>

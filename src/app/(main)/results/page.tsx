@@ -1,4 +1,6 @@
+import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { getCurrentUser } from "@/lib/utils";
 import type { VoteCategory, VoteResult } from "@/lib/types";
 
 const categoryLabels: Record<VoteCategory, string> = {
@@ -14,6 +16,10 @@ const categories: VoteCategory[] = [
 ];
 
 export default async function ResultsPage() {
+  const user = await getCurrentUser();
+  if (!user) redirect("/login");
+  if (user.role !== "admin") redirect("/");
+
   const supabase = await createClient();
   const { data: results } = await supabase.rpc("get_vote_results");
   const voteResults = (results ?? []) as VoteResult[];
