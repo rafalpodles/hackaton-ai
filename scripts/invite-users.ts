@@ -10,7 +10,7 @@ if (!SUPABASE_URL || !SERVICE_ROLE_KEY) {
 
 const supabase = createClient(SUPABASE_URL, SERVICE_ROLE_KEY);
 
-const emails = [
+const emails: string[] = [
   // Add participant emails here, one per line:
   // "jan.kowalski@spyrosoft.com",
   // "anna.nowak@spyrosoft.com",
