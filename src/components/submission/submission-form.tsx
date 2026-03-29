@@ -42,6 +42,21 @@ export function SubmissionForm({ project }: SubmissionFormProps) {
 
   const handleSubmit = () => {
     setSubmitError(null);
+
+    // Client-side validation before calling server action
+    if (!name.trim()) {
+      setSubmitError("Project name is required.");
+      return;
+    }
+    if (!description.trim()) {
+      setSubmitError("Project description is required.");
+      return;
+    }
+    if (!videoUrl) {
+      setSubmitError("Demo video is required.");
+      return;
+    }
+
     startTransition(async () => {
       try {
         await submitProject(project.id);
