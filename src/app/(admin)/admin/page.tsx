@@ -1,8 +1,9 @@
 import { createClient } from "@/lib/supabase/server";
 import StatsCards from "@/components/admin/stats-cards";
 import ProjectsTable from "@/components/admin/projects-table";
+import UsersTable from "@/components/admin/users-table";
 import VotingToggle from "@/components/admin/voting-toggle";
-import type { ProjectWithTeam } from "@/lib/types";
+import type { ProjectWithTeam, Profile } from "@/lib/types";
 
 export default async function AdminDashboardPage() {
   const supabase = await createClient();
@@ -13,6 +14,7 @@ export default async function AdminDashboardPage() {
     { count: voteCount, error: e3 },
     { data: projectsRaw, error: e4 },
     { data: settings, error: e5 },
+    { data: usersRaw, error: e6 },
   ] = await Promise.all([
     supabase
       .from("projects")
@@ -32,9 +34,13 @@ export default async function AdminDashboardPage() {
       .select("voting_open")
       .eq("id", 1)
       .single(),
+    supabase
+      .from("profiles")
+      .select("*, project:projects!project_id(name)")
+      .order("created_at", { ascending: true }),
   ]);
 
-  const queryError = e1 || e2 || e3 || e4 || e5;
+  const queryError = e1 || e2 || e3 || e4 || e5 || e6;
   if (queryError) {
     return (
       <div className="rounded-xl border border-secondary/30 bg-secondary/5 p-6">
@@ -47,6 +53,11 @@ export default async function AdminDashboardPage() {
   }
 
   const projects = (projectsRaw ?? []) as ProjectWithTeam[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const users = (usersRaw ?? []).map((u: any) => ({
+    ...u as Profile,
+    project_name: (u.project as { name: string } | null)?.name ?? null,
+  }));
   const totalProjects = projectCount ?? 0;
   const submittedCount = projects.filter((p) => p.is_submitted).length;
   const completionPct =
@@ -77,6 +88,13 @@ export default async function AdminDashboardPage() {
           Projekty
         </h2>
         <ProjectsTable projects={projects} />
+      </div>
+
+      <div className="space-y-4">
+        <h2 className="font-space-grotesk text-xl font-semibold text-on-surface">
+          Użytkownicy
+        </h2>
+        <UsersTable users={users} />
       </div>
     </div>
   );
