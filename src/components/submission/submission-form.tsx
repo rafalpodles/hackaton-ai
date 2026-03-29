@@ -1,17 +1,44 @@
 "use client";
 
-import { useState, useCallback, useTransition } from "react";
+import { useState, useCallback, useTransition, useEffect } from "react";
 import type { Project } from "@/lib/types";
 import { updateProject, submitProject } from "@/lib/actions/projects";
 import { FileUploadZone } from "./file-upload-zone";
 
 interface SubmissionFormProps {
   project: Project;
+  deadline?: string | null;
 }
 
-export function SubmissionForm({ project }: SubmissionFormProps) {
+export function SubmissionForm({ project, deadline }: SubmissionFormProps) {
   const [isPending, startTransition] = useTransition();
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [timeLeft, setTimeLeft] = useState("");
+
+  // Countdown timer
+  useEffect(() => {
+    if (!deadline) return;
+    const update = () => {
+      const diff = new Date(deadline).getTime() - Date.now();
+      if (diff <= 0) {
+        setTimeLeft("Termin minął");
+        return;
+      }
+      const d = Math.floor(diff / 86400000);
+      const h = Math.floor((diff % 86400000) / 3600000);
+      const m = Math.floor((diff % 3600000) / 60000);
+      const s = Math.floor((diff % 60000) / 1000);
+      const parts = [];
+      if (d > 0) parts.push(`${d}d`);
+      parts.push(`${h}h`, `${String(m).padStart(2, "0")}m`, `${String(s).padStart(2, "0")}s`);
+      setTimeLeft(parts.join(" "));
+    };
+    update();
+    const interval = setInterval(update, 1000);
+    return () => clearInterval(interval);
+  }, [deadline]);
+
+  const isExpired = deadline ? new Date(deadline) < new Date() : false;
 
   const [name, setName] = useState(project.name);
   const [description, setDescription] = useState(project.description ?? "");
@@ -42,6 +69,12 @@ export function SubmissionForm({ project }: SubmissionFormProps) {
 
   const handleSubmit = () => {
     setSubmitError(null);
+
+    // Check deadline
+    if (deadline && new Date(deadline) < new Date()) {
+      setSubmitError("Termin zgłoszeń minął.");
+      return;
+    }
 
     // Client-side validation before calling server action
     if (!name.trim()) {
@@ -93,12 +126,26 @@ export function SubmissionForm({ project }: SubmissionFormProps) {
       <div className="mx-auto max-w-6xl">
         {/* Header */}
         <header className="mb-12">
-          <h1 className="font-space-grotesk text-5xl font-extrabold tracking-tighter text-on-surface">
-            ZGŁOSZENIE PROJEKTU
-          </h1>
-          <p className="mt-2 max-w-2xl text-lg font-light text-on-surface-muted">
-            Opisz swój projekt, pokaż swoją drogę i zgłoś go na hackathon.
-          </p>
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <h1 className="font-space-grotesk text-5xl font-extrabold tracking-tighter text-on-surface">
+                ZGŁOSZENIE PROJEKTU
+              </h1>
+              <p className="mt-2 max-w-2xl text-lg font-light text-on-surface-muted">
+                Opisz swój projekt, pokaż swoją drogę i zgłoś go na hackathon.
+              </p>
+            </div>
+            {deadline && (
+              <div className={`shrink-0 rounded-xl px-5 py-3 text-center ${isExpired ? "bg-secondary/10" : "bg-surface-low"}`}>
+                <p className="font-space-grotesk text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-muted">
+                  {isExpired ? "Termin minął" : "Pozostało"}
+                </p>
+                <p className={`mt-1 font-mono text-lg font-bold ${isExpired ? "text-secondary" : "text-primary-dim"}`}>
+                  {isExpired ? "—" : timeLeft}
+                </p>
+              </div>
+            )}
+          </div>
         </header>
 
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-12">
@@ -317,11 +364,11 @@ export function SubmissionForm({ project }: SubmissionFormProps) {
           <button
             type="button"
             onClick={handleSubmit}
-            disabled={isPending}
+            disabled={isPending || isExpired}
             className="group flex h-20 w-full items-center justify-center gap-4 bg-gradient-to-br from-primary via-primary to-secondary transition-all hover:shadow-[0_0_40px_rgba(164,165,255,0.2)] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <span className="font-space-grotesk text-xl font-extrabold tracking-[0.2em] text-white">
-              {isPending ? "WYSYŁANIE..." : "ZGŁOŚ PROJEKT"}
+              {isExpired ? "TERMIN MINĄŁ" : isPending ? "WYSYŁANIE..." : "ZGŁOŚ PROJEKT"}
             </span>
             {!isPending && (
               <svg className="h-6 w-6 text-white transition-transform group-hover:translate-x-2" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">

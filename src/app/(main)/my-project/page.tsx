@@ -113,8 +113,20 @@ export default async function MyProjectPage() {
     );
   }
 
+  // Fetch submission deadline
+  const { data: settings } = await supabase
+    .from("app_settings")
+    .select("submission_deadline")
+    .eq("id", 1)
+    .single();
+
   // Not submitted — show form
-  return <SubmissionForm project={typedProject} />;
+  return (
+    <SubmissionForm
+      project={typedProject}
+      deadline={settings?.submission_deadline ?? null}
+    />
+  );
 }
 
 function InfoRow({ label, value }: { label: string; value: string }) {

@@ -26,6 +26,22 @@ export async function toggleVoting(open: boolean) {
   revalidatePath("/vote");
 }
 
+export async function setSubmissionDeadline(deadline: string | null) {
+  await requireAdmin();
+  const supabase = await createClient();
+
+  const { error } = await supabase
+    .from("app_settings")
+    .update({ submission_deadline: deadline })
+    .eq("id", 1);
+
+  if (error) throw new Error("Nie udało się ustawić deadline'u");
+
+  revalidatePath("/admin");
+  revalidatePath("/my-project");
+  revalidatePath("/");
+}
+
 export async function deleteProject(projectId: string) {
   await requireAdmin();
   const supabase = await createClient();

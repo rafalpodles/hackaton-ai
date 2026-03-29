@@ -3,6 +3,7 @@ import StatsCards from "@/components/admin/stats-cards";
 import ProjectsTable from "@/components/admin/projects-table";
 import UsersTable from "@/components/admin/users-table";
 import VotingToggle from "@/components/admin/voting-toggle";
+import DeadlinePicker from "@/components/admin/deadline-picker";
 import { getOpenRouterKeyUsage } from "@/lib/actions/admin";
 import type { ProjectWithTeam, Profile } from "@/lib/types";
 
@@ -32,7 +33,7 @@ export default async function AdminDashboardPage() {
       .select("*, team:profiles!project_id(id, display_name, avatar_url)"),
     supabase
       .from("app_settings")
-      .select("voting_open")
+      .select("voting_open, submission_deadline")
       .eq("id", 1)
       .single(),
     supabase
@@ -95,6 +96,8 @@ export default async function AdminDashboardPage() {
         </h1>
         <VotingToggle isOpen={settings?.voting_open ?? false} />
       </div>
+
+      <DeadlinePicker currentDeadline={settings?.submission_deadline ?? null} />
 
       <StatsCards stats={stats} />
 
