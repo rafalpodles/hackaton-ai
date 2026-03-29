@@ -14,10 +14,10 @@ export default function VotingToggle({ isOpen }: { isOpen: boolean }) {
   return (
     <GradientButton onClick={handleToggle} disabled={isPending}>
       {isPending
-        ? "Updating..."
+        ? "Aktualizacja..."
         : isOpen
-          ? "Close Voting"
-          : "Open Voting"}
+          ? "Zamknij głosowanie"
+          : "Otwórz głosowanie"}
     </GradientButton>
   );
 }

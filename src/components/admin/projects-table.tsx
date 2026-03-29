@@ -31,16 +31,16 @@ export default function ProjectsTable({ projects }: ProjectsTableProps) {
           <thead>
             <tr className="border-b border-outline">
               <th className="px-5 py-3 text-left font-space-grotesk text-xs uppercase tracking-wider text-on-surface-muted">
-                Project Title
+                Nazwa projektu
               </th>
               <th className="px-5 py-3 text-left font-space-grotesk text-xs uppercase tracking-wider text-on-surface-muted">
                 Status
               </th>
               <th className="px-5 py-3 text-left font-space-grotesk text-xs uppercase tracking-wider text-on-surface-muted">
-                Team
+                Zespół
               </th>
               <th className="px-5 py-3 text-right font-space-grotesk text-xs uppercase tracking-wider text-on-surface-muted">
-                Actions
+                Akcje
               </th>
             </tr>
           </thead>
@@ -61,7 +61,7 @@ export default function ProjectsTable({ projects }: ProjectsTableProps) {
                         : "bg-yellow-500/15 text-yellow-400"
                     }`}
                   >
-                    {project.is_submitted ? "Submitted" : "Draft"}
+                    {project.is_submitted ? "Zgłoszony" : "Szkic"}
                   </span>
                 </td>
                 <td className="px-5 py-4 text-sm text-on-surface-muted">
@@ -75,7 +75,7 @@ export default function ProjectsTable({ projects }: ProjectsTableProps) {
                     }
                     className="rounded-md px-3 py-1.5 font-space-grotesk text-xs font-semibold uppercase tracking-wider text-red-400 transition-colors hover:bg-red-500/15 disabled:opacity-50"
                   >
-                    Delete
+                    Usuń
                   </button>
                 </td>
               </tr>
@@ -86,7 +86,7 @@ export default function ProjectsTable({ projects }: ProjectsTableProps) {
                   colSpan={4}
                   className="px-5 py-8 text-center text-sm text-on-surface-muted"
                 >
-                  No projects yet
+                  Brak projektów
                 </td>
               </tr>
             )}
@@ -96,9 +96,9 @@ export default function ProjectsTable({ projects }: ProjectsTableProps) {
 
       {deleteTarget && (
         <ConfirmDialog
-          title="Delete Project"
-          message={`Are you sure you want to delete "${deleteTarget.name}"? All associated files and votes will be permanently removed.`}
-          confirmLabel="Delete"
+          title="Usuń projekt"
+          message={`Czy na pewno chcesz usunąć "${deleteTarget.name}"? Wszystkie powiązane pliki i głosy zostaną trwale usunięte.`}
+          confirmLabel="Usuń"
           onConfirm={handleDelete}
           onCancel={() => setDeleteTarget(null)}
         />

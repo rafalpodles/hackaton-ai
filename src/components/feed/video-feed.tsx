@@ -34,7 +34,7 @@ export function VideoFeed({ projects }: VideoFeedProps) {
             To wszystko!
           </h2>
           <p className="text-on-surface-muted">
-            Obejrzałeś wszystkie projekty. Gotowy do głosowania?
+            To już wszystkie projekty. Czas głosować!
           </p>
           <Link href="/vote">
             <GradientButton>Głosuj &rarr;</GradientButton>

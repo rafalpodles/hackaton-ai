@@ -23,7 +23,7 @@ export default function VoteSubmitBar({
         {/* Counter */}
         <div className="flex items-center gap-3">
           <span className="font-space-grotesk text-sm text-on-surface-muted">
-            Selections Made
+            Wybrano
           </span>
           <span className="font-space-grotesk text-xl font-bold tabular-nums text-on-surface">
             {String(count).padStart(2, "0")} / 03
@@ -38,7 +38,7 @@ export default function VoteSubmitBar({
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75" />
                 <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-primary" />
               </span>
-              Ready to transmit
+              Gotowe!
             </span>
           )}
 
@@ -46,7 +46,7 @@ export default function VoteSubmitBar({
             disabled={!allSelected || submitting}
             onClick={onSubmit}
           >
-            {submitting ? "Transmitting..." : "Submit Votes"}
+            {submitting ? "Wysyłanie..." : "Zagłosuj!"}
           </GradientButton>
         </div>
       </div>

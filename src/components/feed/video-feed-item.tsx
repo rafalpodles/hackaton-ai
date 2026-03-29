@@ -109,7 +109,7 @@ export function VideoFeedItem({
           onClick={onViewDetails}
           className="shrink-0 text-sm font-medium text-primary-dim transition-colors hover:text-on-surface"
         >
-          Zobacz szczegóły &rarr;
+          Pokaż więcej &rarr;
         </button>
       </div>
 

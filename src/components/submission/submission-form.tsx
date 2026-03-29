@@ -107,7 +107,7 @@ export function SubmissionForm({ project }: SubmissionFormProps) {
             {/* Project name */}
             <div className="space-y-2">
               <label className="font-space-grotesk text-[10px] font-bold uppercase tracking-[0.2em] text-primary-dim">
-                Identyfikacja
+                Podstawy
               </label>
               <h2 className="font-space-grotesk text-2xl font-bold text-on-surface">
                 Jak się nazywa Twój projekt?
@@ -222,7 +222,7 @@ export function SubmissionForm({ project }: SubmissionFormProps) {
           <div className="space-y-8 lg:col-span-5">
             <div className="space-y-6">
               <label className="font-space-grotesk text-[10px] font-bold uppercase tracking-[0.2em] text-primary-dim">
-                Materiały
+                Dowody
               </label>
 
               {/* Video upload */}
@@ -287,7 +287,7 @@ export function SubmissionForm({ project }: SubmissionFormProps) {
                 </svg>
                 <div>
                   <p className="font-space-grotesk text-sm font-bold tracking-tight text-on-surface">
-                    WYTYCZNE
+                    WAŻNE
                   </p>
                   <p className="mt-1 text-xs leading-relaxed text-on-surface-muted">
                     Upewnij się, że wideo pokazuje działający projekt.
@@ -330,7 +330,7 @@ export function SubmissionForm({ project }: SubmissionFormProps) {
             )}
           </button>
           <p className="mt-4 text-center font-space-grotesk text-[10px] uppercase tracking-widest text-on-surface-muted">
-            Wysyłając zgłoszenie, potwierdzasz poprawność informacji.
+            Klikając, potwierdzasz że wszystko się zgadza.
           </p>
         </div>
       </div>

@@ -93,13 +93,13 @@ function LoginForm() {
               fullWidth
               disabled={loading || !email}
             >
-              {loading ? "Wysyłanie..." : "Wyślij link logowania"}
+              {loading ? "Wysyłanie..." : "Wyślij link"}
             </GradientButton>
           </form>
 
           {/* Footer text */}
           <p className="text-on-surface-muted text-sm text-center mt-6">
-            Sprawdź skrzynkę — link logowania już czeka. Bez hasła.
+            Sprawdź skrzynkę — bez hasła, po prostu kliknij link.
           </p>
         </GlassCard>
       </div>

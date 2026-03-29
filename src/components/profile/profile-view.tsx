@@ -32,12 +32,12 @@ export default function ProfileView({ user, project, team }: ProfileViewProps) {
       if (!file) return;
 
       if (file.size > 2 * 1024 * 1024) {
-        setError("Avatar must be under 2 MB");
+        setError("Avatar musi być mniejszy niż 2 MB");
         return;
       }
 
       if (!file.type.startsWith("image/")) {
-        setError("File must be an image");
+        setError("Plik musi być obrazem");
         return;
       }
 
@@ -66,11 +66,11 @@ export default function ProfileView({ user, project, team }: ProfileViewProps) {
           try {
             await updateProfile({ avatar_url: urlWithCacheBust });
           } catch (err) {
-            setError(err instanceof Error ? err.message : "Failed to update avatar");
+            setError(err instanceof Error ? err.message : "Nie udało się zaktualizować avatara");
           }
         });
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Upload failed");
+        setError(err instanceof Error ? err.message : "Przesyłanie nie powiodło się");
       } finally {
         setAvatarUploading(false);
       }
@@ -102,7 +102,7 @@ export default function ProfileView({ user, project, team }: ProfileViewProps) {
       try {
         await leaveProject();
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Failed to leave project");
+        setError(err instanceof Error ? err.message : "Nie udało się opuścić projektu");
       }
     });
   }, []);
@@ -121,7 +121,7 @@ export default function ProfileView({ user, project, team }: ProfileViewProps) {
           className="group relative h-28 w-28 overflow-hidden rounded-full ring-4 ring-surface focus:outline-none focus-visible:ring-primary"
           onClick={() => fileInputRef.current?.click()}
           disabled={avatarUploading || isPending}
-          aria-label="Change avatar"
+          aria-label="Zmień avatar"
         >
           {user.avatar_url ? (
             <Image
@@ -158,7 +158,7 @@ export default function ProfileView({ user, project, team }: ProfileViewProps) {
                 d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0Z"
               />
             </svg>
-            <span className="mt-1 text-xs font-semibold text-white">Change</span>
+            <span className="mt-1 text-xs font-semibold text-white">Zmień</span>
           </div>
           {avatarUploading && (
             <div className="absolute inset-0 flex items-center justify-center bg-black/60">
@@ -185,7 +185,7 @@ export default function ProfileView({ user, project, team }: ProfileViewProps) {
       {/* Profile Card */}
       <div className="mt-6 rounded-2xl bg-surface-low p-6">
         <p className="mb-4 font-space-grotesk text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-muted">
-          Profile
+          Profil
         </p>
 
         {/* Display Name */}
@@ -215,7 +215,7 @@ export default function ProfileView({ user, project, team }: ProfileViewProps) {
                 disabled={isPending}
                 className="rounded-lg bg-primary/15 px-3 py-1.5 font-space-grotesk text-xs font-bold uppercase tracking-wider text-primary-dim transition-colors hover:bg-primary/25 disabled:opacity-50"
               >
-                Save
+                Zapisz
               </button>
               <button
                 onClick={() => {
@@ -224,7 +224,7 @@ export default function ProfileView({ user, project, team }: ProfileViewProps) {
                 }}
                 className="rounded-lg px-3 py-1.5 font-space-grotesk text-xs uppercase tracking-wider text-on-surface-muted transition-colors hover:bg-surface-high"
               >
-                Cancel
+                Anuluj
               </button>
             </div>
           ) : (
@@ -235,7 +235,7 @@ export default function ProfileView({ user, project, team }: ProfileViewProps) {
               <button
                 onClick={() => setEditingName(true)}
                 className="rounded-lg p-2 text-on-surface-muted transition-colors hover:bg-surface-high hover:text-on-surface"
-                aria-label="Edit display name"
+                aria-label="Edytuj nazwę"
               >
                 <svg
                   className="h-4 w-4"
@@ -278,7 +278,7 @@ export default function ProfileView({ user, project, team }: ProfileViewProps) {
       {/* Team & Project Card */}
       <div className="mt-4 rounded-2xl bg-surface-low p-6">
         <p className="mb-4 font-space-grotesk text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-muted">
-          Team & Project
+          Twój zespół
         </p>
 
         {project ? (
@@ -290,11 +290,11 @@ export default function ProfileView({ user, project, team }: ProfileViewProps) {
               </p>
               {project.is_submitted ? (
                 <span className="rounded-full bg-green-500/15 px-2.5 py-0.5 font-space-grotesk text-[10px] font-bold uppercase tracking-wider text-green-400">
-                  Submitted
+                  Zgłoszony
                 </span>
               ) : (
                 <span className="rounded-full bg-yellow-500/15 px-2.5 py-0.5 font-space-grotesk text-[10px] font-bold uppercase tracking-wider text-yellow-400">
-                  Draft
+                  Szkic
                 </span>
               )}
             </div>
@@ -326,7 +326,7 @@ export default function ProfileView({ user, project, team }: ProfileViewProps) {
                     <p className="text-sm text-on-surface">{member.display_name}</p>
                     {member.id === user.id && (
                       <span className="rounded-full bg-primary/10 px-2 py-0.5 font-space-grotesk text-[10px] font-bold uppercase tracking-wider text-primary-dim">
-                        You
+                        TY
                       </span>
                     )}
                   </div>
@@ -341,7 +341,7 @@ export default function ProfileView({ user, project, team }: ProfileViewProps) {
                 disabled={isPending}
                 className="mt-6 w-full rounded-xl border border-secondary/25 bg-transparent py-3 font-space-grotesk text-sm uppercase tracking-wider text-secondary transition-colors hover:border-secondary/40 hover:bg-secondary/10 disabled:opacity-50"
               >
-                Leave Team
+                Opuść zespół
               </button>
             )}
           </>
@@ -361,10 +361,10 @@ export default function ProfileView({ user, project, team }: ProfileViewProps) {
               />
             </svg>
             <p className="mt-3 font-space-grotesk text-sm font-semibold text-on-surface">
-              No team yet
+              Brak zespołu
             </p>
             <p className="mt-1 text-xs text-on-surface-muted">
-              Join or create a project to get started
+              Stwórz projekt lub dołącz do zespołu
             </p>
           </div>
         )}
@@ -373,9 +373,9 @@ export default function ProfileView({ user, project, team }: ProfileViewProps) {
       {/* Leave Team Confirm Dialog */}
       {showLeaveConfirm && (
         <ConfirmDialog
-          title="Leave Team"
-          message="Are you sure you want to leave this team? You can rejoin later if the project has not been submitted."
-          confirmLabel="Leave"
+          title="Opuść zespół"
+          message="Czy na pewno chcesz opuścić zespół? Możesz dołączyć ponownie, jeśli projekt nie został jeszcze zgłoszony."
+          confirmLabel="Opuść"
           onConfirm={handleLeaveProject}
           onCancel={() => setShowLeaveConfirm(false)}
         />

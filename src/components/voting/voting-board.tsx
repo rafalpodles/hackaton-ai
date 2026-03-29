@@ -8,9 +8,9 @@ import VotingCategory from "./voting-category";
 import VoteSubmitBar from "./vote-submit-bar";
 
 const CATEGORIES: { key: VoteCategory; label: string; icon: string }[] = [
-  { key: "best_overall", label: "Best Overall", icon: "\u25C6" },
-  { key: "best_demo_ux", label: "Best Demo/UX", icon: "\u25C7" },
-  { key: "most_creative", label: "Most Creative", icon: "\u2726" },
+  { key: "best_overall", label: "Najlepszy projekt", icon: "\u25C6" },
+  { key: "best_demo_ux", label: "Najlepsze demo / UX", icon: "\u25C7" },
+  { key: "most_creative", label: "Najbardziej kreatywny", icon: "\u2726" },
 ];
 
 interface VotingBoardProps {
@@ -64,16 +64,16 @@ export default function VotingBoard({
             </svg>
           </div>
           <h2 className="font-space-grotesk text-2xl font-bold text-on-surface">
-            Votes Submitted
+            Głosy oddane
           </h2>
           <p className="text-on-surface-muted">
-            Your votes have been recorded. Results will be revealed soon.
+            Głosy zapisane! Wyniki poznasz wkrótce.
           </p>
         </div>
 
         <div className="mx-auto max-w-2xl space-y-4">
           <h3 className="font-space-grotesk text-sm font-semibold uppercase tracking-wider text-on-surface-muted">
-            Your picks
+            Twoje wybory
           </h3>
           {CATEGORIES.map((cat) => {
             const projectId = votedFor[cat.key];
@@ -90,7 +90,7 @@ export default function VotingBoard({
                     {cat.label}
                   </p>
                   <p className="truncate font-space-grotesk text-base font-bold text-on-surface">
-                    {project?.name ?? "Unknown project"}
+                    {project?.name ?? "Nieznany projekt"}
                   </p>
                   {project?.team && project.team.length > 0 && (
                     <p className="truncate text-xs text-on-surface-muted">

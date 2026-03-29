@@ -77,7 +77,7 @@ export default function VotingCategory({
               {/* Own project label */}
               {isOwn && (
                 <span className="flex-shrink-0 rounded bg-surface-mid px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-on-surface-muted">
-                  Your project
+                  Twój projekt
                 </span>
               )}
 

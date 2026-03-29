@@ -65,7 +65,7 @@ export default async function AdminDashboardPage() {
     <div className="space-y-8">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <h1 className="font-space-grotesk text-3xl font-bold text-on-surface">
-          Panel administracyjny
+          Panel admina
         </h1>
         <VotingToggle isOpen={settings?.voting_open ?? false} />
       </div>

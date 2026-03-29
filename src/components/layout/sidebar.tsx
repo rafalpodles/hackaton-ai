@@ -11,9 +11,9 @@ interface SidebarProps {
 }
 
 const navItems = [
-  { label: "Na żywo", href: "/feed" },
+  { label: "Live", href: "/feed" },
   { label: "Projekty", href: "/" },
-  { label: "Zgłoś projekt", href: "/my-project" },
+  { label: "Zgłoś", href: "/my-project" },
 ];
 
 const adminItems = [

@@ -33,7 +33,7 @@ export default async function OnboardingPage() {
   return (
     <div className="mx-auto max-w-2xl space-y-10 py-8">
       <h1 className="font-space-grotesk text-3xl font-bold text-on-surface">
-        Rozpocznij
+        Zaczynamy!
       </h1>
 
       <GlassCard>
@@ -54,7 +54,7 @@ export default async function OnboardingPage() {
 
       <GlassCard>
         <h2 className="font-space-grotesk text-xl font-semibold text-on-surface mb-6">
-          Dołącz do istniejącego projektu
+          Dołącz do zespołu
         </h2>
         <JoinProjectList projects={projectList} />
       </GlassCard>
