@@ -63,6 +63,117 @@ export async function deleteProject(projectId: string) {
   revalidatePath("/feed");
 }
 
+export async function generateOpenRouterKey(
+  userId: string,
+  limit: number = 5
+) {
+  await requireAdmin();
+  const supabase = await createClient();
+
+  const managementKey = process.env.OPENROUTER_MANAGEMENT_KEY;
+  if (!managementKey) throw new Error("Brak klucza zarządzania OpenRouter");
+
+  // Get user display name for key naming
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("display_name, openrouter_key_hash")
+    .eq("id", userId)
+    .single();
+
+  if (!profile) throw new Error("Nie znaleziono użytkownika");
+
+  // If user already has a key, delete it first
+  if (profile.openrouter_key_hash) {
+    await fetch(
+      `https://openrouter.ai/api/v1/keys/${profile.openrouter_key_hash}`,
+      {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${managementKey}` },
+      }
+    );
+  }
+
+  // Create new key
+  const res = await fetch("https://openrouter.ai/api/v1/keys", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${managementKey}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      name: `Hackathon - ${profile.display_name}`,
+      limit,
+    }),
+  });
+
+  if (!res.ok) {
+    const err = await res.text();
+    throw new Error(`OpenRouter API error: ${err}`);
+  }
+
+  const data = await res.json();
+  const apiKey: string = data.key;
+  const keyHash: string = data.data?.hash ?? data.hash;
+
+  // Save to profile
+  const { error } = await supabase
+    .from("profiles")
+    .update({
+      openrouter_api_key: apiKey,
+      openrouter_key_hash: keyHash,
+    })
+    .eq("id", userId);
+
+  if (error) throw new Error("Nie udało się zapisać klucza");
+
+  revalidatePath("/admin");
+  revalidatePath("/profile");
+}
+
+export async function deleteOpenRouterKey(userId: string) {
+  await requireAdmin();
+  const supabase = await createClient();
+
+  const managementKey = process.env.OPENROUTER_MANAGEMENT_KEY;
+  if (!managementKey) throw new Error("Brak klucza zarządzania OpenRouter");
+
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("openrouter_key_hash")
+    .eq("id", userId)
+    .single();
+
+  if (!profile?.openrouter_key_hash)
+    throw new Error("Użytkownik nie ma klucza API");
+
+  // Delete from OpenRouter
+  const res = await fetch(
+    `https://openrouter.ai/api/v1/keys/${profile.openrouter_key_hash}`,
+    {
+      method: "DELETE",
+      headers: { Authorization: `Bearer ${managementKey}` },
+    }
+  );
+
+  if (!res.ok && res.status !== 404) {
+    throw new Error("Nie udało się usunąć klucza z OpenRouter");
+  }
+
+  // Clear from profile
+  const { error } = await supabase
+    .from("profiles")
+    .update({
+      openrouter_api_key: null,
+      openrouter_key_hash: null,
+    })
+    .eq("id", userId);
+
+  if (error) throw new Error("Nie udało się wyczyścić klucza");
+
+  revalidatePath("/admin");
+  revalidatePath("/profile");
+}
+
 export async function exportResults(): Promise<string> {
   await requireAdmin();
   const supabase = await createClient();

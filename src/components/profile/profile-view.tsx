@@ -370,6 +370,32 @@ export default function ProfileView({ user, project, team }: ProfileViewProps) {
         )}
       </div>
 
+      {/* API Key Card */}
+      {user.openrouter_api_key && (
+        <div className="mt-4 rounded-2xl bg-surface-low p-6">
+          <p className="mb-4 font-space-grotesk text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-muted">
+            Klucz API
+          </p>
+          <div className="flex items-center gap-3">
+            <code className="flex-1 overflow-x-auto rounded-lg bg-black px-4 py-3 font-mono text-sm text-primary-dim">
+              {user.openrouter_api_key}
+            </code>
+            <button
+              type="button"
+              onClick={() => {
+                navigator.clipboard.writeText(user.openrouter_api_key!);
+              }}
+              className="shrink-0 rounded-lg bg-surface-high px-3 py-2 font-space-grotesk text-xs font-semibold uppercase tracking-wider text-on-surface-muted transition-colors hover:bg-surface-bright hover:text-on-surface"
+            >
+              Kopiuj
+            </button>
+          </div>
+          <p className="mt-3 text-xs text-on-surface-muted">
+            Użyj tego klucza do połączenia z OpenRouter API. Nie udostępniaj go nikomu.
+          </p>
+        </div>
+      )}
+
       {/* Leave Team Confirm Dialog */}
       {showLeaveConfirm && (
         <ConfirmDialog

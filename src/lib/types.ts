@@ -8,6 +8,8 @@ export interface Profile {
   avatar_url: string | null;
   project_id: string | null;
   role: Role;
+  openrouter_api_key: string | null;
+  openrouter_key_hash: string | null;
   created_at: string;
   updated_at: string;
 }
