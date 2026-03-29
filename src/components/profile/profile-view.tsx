@@ -25,7 +25,8 @@ export default function ProfileView({
 }: ProfileViewProps) {
   const [isPending, startTransition] = useTransition();
   const [editingName, setEditingName] = useState(false);
-  const [nameValue, setNameValue] = useState(user.display_name);
+  const [firstNameValue, setFirstNameValue] = useState(user.first_name ?? "");
+  const [lastNameValue, setLastNameValue] = useState(user.last_name ?? "");
   const [showLeaveConfirm, setShowLeaveConfirm] = useState(false);
   const [avatarUploading, setAvatarUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -87,22 +88,22 @@ export default function ProfileView({
   );
 
   const handleSaveName = useCallback(() => {
-    const trimmed = nameValue.trim();
-    if (!trimmed || trimmed === user.display_name) {
+    const first = firstNameValue.trim();
+    const last = lastNameValue.trim();
+    if (!first && !last) {
       setEditingName(false);
-      setNameValue(user.display_name);
       return;
     }
 
     startTransition(async () => {
       try {
-        await updateProfile({ display_name: trimmed });
+        await updateProfile({ first_name: first, last_name: last });
         setEditingName(false);
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Failed to update name");
+        setError(err instanceof Error ? err.message : "Nie udało się zapisać");
       }
     });
-  }, [nameValue, user.display_name]);
+  }, [firstNameValue, lastNameValue]);
 
   const handleLeaveProject = useCallback(() => {
     setShowLeaveConfirm(false);
@@ -196,54 +197,86 @@ export default function ProfileView({
           Profil
         </p>
 
-        {/* Display Name */}
-        <div className="flex items-center justify-between">
+        {/* Name */}
+        <div>
           {editingName ? (
-            <div className="flex flex-1 items-center gap-3">
-              <div className="relative flex-1">
-                <input
-                  type="text"
-                  value={nameValue}
-                  onChange={(e) => setNameValue(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") handleSaveName();
-                    if (e.key === "Escape") {
-                      setEditingName(false);
-                      setNameValue(user.display_name);
-                    }
-                  }}
-                  className="w-full bg-black px-3 py-2 font-space-grotesk text-lg font-semibold text-on-surface outline-none"
-                  autoFocus
-                  disabled={isPending}
-                />
-                <div className="h-0.5 bg-gradient-to-r from-primary to-secondary" />
+            <div className="space-y-3">
+              <div className="grid grid-cols-2 gap-3">
+                <div className="relative">
+                  <label className="mb-1 block font-space-grotesk text-[10px] uppercase tracking-[0.2em] text-on-surface-muted">
+                    Imię
+                  </label>
+                  <input
+                    type="text"
+                    value={firstNameValue}
+                    onChange={(e) => setFirstNameValue(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") handleSaveName();
+                      if (e.key === "Escape") {
+                        setEditingName(false);
+                        setFirstNameValue(user.first_name ?? "");
+                        setLastNameValue(user.last_name ?? "");
+                      }
+                    }}
+                    className="w-full bg-black px-3 py-2 font-space-grotesk text-on-surface outline-none"
+                    autoFocus
+                    disabled={isPending}
+                    placeholder="Jan"
+                  />
+                  <div className="h-0.5 bg-gradient-to-r from-primary to-secondary" />
+                </div>
+                <div className="relative">
+                  <label className="mb-1 block font-space-grotesk text-[10px] uppercase tracking-[0.2em] text-on-surface-muted">
+                    Nazwisko
+                  </label>
+                  <input
+                    type="text"
+                    value={lastNameValue}
+                    onChange={(e) => setLastNameValue(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") handleSaveName();
+                      if (e.key === "Escape") {
+                        setEditingName(false);
+                        setFirstNameValue(user.first_name ?? "");
+                        setLastNameValue(user.last_name ?? "");
+                      }
+                    }}
+                    className="w-full bg-black px-3 py-2 font-space-grotesk text-on-surface outline-none"
+                    disabled={isPending}
+                    placeholder="Kowalski"
+                  />
+                  <div className="h-0.5 bg-gradient-to-r from-primary to-secondary" />
+                </div>
               </div>
-              <button
-                onClick={handleSaveName}
-                disabled={isPending}
-                className="rounded-lg bg-primary/15 px-3 py-1.5 font-space-grotesk text-xs font-bold uppercase tracking-wider text-primary-dim transition-colors hover:bg-primary/25 disabled:opacity-50"
-              >
-                Zapisz
-              </button>
-              <button
-                onClick={() => {
-                  setEditingName(false);
-                  setNameValue(user.display_name);
-                }}
-                className="rounded-lg px-3 py-1.5 font-space-grotesk text-xs uppercase tracking-wider text-on-surface-muted transition-colors hover:bg-surface-high"
-              >
-                Anuluj
-              </button>
+              <div className="flex gap-2">
+                <button
+                  onClick={handleSaveName}
+                  disabled={isPending}
+                  className="rounded-lg bg-primary/15 px-3 py-1.5 font-space-grotesk text-xs font-bold uppercase tracking-wider text-primary-dim transition-colors hover:bg-primary/25 disabled:opacity-50"
+                >
+                  Zapisz
+                </button>
+                <button
+                  onClick={() => {
+                    setEditingName(false);
+                    setFirstNameValue(user.first_name ?? "");
+                    setLastNameValue(user.last_name ?? "");
+                  }}
+                  className="rounded-lg px-3 py-1.5 font-space-grotesk text-xs uppercase tracking-wider text-on-surface-muted transition-colors hover:bg-surface-high"
+                >
+                  Anuluj
+                </button>
+              </div>
             </div>
           ) : (
-            <>
+            <div className="flex items-center justify-between">
               <p className="font-space-grotesk text-lg font-semibold text-on-surface">
                 {user.display_name}
               </p>
               <button
                 onClick={() => setEditingName(true)}
                 className="rounded-lg p-2 text-on-surface-muted transition-colors hover:bg-surface-high hover:text-on-surface"
-                aria-label="Edytuj nazwę"
+                aria-label="Edytuj imię i nazwisko"
               >
                 <svg
                   className="h-4 w-4"
@@ -259,7 +292,7 @@ export default function ProfileView({
                   />
                 </svg>
               </button>
-            </>
+            </div>
           )}
         </div>
 

@@ -13,33 +13,56 @@ if (!SUPABASE_URL || !SERVICE_ROLE_KEY) {
 
 const supabase = createClient(SUPABASE_URL, SERVICE_ROLE_KEY);
 
-const emails: string[] = [
-  "rpo@spyro-soft.com",
+// Format: { email, firstName, lastName }
+const users: { email: string; firstName: string; lastName: string }[] = [
+  { email: "rafal.podles@graviteesource.com", firstName: "Rafał", lastName: "Podleś" },
 ];
 
 async function main() {
-  if (emails.length === 0) {
-    console.log("No emails to invite. Add emails to the array in this script.");
+  if (users.length === 0) {
+    console.log("No users to invite. Add users to the array in this script.");
     return;
   }
 
-  console.log(`Inviting ${emails.length} users...\n`);
+  console.log(`Inviting ${users.length} users...\n`);
 
   let success = 0;
   let failed = 0;
 
-  for (const email of emails) {
-    const { error } = await supabase.auth.admin.inviteUserByEmail(email, {
+  for (const { email, firstName, lastName } of users) {
+    const { data, error } = await supabase.auth.admin.inviteUserByEmail(email, {
       redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL || "https://spyrosoft-ai-hackaton.up.railway.app"}/auth/callback`,
+      data: {
+        first_name: firstName,
+        last_name: lastName,
+        display_name: `${firstName} ${lastName}`,
+      },
     });
 
     if (error) {
       console.error(`✗ ${email}: ${error.message}`);
       failed++;
-    } else {
-      console.log(`✓ ${email}: invited`);
-      success++;
+      continue;
     }
+
+    // Update profile with first/last name
+    if (data?.user?.id) {
+      const { error: profileError } = await supabase
+        .from("profiles")
+        .update({
+          first_name: firstName,
+          last_name: lastName,
+          display_name: `${firstName} ${lastName}`,
+        })
+        .eq("id", data.user.id);
+
+      if (profileError) {
+        console.warn(`  ⚠ ${email}: invited but profile update failed: ${profileError.message}`);
+      }
+    }
+
+    console.log(`✓ ${firstName} ${lastName} (${email}): invited`);
+    success++;
   }
 
   console.log(`\nDone! ${success} invited, ${failed} failed.`);
