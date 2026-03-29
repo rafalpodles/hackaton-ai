@@ -12,9 +12,17 @@ interface ProfileViewProps {
   user: Profile;
   project: Project | null;
   team: Pick<Profile, "id" | "display_name" | "avatar_url">[];
+  keyUsage?: number | null;
+  keyLimit?: number | null;
 }
 
-export default function ProfileView({ user, project, team }: ProfileViewProps) {
+export default function ProfileView({
+  user,
+  project,
+  team,
+  keyUsage,
+  keyLimit,
+}: ProfileViewProps) {
   const [isPending, startTransition] = useTransition();
   const [editingName, setEditingName] = useState(false);
   const [nameValue, setNameValue] = useState(user.display_name);
@@ -390,6 +398,33 @@ export default function ProfileView({ user, project, team }: ProfileViewProps) {
               Kopiuj
             </button>
           </div>
+          {keyLimit != null && (
+            <div className="mt-4 space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="font-space-grotesk text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-muted">
+                  Zużycie
+                </span>
+                <span className="font-mono text-xs text-on-surface-muted">
+                  ${(keyUsage ?? 0).toFixed(2)} / ${keyLimit}
+                </span>
+              </div>
+              <div className="h-2 overflow-hidden rounded-full bg-surface-high">
+                <div
+                  className={`h-full rounded-full transition-all ${
+                    (keyUsage ?? 0) / keyLimit > 0.8
+                      ? "bg-secondary"
+                      : "bg-gradient-to-r from-primary to-primary-dim"
+                  }`}
+                  style={{
+                    width: `${Math.min(
+                      ((keyUsage ?? 0) / keyLimit) * 100,
+                      100
+                    )}%`,
+                  }}
+                />
+              </div>
+            </div>
+          )}
           <p className="mt-3 text-xs text-on-surface-muted">
             Użyj tego klucza do połączenia z OpenRouter API. Nie udostępniaj go nikomu.
           </p>

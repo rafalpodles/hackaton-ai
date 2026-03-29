@@ -3,6 +3,7 @@ import StatsCards from "@/components/admin/stats-cards";
 import ProjectsTable from "@/components/admin/projects-table";
 import UsersTable from "@/components/admin/users-table";
 import VotingToggle from "@/components/admin/voting-toggle";
+import { getOpenRouterKeyUsage } from "@/lib/actions/admin";
 import type { ProjectWithTeam, Profile } from "@/lib/types";
 
 export default async function AdminDashboardPage() {
@@ -54,10 +55,24 @@ export default async function AdminDashboardPage() {
 
   const projects = (projectsRaw ?? []) as ProjectWithTeam[];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const users = (usersRaw ?? []).map((u: any) => ({
+  const usersBase = (usersRaw ?? []).map((u: any) => ({
     ...u as Profile,
     project_name: (u.project as { name: string } | null)?.name ?? null,
   }));
+
+  // Fetch OpenRouter usage for users with keys (in parallel)
+  const usageResults = await Promise.all(
+    usersBase.map(async (u) => {
+      if (!u.openrouter_key_hash) return { ...u, key_usage: null, key_limit: null };
+      const usage = await getOpenRouterKeyUsage(u.openrouter_key_hash);
+      return {
+        ...u,
+        key_usage: usage?.usage ?? null,
+        key_limit: usage?.limit ?? null,
+      };
+    })
+  );
+  const users = usageResults;
   const totalProjects = projectCount ?? 0;
   const submittedCount = projects.filter((p) => p.is_submitted).length;
   const completionPct =

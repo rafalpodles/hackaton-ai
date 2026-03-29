@@ -7,7 +7,11 @@ import { generateOpenRouterKey, deleteOpenRouterKey } from "@/lib/actions/admin"
 import ConfirmDialog from "@/components/ui/confirm-dialog";
 
 interface UsersTableProps {
-  users: (Profile & { project_name?: string | null })[];
+  users: (Profile & {
+    project_name?: string | null;
+    key_usage?: number | null;
+    key_limit?: number | null;
+  })[];
 }
 
 export default function UsersTable({ users }: UsersTableProps) {
@@ -122,22 +126,46 @@ export default function UsersTable({ users }: UsersTableProps) {
                 </td>
                 <td className="px-5 py-4">
                   {user.openrouter_api_key ? (
-                    <div className="flex items-center gap-2">
-                      <code className="rounded bg-surface-high px-2 py-1 font-mono text-xs text-primary-dim">
-                        {user.openrouter_api_key.slice(0, 12)}...
-                      </code>
-                      <button
-                        disabled={isPending}
-                        onClick={() =>
-                          setDeleteTarget({
-                            id: user.id,
-                            name: user.display_name,
-                          })
-                        }
-                        className="rounded-md px-2 py-1 font-space-grotesk text-xs font-semibold uppercase tracking-wider text-red-400 transition-colors hover:bg-red-500/15 disabled:opacity-50"
-                      >
-                        Usuń
-                      </button>
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2">
+                        <code className="rounded bg-surface-high px-2 py-1 font-mono text-xs text-primary-dim">
+                          {user.openrouter_api_key.slice(0, 12)}...
+                        </code>
+                        <button
+                          disabled={isPending}
+                          onClick={() =>
+                            setDeleteTarget({
+                              id: user.id,
+                              name: user.display_name,
+                            })
+                          }
+                          className="rounded-md px-2 py-1 font-space-grotesk text-xs font-semibold uppercase tracking-wider text-red-400 transition-colors hover:bg-red-500/15 disabled:opacity-50"
+                        >
+                          Usuń
+                        </button>
+                      </div>
+                      {user.key_limit != null && (
+                        <div className="flex items-center gap-2">
+                          <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-surface-high">
+                            <div
+                              className={`h-full rounded-full transition-all ${
+                                (user.key_usage ?? 0) / user.key_limit > 0.8
+                                  ? "bg-secondary"
+                                  : "bg-gradient-to-r from-primary to-primary-dim"
+                              }`}
+                              style={{
+                                width: `${Math.min(
+                                  ((user.key_usage ?? 0) / user.key_limit) * 100,
+                                  100
+                                )}%`,
+                              }}
+                            />
+                          </div>
+                          <span className="shrink-0 font-mono text-[10px] text-on-surface-muted">
+                            ${(user.key_usage ?? 0).toFixed(2)} / ${user.key_limit}
+                          </span>
+                        </div>
+                      )}
                     </div>
                   ) : (
                     <div className="flex items-center gap-2">

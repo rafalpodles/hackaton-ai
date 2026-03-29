@@ -174,6 +174,31 @@ export async function deleteOpenRouterKey(userId: string) {
   revalidatePath("/profile");
 }
 
+export async function getOpenRouterKeyUsage(
+  keyHash: string
+): Promise<{ usage: number; limit: number | null } | null> {
+  await requireAdmin();
+
+  const managementKey = process.env.OPENROUTER_MANAGEMENT_KEY;
+  if (!managementKey) return null;
+
+  const res = await fetch(
+    `https://openrouter.ai/api/v1/keys/${keyHash}`,
+    {
+      headers: { Authorization: `Bearer ${managementKey}` },
+      next: { revalidate: 0 },
+    }
+  );
+
+  if (!res.ok) return null;
+
+  const { data } = await res.json();
+  return {
+    usage: data?.usage ?? 0,
+    limit: data?.limit ?? null,
+  };
+}
+
 export async function exportResults(): Promise<string> {
   await requireAdmin();
   const supabase = await createClient();
