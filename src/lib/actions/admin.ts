@@ -103,6 +103,7 @@ export async function generateOpenRouterKey(
     body: JSON.stringify({
       name: `Hackathon - ${profile.display_name}`,
       limit,
+      expires_at: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(),
     }),
   });
 
