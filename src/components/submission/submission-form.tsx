@@ -132,7 +132,7 @@ export function SubmissionForm({ project, deadline }: SubmissionFormProps) {
                 ZGŁOSZENIE PROJEKTU
               </h1>
               <p className="mt-2 max-w-2xl text-lg font-light text-on-surface-muted">
-                Opisz swój projekt, pokaż swoją drogę i zgłoś go na hackathon.
+                Pokaż co udało Ci się zbudować podczas hackathonu!
               </p>
             </div>
             {deadline && (
