@@ -2,6 +2,7 @@
 
 import { useRef, useEffect } from "react";
 import type { ProjectWithTeam } from "@/lib/types";
+import { VideoPlayer } from "@/components/ui/video-player";
 
 interface VideoFeedItemProps {
   project: ProjectWithTeam;
@@ -17,12 +18,15 @@ export function VideoFeedItem({
   onViewDetails,
 }: VideoFeedItemProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
-    const video = videoRef.current;
     const container = containerRef.current;
-    if (!video || !container) return;
+    if (!container) return;
+
+    // Auto-play/pause based on visibility is handled by VideoPlayer's autoPlay
+    // but we need intersection observer to play/pause as user scrolls
+    const video = container.querySelector("video");
+    if (!video) return;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -54,14 +58,11 @@ export function VideoFeedItem({
       {/* Video */}
       <div className="w-full max-w-4xl">
         {project.video_url ? (
-          <video
-            ref={videoRef}
+          <VideoPlayer
             src={project.video_url}
-            controls
-            muted
-            playsInline
-            preload={index < 2 ? "auto" : "metadata"}
-            className="aspect-video w-full rounded-xl bg-black"
+            autoPlay
+            showMuteButton
+            className="aspect-video w-full bg-black"
           />
         ) : (
           <div className="flex aspect-video w-full items-center justify-center rounded-xl bg-surface-high">
