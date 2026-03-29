@@ -36,7 +36,7 @@ function LoginForm() {
 
       router.push(`/auth/confirm?email=${encodeURIComponent(email)}`);
     } catch {
-      setError("Something went wrong. Please try again.");
+      setError("Coś poszło nie tak. Spróbuj ponownie.");
     } finally {
       setLoading(false);
     }
@@ -56,7 +56,7 @@ function LoginForm() {
 
           {/* Heading */}
           <h2 className="font-space-grotesk text-2xl font-bold text-on-surface text-center mb-8">
-            Welcome, hacker!
+            Witaj, hackerze!
           </h2>
 
           {/* Form */}
@@ -74,14 +74,14 @@ function LoginForm() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="you@example.com"
+                placeholder="ty@example.com"
                 className="w-full bg-surface-low text-on-surface placeholder:text-on-surface-muted/40 border-b-2 border-secondary focus:border-primary-dim outline-none px-4 py-3 rounded-t-md transition-colors duration-200"
               />
             </div>
 
             {linkExpired && (
               <p className="text-secondary text-sm text-center">
-                Your magic link has expired or was already used. Request a new one below.
+                Twój link logowania wygasł lub został już użyty. Poproś o nowy poniżej.
               </p>
             )}
             {error && (
@@ -93,13 +93,13 @@ function LoginForm() {
               fullWidth
               disabled={loading || !email}
             >
-              {loading ? "Sending..." : "Send Magic Link"}
+              {loading ? "Wysyłanie..." : "Wyślij link logowania"}
             </GradientButton>
           </form>
 
           {/* Footer text */}
           <p className="text-on-surface-muted text-sm text-center mt-6">
-            Check your inbox for the login link — no password needed.
+            Sprawdź skrzynkę — link logowania już czeka. Bez hasła.
           </p>
         </GlassCard>
       </div>

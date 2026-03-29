@@ -21,7 +21,7 @@ export async function castVotes(votes: CastVoteInput[]) {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) {
-    return { error: "You must be logged in to vote." };
+    return { error: "Musisz być zalogowany, aby głosować." };
   }
 
   // Check voting is open
@@ -32,7 +32,7 @@ export async function castVotes(votes: CastVoteInput[]) {
     .single();
 
   if (!settings?.voting_open) {
-    return { error: "Voting is not open yet." };
+    return { error: "Głosowanie nie jest jeszcze otwarte." };
   }
 
   const { data: profile } = await supabase
@@ -42,12 +42,12 @@ export async function castVotes(votes: CastVoteInput[]) {
     .single();
 
   if (!profile) {
-    return { error: "Profile not found." };
+    return { error: "Nie znaleziono profilu." };
   }
 
   // Validate votes structure
   if (!Array.isArray(votes) || votes.length !== 3) {
-    return { error: "You must submit exactly 3 votes (one per category)." };
+    return { error: "Musisz oddać dokładnie 3 głosy (po jednym na kategorię)." };
   }
 
   const seenCategories = new Set<string>();
@@ -55,16 +55,16 @@ export async function castVotes(votes: CastVoteInput[]) {
 
   for (const vote of votes) {
     if (!VALID_CATEGORIES.includes(vote.category)) {
-      return { error: `Invalid category: ${vote.category}` };
+      return { error: `Nieprawidłowa kategoria: ${vote.category}` };
     }
     if (seenCategories.has(vote.category)) {
-      return { error: `Duplicate category: ${vote.category}` };
+      return { error: `Zduplikowana kategoria: ${vote.category}` };
     }
     seenCategories.add(vote.category);
     projectIds.add(vote.project_id);
 
     if (profile.project_id && vote.project_id === profile.project_id) {
-      return { error: "You cannot vote for your own project." };
+      return { error: "Nie możesz głosować na własny projekt." };
     }
   }
 
@@ -76,7 +76,7 @@ export async function castVotes(votes: CastVoteInput[]) {
     .eq("is_submitted", true);
 
   if (!validProjects || validProjects.length !== projectIds.size) {
-    return { error: "One or more selected projects are invalid." };
+    return { error: "Jeden lub więcej wybranych projektów jest nieprawidłowy." };
   }
 
   // Check for existing votes
@@ -87,7 +87,7 @@ export async function castVotes(votes: CastVoteInput[]) {
     .limit(1);
 
   if (existingVotes && existingVotes.length > 0) {
-    return { error: "You have already submitted your votes." };
+    return { error: "Twoje głosy zostały już oddane." };
   }
 
   const rows = votes.map((v) => ({
@@ -100,9 +100,9 @@ export async function castVotes(votes: CastVoteInput[]) {
 
   if (insertError) {
     if (insertError.code === "23505") {
-      return { error: "You have already submitted your votes." };
+      return { error: "Twoje głosy zostały już oddane." };
     }
-    return { error: "Failed to submit votes. Please try again." };
+    return { error: "Nie udało się oddać głosów. Spróbuj ponownie." };
   }
 
   return { success: true };

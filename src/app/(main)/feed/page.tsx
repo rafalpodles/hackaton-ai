@@ -8,7 +8,7 @@ export default async function FeedPage() {
     return (
       <div className="flex h-96 items-center justify-center">
         <p className="text-on-surface-muted">
-          No submitted projects yet. Check back soon!
+          Brak zgłoszonych projektów. Sprawdź później!
         </p>
       </div>
     );

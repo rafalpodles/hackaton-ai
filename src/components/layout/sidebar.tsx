@@ -11,14 +11,14 @@ interface SidebarProps {
 }
 
 const navItems = [
-  { label: "Live Feed", href: "/feed" },
-  { label: "Projects", href: "/" },
-  { label: "Submit", href: "/my-project" },
+  { label: "Na żywo", href: "/feed" },
+  { label: "Projekty", href: "/" },
+  { label: "Zgłoś projekt", href: "/my-project" },
 ];
 
 const adminItems = [
-  { label: "Dashboard", href: "/admin" },
-  { label: "Results", href: "/results" },
+  { label: "Panel", href: "/admin" },
+  { label: "Wyniki", href: "/results" },
 ];
 
 export default function Sidebar({ user, votingOpen }: SidebarProps) {
@@ -102,7 +102,7 @@ export default function Sidebar({ user, votingOpen }: SidebarProps) {
             href="/vote"
             className="block w-full rounded-lg bg-gradient-to-r from-primary to-secondary py-2.5 text-center font-space-grotesk text-sm font-bold uppercase tracking-wider text-white transition-opacity hover:opacity-90"
           >
-            Vote Now
+            Głosuj
           </Link>
         </div>
       )}
@@ -113,7 +113,7 @@ export default function Sidebar({ user, votingOpen }: SidebarProps) {
           onClick={handleLogout}
           className="w-full rounded-lg px-3 py-2 text-left font-space-grotesk text-xs uppercase tracking-wider text-on-surface-muted transition-colors hover:bg-surface-high hover:text-on-surface"
         >
-          Logout
+          Wyloguj
         </button>
       </div>
     </aside>

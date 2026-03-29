@@ -7,7 +7,7 @@ import ExcelJS from "exceljs";
 
 async function requireAdmin() {
   const user = await getCurrentUser();
-  if (!user || user.role !== "admin") throw new Error("Forbidden");
+  if (!user || user.role !== "admin") throw new Error("Brak dostępu");
   return user;
 }
 
@@ -20,7 +20,7 @@ export async function toggleVoting(open: boolean) {
     .update({ voting_open: open })
     .eq("id", 1);
 
-  if (error) throw new Error("Failed to update voting status");
+  if (error) throw new Error("Nie udało się zaktualizować statusu głosowania");
 
   revalidatePath("/admin");
   revalidatePath("/vote");
@@ -48,7 +48,7 @@ export async function deleteProject(projectId: string) {
     .update({ project_id: null })
     .eq("project_id", projectId);
 
-  if (unlinkError) throw new Error("Failed to unlink team members");
+  if (unlinkError) throw new Error("Nie udało się odłączyć członków zespołu");
 
   // Delete project (cascades votes)
   const { error: deleteError } = await supabase
@@ -56,7 +56,7 @@ export async function deleteProject(projectId: string) {
     .delete()
     .eq("id", projectId);
 
-  if (deleteError) throw new Error("Failed to delete project");
+  if (deleteError) throw new Error("Nie udało się usunąć projektu");
 
   revalidatePath("/admin");
   revalidatePath("/");

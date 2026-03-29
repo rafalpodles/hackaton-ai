@@ -40,20 +40,20 @@ export default async function MyProjectPage() {
       <div className="mx-auto max-w-3xl space-y-8">
         <div className="flex items-center gap-4">
           <h1 className="font-space-grotesk text-2xl font-bold text-on-surface">
-            Project Submission
+            Zgłoszenie projektu
           </h1>
           <span className="rounded-full bg-primary/20 px-3 py-1 text-xs font-bold uppercase tracking-wider text-primary-dim">
-            Submitted &#10003;
+            Zgłoszony &#10003;
           </span>
         </div>
 
         <div className="space-y-4 rounded-xl border border-outline bg-surface-low p-6 text-sm">
-          <InfoRow label="Name" value={typedProject.name} />
-          <InfoRow label="Description" value={typedProject.description} />
-          <InfoRow label="Idea Origin" value={typedProject.idea_origin} />
-          <InfoRow label="Journey" value={typedProject.journey} />
+          <InfoRow label="Nazwa" value={typedProject.name} />
+          <InfoRow label="Opis" value={typedProject.description} />
+          <InfoRow label="Źródło pomysłu" value={typedProject.idea_origin} />
+          <InfoRow label="Droga" value={typedProject.journey} />
           <InfoRow
-            label="Tech Stack"
+            label="Technologie"
             value={
               (typedProject.tech_stack ?? []).length > 0
                 ? (typedProject.tech_stack ?? []).join(", ")
@@ -61,20 +61,20 @@ export default async function MyProjectPage() {
             }
           />
           <InfoRow
-            label="Video"
+            label="Wideo"
             value={
               typedProject.video_url
-                ? `Uploaded \u2713${typedProject.video_duration ? ` (${typedProject.video_duration}s)` : ""}`
-                : "\u2014"
+                ? `Przesłano \u2713${typedProject.video_duration ? ` (${typedProject.video_duration}s)` : ""}`
+                : "Nie przesłano"
             }
           />
           <InfoRow
-            label="Thumbnail"
-            value={typedProject.thumbnail_url ? "Uploaded \u2713" : "\u2014"}
+            label="Miniaturka"
+            value={typedProject.thumbnail_url ? "Przesłano \u2713" : "Nie przesłano"}
           />
           <InfoRow
-            label="Presentation"
-            value={typedProject.pdf_url ? "Uploaded \u2713" : "\u2014"}
+            label="Prezentacja"
+            value={typedProject.pdf_url ? "Przesłano \u2713" : "Nie przesłano"}
           />
         </div>
 
@@ -82,7 +82,7 @@ export default async function MyProjectPage() {
         {team.length > 0 && (
           <div className="space-y-3">
             <h2 className="font-space-grotesk text-sm font-bold uppercase tracking-wider text-on-surface-muted">
-              Team Members
+              Członkowie zespołu
             </h2>
             <div className="flex flex-wrap gap-3">
               {team.map((member) => (

@@ -16,7 +16,7 @@ export function JoinProjectList({ projects }: JoinProjectListProps) {
   if (projects.length === 0) {
     return (
       <p className="text-on-surface-muted text-sm">
-        No projects available to join yet.
+        Brak projektów do dołączenia.
       </p>
     );
   }
@@ -27,7 +27,7 @@ export function JoinProjectList({ projects }: JoinProjectListProps) {
     try {
       await joinProject(projectId);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to join project");
+      setError(err instanceof Error ? err.message : "Nie udało się dołączyć");
       setLoadingId(null);
     }
   }
@@ -52,7 +52,7 @@ export function JoinProjectList({ projects }: JoinProjectListProps) {
             <p className="text-on-surface-muted text-xs mt-1">
               {project.team.length > 0
                 ? project.team.map((m) => m.display_name).join(", ")
-                : "No members yet"}
+                : "Brak członków"}
             </p>
           </div>
           <GradientButton
@@ -60,7 +60,7 @@ export function JoinProjectList({ projects }: JoinProjectListProps) {
             disabled={loadingId !== null}
             onClick={() => handleJoin(project.id)}
           >
-            {loadingId === project.id ? "Joining..." : "Join \u2192"}
+            {loadingId === project.id ? "Dołączanie..." : "Dołącz \u2192"}
           </GradientButton>
         </li>
       ))}

@@ -31,13 +31,13 @@ export function VideoFeed({ projects }: VideoFeedProps) {
         {/* End slide */}
         <div className="flex h-screen snap-start flex-col items-center justify-center gap-6">
           <h2 className="font-space-grotesk text-3xl font-bold text-on-surface">
-            That&apos;s all!
+            To wszystko!
           </h2>
           <p className="text-on-surface-muted">
-            You&apos;ve seen every project. Ready to vote?
+            Obejrzałeś wszystkie projekty. Gotowy do głosowania?
           </p>
           <Link href="/vote">
-            <GradientButton>Go Vote &rarr;</GradientButton>
+            <GradientButton>Głosuj &rarr;</GradientButton>
           </Link>
         </div>
       </div>

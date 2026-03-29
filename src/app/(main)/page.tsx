@@ -18,7 +18,7 @@ export default async function HomePage() {
         </h1>
 
         <Link href="/feed">
-          <GradientButton>Watch All Demos</GradientButton>
+          <GradientButton>Oglądaj wszystkie dema</GradientButton>
         </Link>
       </div>
 
@@ -27,14 +27,14 @@ export default async function HomePage() {
         <ProjectGrid projects={projects} />
       ) : (
         <p className="text-center text-on-surface-muted">
-          No projects submitted yet.
+          Brak zgłoszonych projektów.
         </p>
       )}
 
       {/* Project count */}
       <p className="text-center text-sm text-on-surface-muted">
         {projects.length}{" "}
-        {projects.length === 1 ? "project" : "projects"} submitted
+        {projects.length === 1 ? "projekt" : projects.length >= 2 && projects.length <= 4 ? "projekty" : "projektów"} zgłoszonych
       </p>
     </div>
   );

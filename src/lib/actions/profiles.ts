@@ -11,14 +11,14 @@ export async function updateProfile(data: {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) throw new Error("Not authenticated");
+  if (!user) throw new Error("Nie jesteś zalogowany");
 
   const allowed: Record<string, string> = {};
 
   if (data.display_name !== undefined) {
     const name = data.display_name.trim();
-    if (!name) throw new Error("Display name cannot be empty");
-    if (name.length > 100) throw new Error("Display name is too long");
+    if (!name) throw new Error("Nazwa nie może być pusta");
+    if (name.length > 100) throw new Error("Nazwa jest za długa");
     allowed.display_name = name;
   }
 
@@ -27,7 +27,7 @@ export async function updateProfile(data: {
   }
 
   if (Object.keys(allowed).length === 0) {
-    throw new Error("No fields to update");
+    throw new Error("Brak pól do aktualizacji");
   }
 
   const { error } = await supabase
@@ -35,7 +35,7 @@ export async function updateProfile(data: {
     .update(allowed)
     .eq("id", user.id);
 
-  if (error) throw new Error("Failed to update profile");
+  if (error) throw new Error("Nie udało się zaktualizować profilu");
 
   revalidatePath("/profile");
   revalidatePath("/");

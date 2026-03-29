@@ -14,7 +14,7 @@ interface ConfirmDialogProps {
 export default function ConfirmDialog({
   title,
   message,
-  confirmLabel = "Confirm",
+  confirmLabel = "Potwierdź",
   onConfirm,
   onCancel,
 }: ConfirmDialogProps) {
@@ -87,7 +87,7 @@ export default function ConfirmDialog({
         </p>
         <div className="mt-6 flex justify-end gap-3">
           <GradientButton variant="ghost" onClick={onCancel}>
-            Cancel
+            Anuluj
           </GradientButton>
           <GradientButton ref={confirmBtnRef} onClick={onConfirm}>
             {confirmLabel}

@@ -87,7 +87,7 @@ export function VideoFeedItem({
       <div className="mt-4 flex w-full max-w-4xl items-start justify-between gap-4">
         <div className="min-w-0 flex-1">
           <p className="text-xs font-medium uppercase tracking-wider text-primary-dim">
-            Project #{projectNumber}
+            Projekt #{projectNumber}
           </p>
           <h2 className="font-space-grotesk text-2xl font-bold text-on-surface">
             {project.name}
@@ -109,14 +109,14 @@ export function VideoFeedItem({
           onClick={onViewDetails}
           className="shrink-0 text-sm font-medium text-primary-dim transition-colors hover:text-on-surface"
         >
-          View Full Project Details &rarr;
+          Zobacz szczegóły &rarr;
         </button>
       </div>
 
       {/* Scroll down indicator */}
       {index < total - 1 && (
         <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 text-on-surface-muted/50">
-          <span className="text-xs uppercase tracking-widest">Scroll</span>
+          <span className="text-xs uppercase tracking-widest">Przewiń</span>
           <div className="flex flex-col items-center animate-bounce">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="opacity-60">
               <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />

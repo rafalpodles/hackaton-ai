@@ -37,7 +37,7 @@ function ConfirmContent() {
 
           {/* Heading */}
           <h2 className="font-space-grotesk text-2xl font-bold text-on-surface mb-4">
-            Check your email!
+            Sprawdź email!
           </h2>
 
           {/* Email display */}
@@ -49,13 +49,12 @@ function ConfirmContent() {
 
           {/* Message */}
           <p className="text-on-surface-muted text-sm mb-8">
-            Click the link we sent you to sign in. The link expires in 15
-            minutes.
+            Kliknij link, który wysłaliśmy. Link wygasa za 15 minut.
           </p>
 
           {/* Open mail app button */}
           <a href={`mailto:${email}`}>
-            <GradientButton fullWidth>Open Mail App</GradientButton>
+            <GradientButton fullWidth>Otwórz pocztę</GradientButton>
           </a>
 
           {/* Links */}
@@ -64,13 +63,13 @@ function ConfirmContent() {
               href={`/login`}
               className="text-primary-dim text-sm hover:underline transition-colors"
             >
-              Send again
+              Wyślij ponownie
             </Link>
             <Link
               href="/login"
               className="text-on-surface-muted text-sm hover:text-on-surface transition-colors"
             >
-              Use different email
+              Użyj innego emaila
             </Link>
           </div>
         </GlassCard>
@@ -84,7 +83,7 @@ export default function ConfirmPage() {
     <Suspense
       fallback={
         <div className="min-h-screen bg-surface flex items-center justify-center">
-          <p className="text-on-surface-muted">Loading...</p>
+          <p className="text-on-surface-muted">Ładowanie...</p>
         </div>
       }
     >

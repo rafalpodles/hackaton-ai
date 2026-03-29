@@ -30,7 +30,7 @@ export default function AdminResultsPage() {
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Export failed");
+        setError(err instanceof Error ? err.message : "Eksport nie powiódł się");
       }
     });
   };
@@ -38,19 +38,18 @@ export default function AdminResultsPage() {
   return (
     <div className="space-y-8">
       <h1 className="font-space-grotesk text-3xl font-bold text-on-surface">
-        Export Results
+        Eksport wyników
       </h1>
 
       <div className="rounded-xl border border-outline bg-surface-low/60 p-8 backdrop-blur-md">
         <p className="mb-6 text-sm text-on-surface-muted">
-          Download all hackathon results, votes, and project data as an Excel
-          spreadsheet. The file includes three sheets: Results (ranked by
-          category), All Votes (individual votes), and Projects (full data
-          dump).
+          Pobierz wszystkie wyniki hackathonu, głosy i dane projektów jako arkusz
+          Excel. Plik zawiera trzy arkusze: Wyniki (ranking wg kategorii),
+          Wszystkie głosy (pojedyncze głosy) i Projekty (pełne dane).
         </p>
 
         <GradientButton onClick={handleExport} disabled={isPending}>
-          {isPending ? "Generating..." : "Download Excel Report"}
+          {isPending ? "Generowanie..." : "Pobierz raport Excel"}
         </GradientButton>
 
         {error && (

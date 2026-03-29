@@ -20,10 +20,10 @@ export default async function VotePage() {
     return (
       <div className="flex flex-col items-center justify-center py-20">
         <h1 className="font-space-grotesk text-3xl font-bold text-on-surface">
-          Voting is not open yet
+          Głosowanie jeszcze nie jest otwarte
         </h1>
         <p className="mt-2 text-on-surface-muted">
-          The admin will open voting when all projects are submitted.
+          Administrator otworzy głosowanie, gdy wszystkie projekty zostaną zgłoszone.
         </p>
       </div>
     );
@@ -48,10 +48,10 @@ export default async function VotePage() {
     <div className="space-y-6">
       <div>
         <h1 className="font-space-grotesk text-3xl font-bold text-on-surface">
-          Vote for your favorites
+          Głosuj na swoich faworytów
         </h1>
         <p className="mt-1 text-on-surface-muted">
-          Select one project per category. You cannot vote for your own project.
+          Wybierz jeden projekt w każdej kategorii. Nie możesz głosować na własny projekt.
         </p>
       </div>
 

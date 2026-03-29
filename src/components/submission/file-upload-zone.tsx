@@ -73,7 +73,7 @@ export function FileUploadZone({
       setError(null);
 
       if (maxSizeMb && file.size > maxSizeMb * 1024 * 1024) {
-        setError(`File too large. Maximum size is ${maxSizeMb} MB.`);
+        setError(`Plik za duży. Maksymalny rozmiar to ${maxSizeMb} MB.`);
         return;
       }
 
@@ -83,12 +83,12 @@ export function FileUploadZone({
           duration = await getVideoDuration(file);
           if (duration > maxDurationSec) {
             setError(
-              `Video too long (${Math.round(duration)}s). Maximum is ${maxDurationSec}s.`
+              `Wideo za długie (${Math.round(duration)}s). Maksymalnie ${maxDurationSec}s.`
             );
             return;
           }
         } catch {
-          setError("Could not read video duration.");
+          setError("Nie udało się odczytać długości wideo.");
           return;
         }
       }
@@ -122,7 +122,7 @@ export function FileUploadZone({
         setUploaded(true);
         onUploadComplete(publicUrl, duration);
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Upload failed");
+        setError(err instanceof Error ? err.message : "Przesyłanie nie powiodło się");
       } finally {
         clearInterval(progressInterval);
         setUploading(false);
@@ -184,7 +184,7 @@ export function FileUploadZone({
         {bucketIcon(bucket)}
 
         <p className="font-space-grotesk text-sm font-bold uppercase tracking-widest text-on-surface">
-          {uploaded ? `${label} uploaded` : `Upload ${label}`}
+          {uploaded ? `${label} — przesłano` : `Prześlij ${label}`}
         </p>
         <p className="text-xs font-light text-on-surface-muted">{hint}</p>
 
@@ -199,7 +199,7 @@ export function FileUploadZone({
 
         {uploaded && !uploading && (
           <p className="font-space-grotesk text-xs font-semibold text-primary-dim">
-            Uploaded &#10003;
+            Przesłano &#10003;
           </p>
         )}
 

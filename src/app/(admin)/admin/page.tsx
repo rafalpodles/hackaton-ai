@@ -39,7 +39,7 @@ export default async function AdminDashboardPage() {
     return (
       <div className="rounded-xl border border-secondary/30 bg-secondary/5 p-6">
         <h2 className="font-space-grotesk text-lg font-bold text-secondary">
-          Failed to load dashboard
+          Nie udało się załadować panelu
         </h2>
         <p className="mt-2 text-sm text-on-surface-muted">{queryError.message}</p>
       </div>
@@ -55,17 +55,17 @@ export default async function AdminDashboardPage() {
       : 0;
 
   const stats = [
-    { label: "Total Projects", value: totalProjects },
-    { label: "Participants", value: participantCount ?? 0 },
-    { label: "Votes Cast", value: voteCount ?? 0 },
-    { label: "Completion", value: `${completionPct}%` },
+    { label: "Wszystkie projekty", value: totalProjects },
+    { label: "Uczestnicy", value: participantCount ?? 0 },
+    { label: "Oddane głosy", value: voteCount ?? 0 },
+    { label: "Ukończenie", value: `${completionPct}%` },
   ];
 
   return (
     <div className="space-y-8">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <h1 className="font-space-grotesk text-3xl font-bold text-on-surface">
-          Admin Dashboard
+          Panel administracyjny
         </h1>
         <VotingToggle isOpen={settings?.voting_open ?? false} />
       </div>
@@ -74,7 +74,7 @@ export default async function AdminDashboardPage() {
 
       <div className="space-y-4">
         <h2 className="font-space-grotesk text-xl font-semibold text-on-surface">
-          Projects
+          Projekty
         </h2>
         <ProjectsTable projects={projects} />
       </div>

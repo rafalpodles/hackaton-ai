@@ -14,7 +14,7 @@ const manrope = Manrope({
 
 export const metadata: Metadata = {
   title: "Spyrosoft AI Hackathon",
-  description: "Showcase and vote on hackathon projects",
+  description: "Przeglądaj i głosuj na projekty hackathonowe",
 };
 
 export default function RootLayout({
@@ -23,7 +23,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="dark">
+    <html lang="pl" className="dark">
       <body
         className={`${spaceGrotesk.variable} ${manrope.variable} font-manrope bg-[#0e0e13] text-[#f8f5fd] antialiased`}
       >

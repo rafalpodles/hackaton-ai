@@ -4,9 +4,9 @@ import { getCurrentUser } from "@/lib/utils";
 import type { VoteCategory, VoteResult } from "@/lib/types";
 
 const categoryLabels: Record<VoteCategory, string> = {
-  best_overall: "Best Overall 🏆",
-  best_demo_ux: "Best Demo / UX 🎨",
-  most_creative: "Most Creative 🧠",
+  best_overall: "Najlepszy projekt 🏆",
+  best_demo_ux: "Najlepsze demo / UX 🎨",
+  most_creative: "Najbardziej kreatywny 🧠",
 };
 
 const categories: VoteCategory[] = [
@@ -77,7 +77,7 @@ export default async function ResultsPage() {
   return (
     <div className="space-y-8">
       <h1 className="font-space-grotesk text-3xl font-bold text-on-surface">
-        Results
+        Wyniki
       </h1>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
@@ -112,7 +112,7 @@ export default async function ResultsPage() {
                       </p>
                     </div>
                     <span className="shrink-0 rounded-md bg-primary/15 px-2 py-1 font-space-grotesk text-sm font-bold text-primary-dim">
-                      {result.vote_count} {result.vote_count === 1 ? "vote" : "votes"}
+                      {result.vote_count} {result.vote_count === 1 ? "głos" : result.vote_count >= 2 && result.vote_count <= 4 ? "głosy" : "głosów"}
                     </span>
                   </div>
                 </div>
@@ -120,7 +120,7 @@ export default async function ResultsPage() {
 
               {grouped[cat].length === 0 && (
                 <p className="py-8 text-center text-sm text-on-surface-muted">
-                  No votes yet
+                  Brak głosów
                 </p>
               )}
             </div>

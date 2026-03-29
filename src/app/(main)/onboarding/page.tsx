@@ -33,28 +33,28 @@ export default async function OnboardingPage() {
   return (
     <div className="mx-auto max-w-2xl space-y-10 py-8">
       <h1 className="font-space-grotesk text-3xl font-bold text-on-surface">
-        Get Started
+        Rozpocznij
       </h1>
 
       <GlassCard>
         <h2 className="font-space-grotesk text-xl font-semibold text-on-surface mb-6">
-          Create New Project
+          Utwórz nowy projekt
         </h2>
         <form action={handleCreate} className="flex gap-3">
           <input
             name="name"
             type="text"
             required
-            placeholder="Project name"
+            placeholder="Nazwa projektu"
             className="flex-1 rounded-md border border-outline bg-surface-low px-4 py-3 text-on-surface placeholder:text-on-surface-muted focus:outline-none focus:ring-2 focus:ring-primary-dim"
           />
-          <GradientButton type="submit">Create</GradientButton>
+          <GradientButton type="submit">Utwórz</GradientButton>
         </form>
       </GlassCard>
 
       <GlassCard>
         <h2 className="font-space-grotesk text-xl font-semibold text-on-surface mb-6">
-          Join Existing Project
+          Dołącz do istniejącego projektu
         </h2>
         <JoinProjectList projects={projectList} />
       </GlassCard>

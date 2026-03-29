@@ -5,13 +5,13 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 
 export async function createProject(name: string) {
-  if (!name?.trim()) throw new Error("Project name is required");
+  if (!name?.trim()) throw new Error("Nazwa projektu jest wymagana");
 
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) throw new Error("Not authenticated");
+  if (!user) throw new Error("Nie jesteś zalogowany");
 
   // Check user doesn't already have a project
   const { data: profile } = await supabase
@@ -21,7 +21,7 @@ export async function createProject(name: string) {
     .single();
 
   if (profile?.project_id) {
-    throw new Error("You are already in a project");
+    throw new Error("Już należysz do projektu");
   }
 
   const projectId = crypto.randomUUID();
@@ -30,14 +30,14 @@ export async function createProject(name: string) {
     .from("projects")
     .insert({ id: projectId, name: name.trim(), description: "", idea_origin: "", journey: "" });
 
-  if (error) throw new Error(`Failed to create project: ${error.message}`);
+  if (error) throw new Error(`Nie udało się utworzyć projektu: ${error.message}`);
 
   const { error: updateError } = await supabase
     .from("profiles")
     .update({ project_id: projectId })
     .eq("id", user.id);
 
-  if (updateError) throw new Error("Failed to assign you to the project");
+  if (updateError) throw new Error("Nie udało się przypisać Cię do projektu");
 
   revalidatePath("/");
   redirect("/my-project");
@@ -48,7 +48,7 @@ export async function joinProject(projectId: string) {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) throw new Error("Not authenticated");
+  if (!user) throw new Error("Nie jesteś zalogowany");
 
   // Check user doesn't already have a project
   const { data: profile } = await supabase
@@ -58,7 +58,7 @@ export async function joinProject(projectId: string) {
     .single();
 
   if (profile?.project_id) {
-    throw new Error("You are already in a project. Leave it first.");
+    throw new Error("Już należysz do projektu. Najpierw go opuść.");
   }
 
   // Check project exists and is not yet submitted (open for joining)
@@ -68,15 +68,15 @@ export async function joinProject(projectId: string) {
     .eq("id", projectId)
     .single();
 
-  if (!project) throw new Error("Project not found");
-  if (project.is_submitted) throw new Error("Cannot join a submitted project");
+  if (!project) throw new Error("Nie znaleziono projektu");
+  if (project.is_submitted) throw new Error("Nie można dołączyć do zgłoszonego projektu");
 
   const { error } = await supabase
     .from("profiles")
     .update({ project_id: projectId })
     .eq("id", user.id);
 
-  if (error) throw new Error("Failed to join project");
+  if (error) throw new Error("Nie udało się dołączyć do projektu");
 
   revalidatePath("/");
   redirect("/my-project");
@@ -100,7 +100,7 @@ export async function updateProject(
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) throw new Error("Not authenticated");
+  if (!user) throw new Error("Nie jesteś zalogowany");
 
   const { data: profile } = await supabase
     .from("profiles")
@@ -109,7 +109,7 @@ export async function updateProject(
     .single();
 
   if (profile?.project_id !== projectId) {
-    throw new Error("You are not a member of this project");
+    throw new Error("Nie jesteś członkiem tego projektu");
   }
 
   const { data: project } = await supabase
@@ -119,7 +119,7 @@ export async function updateProject(
     .single();
 
   if (project?.is_submitted) {
-    throw new Error("Cannot update a submitted project");
+    throw new Error("Nie można edytować zgłoszonego projektu");
   }
 
   // Only allow known fields
@@ -140,7 +140,7 @@ export async function updateProject(
     .update(allowed)
     .eq("id", projectId);
 
-  if (error) throw new Error("Failed to update project");
+  if (error) throw new Error("Nie udało się zaktualizować projektu");
 
   revalidatePath("/my-project");
 }
@@ -150,7 +150,7 @@ export async function submitProject(projectId: string) {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) throw new Error("Not authenticated");
+  if (!user) throw new Error("Nie jesteś zalogowany");
 
   const { data: profile } = await supabase
     .from("profiles")
@@ -159,7 +159,7 @@ export async function submitProject(projectId: string) {
     .single();
 
   if (profile?.project_id !== projectId) {
-    throw new Error("You are not a member of this project");
+    throw new Error("Nie jesteś członkiem tego projektu");
   }
 
   const { data: project } = await supabase
@@ -168,12 +168,12 @@ export async function submitProject(projectId: string) {
     .eq("id", projectId)
     .single();
 
-  if (!project) throw new Error("Project not found");
-  if (project.is_submitted) throw new Error("Project already submitted");
+  if (!project) throw new Error("Nie znaleziono projektu");
+  if (project.is_submitted) throw new Error("Projekt został już zgłoszony");
 
   if (!project.name || !project.description || !project.video_url) {
     throw new Error(
-      "Missing required fields: name, description, and video are required"
+      "Brakuje wymaganych pól: nazwa, opis i wideo są wymagane"
     );
   }
 
@@ -182,7 +182,7 @@ export async function submitProject(projectId: string) {
     .update({ is_submitted: true })
     .eq("id", projectId);
 
-  if (error) throw new Error("Failed to submit project");
+  if (error) throw new Error("Nie udało się zgłosić projektu");
 
   revalidatePath("/");
   revalidatePath("/my-project");
@@ -194,7 +194,7 @@ export async function leaveProject() {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) throw new Error("Not authenticated");
+  if (!user) throw new Error("Nie jesteś zalogowany");
 
   // Check project isn't submitted
   const { data: profile } = await supabase
@@ -211,7 +211,7 @@ export async function leaveProject() {
       .single();
 
     if (project?.is_submitted) {
-      throw new Error("Cannot leave a submitted project");
+      throw new Error("Nie można opuścić zgłoszonego projektu");
     }
   }
 
@@ -220,7 +220,7 @@ export async function leaveProject() {
     .update({ project_id: null })
     .eq("id", user.id);
 
-  if (error) throw new Error("Failed to leave project");
+  if (error) throw new Error("Nie udało się opuścić projektu");
 
   revalidatePath("/");
   redirect("/onboarding");

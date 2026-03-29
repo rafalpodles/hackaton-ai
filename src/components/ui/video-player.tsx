@@ -51,7 +51,7 @@ export function VideoPlayer({
       onKeyDown={handleKeyDown}
       role="button"
       tabIndex={0}
-      aria-label={isPlaying ? "Pause video" : "Play video"}
+      aria-label={isPlaying ? "Pauza" : "Odtwórz"}
     >
       <video
         ref={videoRef}
@@ -102,7 +102,7 @@ export function VideoPlayer({
             setIsMuted((m) => !m);
           }}
           className="absolute bottom-4 right-4 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-black/60 text-white backdrop-blur-sm transition-all hover:bg-black/80"
-          aria-label={isMuted ? "Unmute" : "Mute"}
+          aria-label={isMuted ? "Włącz dźwięk" : "Wycisz"}
         >
           {isMuted ? (
             <svg className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">

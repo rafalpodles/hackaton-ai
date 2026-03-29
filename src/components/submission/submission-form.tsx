@@ -45,15 +45,15 @@ export function SubmissionForm({ project }: SubmissionFormProps) {
 
     // Client-side validation before calling server action
     if (!name.trim()) {
-      setSubmitError("Project name is required.");
+      setSubmitError("Nazwa projektu jest wymagana.");
       return;
     }
     if (!description.trim()) {
-      setSubmitError("Project description is required.");
+      setSubmitError("Opis projektu jest wymagany.");
       return;
     }
     if (!videoUrl) {
-      setSubmitError("Demo video is required.");
+      setSubmitError("Wideo demo jest wymagane.");
       return;
     }
 
@@ -62,7 +62,7 @@ export function SubmissionForm({ project }: SubmissionFormProps) {
         await submitProject(project.id);
       } catch (err) {
         setSubmitError(
-          err instanceof Error ? err.message : "Submission failed"
+          err instanceof Error ? err.message : "Zgłoszenie nie powiodło się"
         );
       }
     });
@@ -94,11 +94,10 @@ export function SubmissionForm({ project }: SubmissionFormProps) {
         {/* Header */}
         <header className="mb-12">
           <h1 className="font-space-grotesk text-5xl font-extrabold tracking-tighter text-on-surface">
-            PROJECT SUBMISSION
+            ZGŁOSZENIE PROJEKTU
           </h1>
           <p className="mt-2 max-w-2xl text-lg font-light text-on-surface-muted">
-            Document your build, showcase your journey, and submit your project
-            for the hackathon.
+            Opisz swój projekt, pokaż swoją drogę i zgłoś go na hackathon.
           </p>
         </header>
 
@@ -108,10 +107,10 @@ export function SubmissionForm({ project }: SubmissionFormProps) {
             {/* Project name */}
             <div className="space-y-2">
               <label className="font-space-grotesk text-[10px] font-bold uppercase tracking-[0.2em] text-primary-dim">
-                Project Identity
+                Identyfikacja
               </label>
               <h2 className="font-space-grotesk text-2xl font-bold text-on-surface">
-                What&apos;s your project called?
+                Jak się nazywa Twój projekt?
               </h2>
               <div className="group relative">
                 <input
@@ -119,7 +118,7 @@ export function SubmissionForm({ project }: SubmissionFormProps) {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   onBlur={() => save({ name })}
-                  placeholder="Enter your project name..."
+                  placeholder="Wpisz nazwę projektu..."
                 />
                 <div className="absolute bottom-0 left-0 h-[2px] w-full origin-left scale-x-0 bg-gradient-to-r from-primary to-secondary transition-transform duration-500 group-focus-within:scale-x-100" />
               </div>
@@ -128,7 +127,7 @@ export function SubmissionForm({ project }: SubmissionFormProps) {
             {/* Description */}
             <div className="space-y-2">
               <h2 className="font-space-grotesk text-2xl font-bold text-on-surface">
-                What does your project do?
+                Co robi Twój projekt?
               </h2>
               <div className="group relative">
                 <textarea
@@ -137,7 +136,7 @@ export function SubmissionForm({ project }: SubmissionFormProps) {
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   onBlur={() => save({ description })}
-                  placeholder="Describe the core utility and problem solved..."
+                  placeholder="Opisz główną funkcjonalność i rozwiązany problem..."
                 />
                 <div className="absolute bottom-0 left-0 h-[2px] w-full origin-left scale-x-0 bg-gradient-to-r from-primary to-secondary transition-transform duration-500 group-focus-within:scale-x-100" />
               </div>
@@ -149,7 +148,7 @@ export function SubmissionForm({ project }: SubmissionFormProps) {
             {/* Idea Origin */}
             <div className="space-y-2">
               <h2 className="font-space-grotesk text-2xl font-bold text-on-surface">
-                How did you get the idea?
+                Skąd wziął się pomysł?
               </h2>
               <div className="group relative">
                 <textarea
@@ -157,7 +156,7 @@ export function SubmissionForm({ project }: SubmissionFormProps) {
                   value={ideaOrigin}
                   onChange={(e) => setIdeaOrigin(e.target.value)}
                   onBlur={() => save({ idea_origin: ideaOrigin })}
-                  placeholder="Tell us about the 'Eureka' moment..."
+                  placeholder="Opowiedz o momencie 'Eureka'..."
                 />
                 <div className="absolute bottom-0 left-0 h-[2px] w-full origin-left scale-x-0 bg-gradient-to-r from-primary to-secondary transition-transform duration-500 group-focus-within:scale-x-100" />
               </div>
@@ -166,7 +165,7 @@ export function SubmissionForm({ project }: SubmissionFormProps) {
             {/* Journey */}
             <div className="space-y-2">
               <h2 className="font-space-grotesk text-2xl font-bold text-on-surface">
-                What was your journey?
+                Jak wyglądała Twoja droga?
               </h2>
               <div className="group relative">
                 <textarea
@@ -174,7 +173,7 @@ export function SubmissionForm({ project }: SubmissionFormProps) {
                   value={journey}
                   onChange={(e) => setJourney(e.target.value)}
                   onBlur={() => save({ journey })}
-                  placeholder="Challenges, pivots, and breakthroughs..."
+                  placeholder="Wyzwania, zwroty akcji i przełomy..."
                 />
                 <div className="absolute bottom-0 left-0 h-[2px] w-full origin-left scale-x-0 bg-gradient-to-r from-primary to-secondary transition-transform duration-500 group-focus-within:scale-x-100" />
               </div>
@@ -183,7 +182,7 @@ export function SubmissionForm({ project }: SubmissionFormProps) {
             {/* Tech Stack */}
             <div className="space-y-4">
               <h2 className="font-space-grotesk text-2xl font-bold text-on-surface">
-                Tech stack used
+                Użyte technologie
               </h2>
               <div className="flex flex-wrap gap-3 bg-black p-6">
                 {techStack.map((tag) => (
@@ -213,7 +212,7 @@ export function SubmissionForm({ project }: SubmissionFormProps) {
                       addTag();
                     }
                   }}
-                  placeholder="Add tech..."
+                  placeholder="Dodaj..."
                 />
               </div>
             </div>
@@ -223,7 +222,7 @@ export function SubmissionForm({ project }: SubmissionFormProps) {
           <div className="space-y-8 lg:col-span-5">
             <div className="space-y-6">
               <label className="font-space-grotesk text-[10px] font-bold uppercase tracking-[0.2em] text-primary-dim">
-                Proof of Build
+                Materiały
               </label>
 
               {/* Video upload */}
@@ -232,8 +231,8 @@ export function SubmissionForm({ project }: SubmissionFormProps) {
                 projectId={project.id}
                 path="demo"
                 accept="video/*"
-                label="Demo Video"
-                hint="MP4, MOV — max 60 seconds, up to 50MB"
+                label="Wideo demo"
+                hint="MP4, MOV — maks. 60 sekund, do 50MB"
                 maxSizeMb={50}
                 maxDurationSec={60}
                 currentUrl={videoUrl}
@@ -255,8 +254,8 @@ export function SubmissionForm({ project }: SubmissionFormProps) {
                 projectId={project.id}
                 path="presentation"
                 accept="application/pdf"
-                label="Presentation"
-                hint="PDF up to 20MB"
+                label="Prezentacja"
+                hint="PDF do 20MB"
                 maxSizeMb={20}
                 currentUrl={pdfUrl}
                 onUploadComplete={(url) => {
@@ -271,8 +270,8 @@ export function SubmissionForm({ project }: SubmissionFormProps) {
                 projectId={project.id}
                 path="thumb"
                 accept="image/*"
-                label="Thumbnail"
-                hint="Project thumbnail image, up to 5MB"
+                label="Miniaturka"
+                hint="Obrazek miniaturki, do 5MB"
                 maxSizeMb={5}
                 currentUrl={thumbnailUrl}
                 onUploadComplete={(url) => {
@@ -288,11 +287,11 @@ export function SubmissionForm({ project }: SubmissionFormProps) {
                 </svg>
                 <div>
                   <p className="font-space-grotesk text-sm font-bold tracking-tight text-on-surface">
-                    SUBMISSION GUIDELINE
+                    WYTYCZNE
                   </p>
                   <p className="mt-1 text-xs leading-relaxed text-on-surface-muted">
-                    Ensure your video shows a live demo of your project.
-                    Name, description, and video are required to submit.
+                    Upewnij się, że wideo pokazuje działający projekt.
+                    Nazwa, opis i wideo są wymagane do zgłoszenia.
                   </p>
                 </div>
               </div>
@@ -305,8 +304,7 @@ export function SubmissionForm({ project }: SubmissionFormProps) {
           {/* Warning */}
           <div className="mb-6 rounded-lg bg-secondary/5 p-4">
             <p className="text-xs text-secondary-dim">
-              <strong>Warning:</strong> After submitting you will not be able to
-              edit your project. Make sure all information is correct.
+              <strong>Uwaga:</strong> Po zgłoszeniu nie będzie można edytować projektu. Upewnij się, że wszystko jest poprawne.
             </p>
           </div>
 
@@ -323,7 +321,7 @@ export function SubmissionForm({ project }: SubmissionFormProps) {
             className="group flex h-20 w-full items-center justify-center gap-4 bg-gradient-to-br from-primary via-primary to-secondary transition-all hover:shadow-[0_0_40px_rgba(164,165,255,0.2)] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <span className="font-space-grotesk text-xl font-extrabold tracking-[0.2em] text-white">
-              {isPending ? "SUBMITTING..." : "SUBMIT PROJECT"}
+              {isPending ? "WYSYŁANIE..." : "ZGŁOŚ PROJEKT"}
             </span>
             {!isPending && (
               <svg className="h-6 w-6 text-white transition-transform group-hover:translate-x-2" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
@@ -332,7 +330,7 @@ export function SubmissionForm({ project }: SubmissionFormProps) {
             )}
           </button>
           <p className="mt-4 text-center font-space-grotesk text-[10px] uppercase tracking-widest text-on-surface-muted">
-            By submitting, you confirm all information is accurate.
+            Wysyłając zgłoszenie, potwierdzasz poprawność informacji.
           </p>
         </div>
       </div>
