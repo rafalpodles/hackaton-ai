@@ -55,11 +55,29 @@ export default async function AdminDashboardPage() {
   }
 
   const projects = (projectsRaw ?? []) as ProjectWithTeam[];
+
+  // Fetch auth users to get login status
+  const { data: authData } = await supabase.auth.admin.listUsers({ perPage: 1000 });
+  const authMap = new Map(
+    (authData?.users ?? []).map((u) => [
+      u.id,
+      {
+        confirmed_at: u.confirmed_at ?? null,
+        last_sign_in_at: u.last_sign_in_at ?? null,
+      },
+    ])
+  );
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const usersBase = (usersRaw ?? []).map((u: any) => ({
-    ...u as Profile,
-    project_name: (u.project as { name: string } | null)?.name ?? null,
-  }));
+  const usersBase = (usersRaw ?? []).map((u: any) => {
+    const auth = authMap.get(u.id);
+    return {
+      ...u as Profile,
+      project_name: (u.project as { name: string } | null)?.name ?? null,
+      confirmed_at: auth?.confirmed_at ?? null,
+      last_sign_in_at: auth?.last_sign_in_at ?? null,
+    };
+  });
 
   // Fetch OpenRouter usage for users with keys (in parallel)
   const usageResults = await Promise.all(

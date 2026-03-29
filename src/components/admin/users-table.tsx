@@ -11,6 +11,8 @@ interface UsersTableProps {
     project_name?: string | null;
     key_usage?: number | null;
     key_limit?: number | null;
+    confirmed_at?: string | null;
+    last_sign_in_at?: string | null;
   })[];
 }
 
@@ -68,6 +70,9 @@ export default function UsersTable({ users }: UsersTableProps) {
                 Projekt
               </th>
               <th className="px-5 py-3 text-left font-space-grotesk text-xs uppercase tracking-wider text-on-surface-muted">
+                Status
+              </th>
+              <th className="px-5 py-3 text-left font-space-grotesk text-xs uppercase tracking-wider text-on-surface-muted">
                 Rola
               </th>
               <th className="px-5 py-3 text-left font-space-grotesk text-xs uppercase tracking-wider text-on-surface-muted">
@@ -111,6 +116,29 @@ export default function UsersTable({ users }: UsersTableProps) {
                     </span>
                   ) : (
                     <span className="text-sm text-on-surface-muted">—</span>
+                  )}
+                </td>
+                <td className="px-5 py-4">
+                  {user.confirmed_at ? (
+                    <div>
+                      <span className="inline-block rounded-full bg-green-500/15 px-2.5 py-0.5 text-xs font-semibold text-green-400">
+                        Aktywny
+                      </span>
+                      {user.last_sign_in_at && (
+                        <p className="mt-1 text-[10px] text-on-surface-muted">
+                          {new Date(user.last_sign_in_at).toLocaleDateString("pl-PL", {
+                            day: "numeric",
+                            month: "short",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
+                        </p>
+                      )}
+                    </div>
+                  ) : (
+                    <span className="inline-block rounded-full bg-yellow-500/15 px-2.5 py-0.5 text-xs font-semibold text-yellow-400">
+                      Oczekuje
+                    </span>
                   )}
                 </td>
                 <td className="px-5 py-4">
@@ -200,7 +228,7 @@ export default function UsersTable({ users }: UsersTableProps) {
             {users.length === 0 && (
               <tr>
                 <td
-                  colSpan={5}
+                  colSpan={6}
                   className="px-5 py-8 text-center text-sm text-on-surface-muted"
                 >
                   Brak użytkowników
