@@ -11,8 +11,8 @@ interface SidebarProps {
 }
 
 const navItems = [
-  { label: "Projects", href: "/" },
   { label: "Live Feed", href: "/feed" },
+  { label: "Projects", href: "/" },
   { label: "Submit", href: "/my-project" },
 ];
 
