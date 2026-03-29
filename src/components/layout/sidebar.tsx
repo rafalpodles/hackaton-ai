@@ -39,11 +39,14 @@ export default function Sidebar({ user, votingOpen }: SidebarProps) {
   return (
     <aside className="fixed left-0 top-0 z-40 flex h-screen w-60 flex-col bg-surface-low/80 backdrop-blur-[20px] border-r border-outline">
       {/* User identity */}
-      <div className="flex items-center gap-3 px-5 py-6">
+      <Link
+        href="/profile"
+        className="group/user flex items-center gap-3 rounded-xl px-5 py-6 transition-colors hover:bg-surface-high"
+      >
         <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary font-space-grotesk text-sm font-bold text-white">
           {initial}
         </div>
-        <div className="min-w-0">
+        <div className="min-w-0 flex-1">
           <p className="truncate text-sm font-semibold text-on-surface">
             {user.display_name}
           </p>
@@ -51,7 +54,16 @@ export default function Sidebar({ user, votingOpen }: SidebarProps) {
             {user.email}
           </p>
         </div>
-      </div>
+        <svg
+          className="h-4 w-4 shrink-0 text-on-surface-muted opacity-0 transition-opacity group-hover/user:opacity-100"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={1.5}
+          viewBox="0 0 24 24"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+        </svg>
+      </Link>
 
       {/* Navigation */}
       <nav className="flex-1 space-y-1 px-3">
