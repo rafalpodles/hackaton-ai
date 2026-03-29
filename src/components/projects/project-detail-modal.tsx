@@ -78,7 +78,7 @@ export function ProjectDetailModal({
 
         <div className="grid flex-1 overflow-hidden md:grid-cols-[7fr,3fr]">
           {/* Left: Video or PDF preview */}
-          <div className="flex flex-col bg-surface">
+          <div className="flex min-w-0 flex-col bg-surface">
             {/* Segmented toggle */}
             <div className="flex items-center px-6 py-4">
               <div className="relative flex rounded-xl bg-surface-high/80 p-1">
@@ -174,7 +174,7 @@ export function ProjectDetailModal({
           </div>
 
           {/* Right: Project info */}
-          <div className="flex flex-col gap-5 overflow-y-auto border-l border-outline p-6">
+          <div className="flex min-w-0 flex-col gap-5 overflow-y-auto border-l border-outline p-6">
             {/* Title with accent */}
             <div className="space-y-2">
               <div className="h-1 w-12 rounded-full bg-gradient-to-r from-primary to-secondary" />
