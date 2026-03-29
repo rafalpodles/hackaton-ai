@@ -3,22 +3,16 @@
 import { useState, useCallback, useTransition } from "react";
 import type { Project } from "@/lib/types";
 import { updateProject, submitProject } from "@/lib/actions/projects";
-import { GradientButton } from "@/components/ui/gradient-button";
-import { SubmissionStepper } from "./submission-stepper";
 import { FileUploadZone } from "./file-upload-zone";
-
-const TOTAL_STEPS = 4;
 
 interface SubmissionFormProps {
   project: Project;
 }
 
 export function SubmissionForm({ project }: SubmissionFormProps) {
-  const [step, setStep] = useState(0);
   const [isPending, startTransition] = useTransition();
   const [submitError, setSubmitError] = useState<string | null>(null);
 
-  // Local form state
   const [name, setName] = useState(project.name);
   const [description, setDescription] = useState(project.description ?? "");
   const [ideaOrigin, setIdeaOrigin] = useState(project.idea_origin ?? "");
@@ -33,7 +27,6 @@ export function SubmissionForm({ project }: SubmissionFormProps) {
   const [thumbnailUrl, setThumbnailUrl] = useState(project.thumbnail_url);
   const [pdfUrl, setPdfUrl] = useState(project.pdf_url);
 
-  // Auto-save helper
   const save = useCallback(
     (data: Parameters<typeof updateProject>[1]) => {
       startTransition(async () => {
@@ -46,9 +39,6 @@ export function SubmissionForm({ project }: SubmissionFormProps) {
     },
     [project.id]
   );
-
-  const next = () => setStep((s) => Math.min(s + 1, TOTAL_STEPS - 1));
-  const prev = () => setStep((s) => Math.max(s - 1, 0));
 
   const handleSubmit = () => {
     setSubmitError(null);
@@ -63,7 +53,6 @@ export function SubmissionForm({ project }: SubmissionFormProps) {
     });
   };
 
-  // --- Tag helpers ---
   const addTag = () => {
     const tag = tagInput.trim();
     if (tag && !techStack.includes(tag)) {
@@ -80,156 +69,156 @@ export function SubmissionForm({ project }: SubmissionFormProps) {
     save({ tech_stack: next });
   };
 
-  // --- Input class helpers ---
-  const inputClass =
-    "w-full rounded-md border border-outline bg-surface-low px-4 py-3 text-sm text-on-surface placeholder:text-on-surface-muted focus:border-primary-dim focus:outline-none transition";
-  const labelClass =
-    "block mb-1.5 text-xs font-semibold uppercase tracking-wider text-on-surface-muted";
-
   return (
-    <div className="mx-auto max-w-3xl space-y-8">
-      <SubmissionStepper currentStep={step} totalSteps={TOTAL_STEPS} />
+    <div className="relative">
+      {/* Ambient background glows */}
+      <div className="pointer-events-none fixed -bottom-40 -right-40 h-96 w-96 rounded-full bg-primary/10 blur-[120px]" />
+      <div className="pointer-events-none fixed -left-20 top-40 h-80 w-80 rounded-full bg-secondary/5 blur-[100px]" />
 
-      {/* ===== STEP 0: Basic Info ===== */}
-      {step === 0 && (
-        <div className="space-y-6 rounded-xl border border-outline bg-surface-low p-6">
-          <h2 className="font-space-grotesk text-lg font-bold text-on-surface">
-            Basic Info
-          </h2>
+      <div className="mx-auto max-w-6xl">
+        {/* Header */}
+        <header className="mb-12">
+          <h1 className="font-space-grotesk text-5xl font-extrabold tracking-tighter text-on-surface">
+            PROJECT SUBMISSION
+          </h1>
+          <p className="mt-2 max-w-2xl text-lg font-light text-on-surface-muted">
+            Document your build, showcase your journey, and submit your project
+            for the hackathon.
+          </p>
+        </header>
 
-          <div>
-            <label className={labelClass}>Project Name</label>
-            <input
-              className={inputClass}
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              onBlur={() => save({ name })}
-              placeholder="Enter your project name"
-            />
-          </div>
-
-          <div className="flex justify-end">
-            <GradientButton onClick={next} disabled={!name.trim()}>
-              Next &rarr;
-            </GradientButton>
-          </div>
-        </div>
-      )}
-
-      {/* ===== STEP 1: Deep Dive ===== */}
-      {step === 1 && (
-        <div className="space-y-6 rounded-xl border border-outline bg-surface-low p-6">
-          <h2 className="font-space-grotesk text-lg font-bold text-on-surface">
-            Deep Dive
-          </h2>
-
-          {/* Description */}
-          <div>
-            <label className={labelClass}>Description</label>
-            <textarea
-              className={`${inputClass} min-h-[100px] resize-none`}
-              maxLength={280}
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              onBlur={() => save({ description })}
-              placeholder="Describe your project (max 280 chars)"
-            />
-            <p className="mt-1 text-right text-xs text-on-surface-muted">
-              {description.length} / 280
-            </p>
-          </div>
-
-          {/* Idea Origin */}
-          <div>
-            <label className={labelClass}>Idea Origin</label>
-            <textarea
-              className={`${inputClass} min-h-[80px] resize-none`}
-              value={ideaOrigin}
-              onChange={(e) => setIdeaOrigin(e.target.value)}
-              onBlur={() => save({ idea_origin: ideaOrigin })}
-              placeholder="Where did the idea come from?"
-            />
-          </div>
-
-          {/* Journey */}
-          <div>
-            <label className={labelClass}>Journey</label>
-            <textarea
-              className={`${inputClass} min-h-[80px] resize-none`}
-              value={journey}
-              onChange={(e) => setJourney(e.target.value)}
-              onBlur={() => save({ journey })}
-              placeholder="How did the project evolve?"
-            />
-          </div>
-
-          {/* Tech Stack Tags */}
-          <div>
-            <label className={labelClass}>Tech Stack</label>
-            <div className="flex gap-2">
-              <input
-                className={`${inputClass} flex-1`}
-                value={tagInput}
-                onChange={(e) => setTagInput(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    e.preventDefault();
-                    addTag();
-                  }
-                }}
-                placeholder="Add a technology and press Enter"
-              />
-              <GradientButton variant="ghost" onClick={addTag} type="button">
-                Add
-              </GradientButton>
+        <div className="grid grid-cols-1 gap-12 lg:grid-cols-12">
+          {/* Left column — Form fields */}
+          <div className="space-y-10 lg:col-span-7">
+            {/* Project name */}
+            <div className="space-y-2">
+              <label className="font-space-grotesk text-[10px] font-bold uppercase tracking-[0.2em] text-primary-dim">
+                Project Identity
+              </label>
+              <h2 className="font-space-grotesk text-2xl font-bold text-on-surface">
+                What&apos;s your project called?
+              </h2>
+              <div className="group relative">
+                <input
+                  className="w-full border-none bg-black p-6 text-lg text-on-surface placeholder:text-on-surface-muted/30 focus:outline-none focus:ring-0"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  onBlur={() => save({ name })}
+                  placeholder="Enter your project name..."
+                />
+                <div className="absolute bottom-0 left-0 h-[2px] w-full origin-left scale-x-0 bg-gradient-to-r from-primary to-secondary transition-transform duration-500 group-focus-within:scale-x-100" />
+              </div>
             </div>
-            {techStack.length > 0 && (
-              <div className="mt-3 flex flex-wrap gap-2">
+
+            {/* Description */}
+            <div className="space-y-2">
+              <h2 className="font-space-grotesk text-2xl font-bold text-on-surface">
+                What does your project do?
+              </h2>
+              <div className="group relative">
+                <textarea
+                  className="min-h-[140px] w-full resize-none border-none bg-black p-6 text-lg leading-relaxed text-on-surface placeholder:text-on-surface-muted/30 focus:outline-none focus:ring-0"
+                  maxLength={280}
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  onBlur={() => save({ description })}
+                  placeholder="Describe the core utility and problem solved..."
+                />
+                <div className="absolute bottom-0 left-0 h-[2px] w-full origin-left scale-x-0 bg-gradient-to-r from-primary to-secondary transition-transform duration-500 group-focus-within:scale-x-100" />
+              </div>
+              <p className="text-right font-space-grotesk text-[10px] tracking-widest text-on-surface-muted">
+                {description.length} / 280
+              </p>
+            </div>
+
+            {/* Idea Origin */}
+            <div className="space-y-2">
+              <h2 className="font-space-grotesk text-2xl font-bold text-on-surface">
+                How did you get the idea?
+              </h2>
+              <div className="group relative">
+                <textarea
+                  className="min-h-[140px] w-full resize-none border-none bg-black p-6 text-lg leading-relaxed text-on-surface placeholder:text-on-surface-muted/30 focus:outline-none focus:ring-0"
+                  value={ideaOrigin}
+                  onChange={(e) => setIdeaOrigin(e.target.value)}
+                  onBlur={() => save({ idea_origin: ideaOrigin })}
+                  placeholder="Tell us about the 'Eureka' moment..."
+                />
+                <div className="absolute bottom-0 left-0 h-[2px] w-full origin-left scale-x-0 bg-gradient-to-r from-primary to-secondary transition-transform duration-500 group-focus-within:scale-x-100" />
+              </div>
+            </div>
+
+            {/* Journey */}
+            <div className="space-y-2">
+              <h2 className="font-space-grotesk text-2xl font-bold text-on-surface">
+                What was your journey?
+              </h2>
+              <div className="group relative">
+                <textarea
+                  className="min-h-[140px] w-full resize-none border-none bg-black p-6 text-lg leading-relaxed text-on-surface placeholder:text-on-surface-muted/30 focus:outline-none focus:ring-0"
+                  value={journey}
+                  onChange={(e) => setJourney(e.target.value)}
+                  onBlur={() => save({ journey })}
+                  placeholder="Challenges, pivots, and breakthroughs..."
+                />
+                <div className="absolute bottom-0 left-0 h-[2px] w-full origin-left scale-x-0 bg-gradient-to-r from-primary to-secondary transition-transform duration-500 group-focus-within:scale-x-100" />
+              </div>
+            </div>
+
+            {/* Tech Stack */}
+            <div className="space-y-4">
+              <h2 className="font-space-grotesk text-2xl font-bold text-on-surface">
+                Tech stack used
+              </h2>
+              <div className="flex flex-wrap gap-3 bg-black p-6">
                 {techStack.map((tag) => (
                   <span
                     key={tag}
-                    className="inline-flex items-center gap-1.5 rounded-full border border-outline bg-surface-high px-3 py-1 text-xs text-on-surface"
+                    className="flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 font-space-grotesk text-xs uppercase tracking-wider text-primary-dim"
                   >
                     {tag}
                     <button
                       type="button"
                       onClick={() => removeTag(tag)}
-                      className="text-on-surface-muted hover:text-secondary transition cursor-pointer"
+                      className="text-primary-dim/60 transition hover:text-secondary"
                     >
-                      &times;
+                      <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
+                      </svg>
                     </button>
                   </span>
                 ))}
+                <input
+                  className="w-32 border-none bg-transparent font-space-grotesk text-sm tracking-widest text-on-surface-muted placeholder:text-on-surface-muted/30 focus:outline-none focus:ring-0"
+                  value={tagInput}
+                  onChange={(e) => setTagInput(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      addTag();
+                    }
+                  }}
+                  placeholder="Add tech..."
+                />
               </div>
-            )}
+            </div>
           </div>
 
-          <div className="flex justify-between">
-            <GradientButton variant="ghost" onClick={prev}>
-              &larr; Back
-            </GradientButton>
-            <GradientButton onClick={next}>Next &rarr;</GradientButton>
-          </div>
-        </div>
-      )}
+          {/* Right column — Asset uploads */}
+          <div className="space-y-8 lg:col-span-5">
+            <div className="space-y-6">
+              <label className="font-space-grotesk text-[10px] font-bold uppercase tracking-[0.2em] text-primary-dim">
+                Proof of Build
+              </label>
 
-      {/* ===== STEP 2: Proof of Build ===== */}
-      {step === 2 && (
-        <div className="space-y-6 rounded-xl border border-outline bg-surface-low p-6">
-          <h2 className="font-space-grotesk text-lg font-bold text-on-surface">
-            Proof of Build
-          </h2>
-
-          <div className="grid gap-6 md:grid-cols-2">
-            {/* Left: Video + Thumbnail */}
-            <div className="space-y-4">
+              {/* Video upload */}
               <FileUploadZone
                 bucket="videos"
                 projectId={project.id}
                 path="demo"
                 accept="video/*"
                 label="Demo Video"
-                hint="Max 60 seconds, drag & drop or click"
+                hint="MP4, MOV — max 60 seconds, up to 50MB"
                 maxSizeMb={50}
                 maxDurationSec={60}
                 currentUrl={videoUrl}
@@ -244,31 +233,15 @@ export function SubmissionForm({ project }: SubmissionFormProps) {
                   });
                 }}
               />
-              <FileUploadZone
-                bucket="thumbnails"
-                projectId={project.id}
-                path="thumb"
-                accept="image/*"
-                label="Thumbnail"
-                hint="Project thumbnail image"
-                maxSizeMb={5}
-                currentUrl={thumbnailUrl}
-                onUploadComplete={(url) => {
-                  setThumbnailUrl(url);
-                  save({ thumbnail_url: url });
-                }}
-              />
-            </div>
 
-            {/* Right: PDF */}
-            <div>
+              {/* PDF upload */}
               <FileUploadZone
                 bucket="presentations"
                 projectId={project.id}
                 path="presentation"
                 accept="application/pdf"
-                label="Presentation PDF"
-                hint="Upload your project presentation"
+                label="Presentation"
+                hint="PDF up to 20MB"
                 maxSizeMb={20}
                 currentUrl={pdfUrl}
                 onUploadComplete={(url) => {
@@ -276,88 +249,78 @@ export function SubmissionForm({ project }: SubmissionFormProps) {
                   save({ pdf_url: url });
                 }}
               />
+
+              {/* Thumbnail upload */}
+              <FileUploadZone
+                bucket="thumbnails"
+                projectId={project.id}
+                path="thumb"
+                accept="image/*"
+                label="Thumbnail"
+                hint="Project thumbnail image, up to 5MB"
+                maxSizeMb={5}
+                currentUrl={thumbnailUrl}
+                onUploadComplete={(url) => {
+                  setThumbnailUrl(url);
+                  save({ thumbnail_url: url });
+                }}
+              />
+
+              {/* Info box */}
+              <div className="flex gap-4 rounded-lg bg-surface-high/50 p-6">
+                <svg className="h-5 w-5 shrink-0 text-secondary" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
+                </svg>
+                <div>
+                  <p className="font-space-grotesk text-sm font-bold tracking-tight text-on-surface">
+                    SUBMISSION GUIDELINE
+                  </p>
+                  <p className="mt-1 text-xs leading-relaxed text-on-surface-muted">
+                    Ensure your video shows a live demo of your project.
+                    Name, description, and video are required to submit.
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
-
-          <div className="flex justify-between">
-            <GradientButton variant="ghost" onClick={prev}>
-              &larr; Back
-            </GradientButton>
-            <GradientButton onClick={next}>Next &rarr;</GradientButton>
-          </div>
         </div>
-      )}
 
-      {/* ===== STEP 3: Review & Submit ===== */}
-      {step === 3 && (
-        <div className="space-y-6 rounded-xl border border-outline bg-surface-low p-6">
-          <h2 className="font-space-grotesk text-lg font-bold text-on-surface">
-            Review &amp; Submit
-          </h2>
-
-          {/* Read-only summary */}
-          <div className="space-y-4 rounded-lg border border-outline bg-surface p-5 text-sm">
-            <Row label="Name" value={name} />
-            <Row label="Description" value={description} />
-            <Row label="Idea Origin" value={ideaOrigin} />
-            <Row label="Journey" value={journey} />
-            <Row
-              label="Tech Stack"
-              value={techStack.length > 0 ? techStack.join(", ") : "\u2014"}
-            />
-            <Row
-              label="Demo Video"
-              value={
-                videoUrl
-                  ? `Uploaded \u2713${videoDuration ? ` (${videoDuration}s)` : ""}`
-                  : "Not uploaded"
-              }
-            />
-            <Row
-              label="Thumbnail"
-              value={thumbnailUrl ? "Uploaded \u2713" : "Not uploaded"}
-            />
-            <Row
-              label="Presentation"
-              value={pdfUrl ? "Uploaded \u2713" : "Not uploaded"}
-            />
-          </div>
-
+        {/* Submit section */}
+        <div className="mt-16">
           {/* Warning */}
-          <div className="rounded-lg border border-secondary/30 bg-secondary/5 p-4 text-xs text-secondary-dim">
-            <strong>Warning:</strong> After submitting you will not be able to
-            edit your project. Please make sure all information is correct.
+          <div className="mb-6 rounded-lg bg-secondary/5 p-4">
+            <p className="text-xs text-secondary-dim">
+              <strong>Warning:</strong> After submitting you will not be able to
+              edit your project. Make sure all information is correct.
+            </p>
           </div>
 
           {submitError && (
-            <p className="text-sm font-semibold text-secondary">{submitError}</p>
+            <p className="mb-4 font-space-grotesk text-sm font-semibold text-secondary">
+              {submitError}
+            </p>
           )}
 
-          <div className="flex justify-between">
-            <GradientButton variant="ghost" onClick={prev}>
-              &larr; Back
-            </GradientButton>
-            <GradientButton
-              onClick={handleSubmit}
-              disabled={isPending}
-            >
-              {isPending ? "Submitting..." : "Submit Project"}
-            </GradientButton>
-          </div>
+          <button
+            type="button"
+            onClick={handleSubmit}
+            disabled={isPending}
+            className="group flex h-20 w-full items-center justify-center gap-4 bg-gradient-to-br from-primary via-primary to-secondary transition-all hover:shadow-[0_0_40px_rgba(164,165,255,0.2)] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <span className="font-space-grotesk text-xl font-extrabold tracking-[0.2em] text-white">
+              {isPending ? "SUBMITTING..." : "SUBMIT PROJECT"}
+            </span>
+            {!isPending && (
+              <svg className="h-6 w-6 text-white transition-transform group-hover:translate-x-2" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+              </svg>
+            )}
+          </button>
+          <p className="mt-4 text-center font-space-grotesk text-[10px] uppercase tracking-widest text-on-surface-muted">
+            By submitting, you confirm all information is accurate.
+          </p>
         </div>
-      )}
-    </div>
-  );
-}
-
-/* Small helper for read-only rows */
-function Row({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="flex gap-4">
-      <span className="w-28 shrink-0 font-semibold uppercase tracking-wider text-on-surface-muted">
-        {label}
-      </span>
-      <span className="text-on-surface">{value || "\u2014"}</span>
+      </div>
     </div>
   );
 }

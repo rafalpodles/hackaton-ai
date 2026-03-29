@@ -114,14 +114,7 @@ export default async function MyProjectPage() {
   }
 
   // Not submitted — show form
-  return (
-    <div className="space-y-6">
-      <h1 className="font-space-grotesk text-2xl font-bold text-on-surface">
-        Project Submission
-      </h1>
-      <SubmissionForm project={typedProject} />
-    </div>
-  );
+  return <SubmissionForm project={typedProject} />;
 }
 
 function InfoRow({ label, value }: { label: string; value: string }) {
