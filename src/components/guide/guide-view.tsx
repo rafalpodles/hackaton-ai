@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
 import {
   guideSteps,
   CATEGORY_LABELS,
+  CATEGORY_DESCRIPTIONS,
   SUBSCRIPTION_LABELS,
   type OS,
   type Path,
@@ -54,12 +55,12 @@ export function GuideView() {
   const [selectedPath, setSelectedPath] = useState<Path | null>(null);
   const [selectedSubscription, setSelectedSubscription] = useState<Subscription | null>(null);
   const [completedSteps, setCompletedSteps] = useState<Set<string>>(new Set());
-  const [expandedStep, setExpandedStep] = useState<string | null>(null);
+  const [expandedSteps, setExpandedSteps] = useState<Set<string>>(new Set());
   const [activeOS, setActiveOS] = useState<OS>("mac");
   const [mounted, setMounted] = useState(false);
   const [showSteps, setShowSteps] = useState(false);
 
-  // Load persisted state on mount
+  // Load persisted state on mount + handle deep links
   useEffect(() => {
     const persisted = loadState();
     setSelectedPath(persisted.selectedPath);
@@ -68,6 +69,23 @@ export function GuideView() {
     setActiveOS(detectOS());
     setMounted(true);
     if (persisted.selectedPath) setShowSteps(true);
+
+    // Deep link: /guide#step-id
+    const hash = window.location.hash.replace("#", "");
+    if (hash) {
+      const step = guideSteps.find((s) => s.id === hash);
+      if (step) {
+        // Auto-select path if needed
+        if (!persisted.selectedPath && step.paths.length > 0) {
+          setSelectedPath(step.paths[0]);
+          setShowSteps(true);
+        }
+        setTimeout(() => {
+          setExpandedSteps(new Set([hash]));
+          document.getElementById(`step-${hash}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
+        }, 400);
+      }
+    }
   }, []);
 
   // Save state on changes
@@ -82,7 +100,12 @@ export function GuideView() {
   }, []);
 
   const toggleStep = useCallback((stepId: string) => {
-    setExpandedStep((prev) => (prev === stepId ? null : stepId));
+    setExpandedSteps((prev) => {
+      const next = new Set(prev);
+      if (next.has(stepId)) next.delete(stepId);
+      else next.add(stepId);
+      return next;
+    });
   }, []);
 
   const toggleComplete = useCallback((stepId: string) => {
@@ -97,7 +120,8 @@ export function GuideView() {
   const handleResetPath = useCallback(() => {
     setSelectedPath(null);
     setShowSteps(false);
-    setExpandedStep(null);
+    setExpandedSteps(new Set());
+    setCompletedSteps(new Set());
   }, []);
 
   // Filter steps for selected path
@@ -110,8 +134,10 @@ export function GuideView() {
   const progress = requiredSteps.length > 0 ? Math.round((completedRequired.length / requiredSteps.length) * 100) : 0;
   const allDone = requiredSteps.length > 0 && completedRequired.length === requiredSteps.length;
 
+  const totalEstimatedMinutes = filteredSteps.reduce((sum, s) => sum + (s.estimatedMinutes ?? 0), 0);
+
   // Group steps by category
-  const categories: Category[] = ["fundamenty", "ai-tools", "bonus"];
+  const categories: Category[] = ["fundamenty", "ai-tools", "bonus", "weryfikacja"];
   const stepsByCategory = categories
     .map((cat) => ({
       category: cat,
@@ -136,6 +162,7 @@ export function GuideView() {
         totalCount={requiredSteps.length}
         selectedPath={selectedPath}
         allDone={allDone}
+        totalMinutes={totalEstimatedMinutes}
         onResetPath={handleResetPath}
       />
 
@@ -151,10 +178,7 @@ export function GuideView() {
             <div key={group.category}>
               <SectionDivider
                 label={CATEGORY_LABELS[group.category]}
-                showBeginnerBadge={
-                  selectedPath === "beginner" &&
-                  group.category === "fundamenty"
-                }
+                description={CATEGORY_DESCRIPTIONS[group.category]}
               />
 
               {/* Subscription selector — show at top of AI Tools section */}
@@ -174,7 +198,7 @@ export function GuideView() {
                       key={step.id}
                       step={step}
                       displayNumber={globalIndex + 1}
-                      expanded={expandedStep === step.id}
+                      expanded={expandedSteps.has(step.id)}
                       completed={completedSteps.has(step.id)}
                       activeOS={activeOS}
                       activeSubscription={selectedSubscription}
@@ -191,6 +215,16 @@ export function GuideView() {
 
           {/* Completion Banner */}
           {allDone && <CompletionBanner />}
+
+          {/* Help footer */}
+          <div className="text-center text-xs text-on-surface-muted/60 mt-4 flex flex-col gap-1">
+            <p>
+              Masz problem? Napisz na kanale{" "}
+              <span className="font-semibold text-on-surface-muted">#hackathon-help</span>{" "}
+              na Teams/Slack — pomożemy!
+            </p>
+            <p>Ostatnia aktualizacja: marzec 2026</p>
+          </div>
         </>
       )}
     </div>
@@ -205,6 +239,7 @@ function HeroHeader({
   totalCount,
   selectedPath,
   allDone,
+  totalMinutes,
   onResetPath,
 }: {
   progress: number;
@@ -212,6 +247,7 @@ function HeroHeader({
   totalCount: number;
   selectedPath: Path | null;
   allDone: boolean;
+  totalMinutes: number;
   onResetPath: () => void;
 }) {
   return (
@@ -254,6 +290,15 @@ function HeroHeader({
             {completedCount} / {totalCount}
           </span>
 
+          {selectedPath && totalMinutes > 0 && (
+            <span className="hidden sm:inline-flex items-center gap-1 text-xs text-on-surface-muted font-space-grotesk">
+              <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+              </svg>
+              ~{totalMinutes} min
+            </span>
+          )}
+
           {selectedPath && <PathBadge path={selectedPath} onClick={onResetPath} />}
         </div>
       </div>
@@ -294,6 +339,16 @@ function PathSelector({ onSelect }: { onSelect: (path: Path) => void }) {
     setTimeout(() => onSelect(path), 200);
   };
 
+  // Compute stats for each path
+  const getPathStats = (path: Path) => {
+    const steps = guideSteps.filter((s) => s.paths.includes(path));
+    const totalMin = steps.reduce((sum, s) => sum + (s.estimatedMinutes ?? 0), 0);
+    return { count: steps.length, minutes: totalMin };
+  };
+
+  const beginnerStats = getPathStats("beginner");
+  const advancedStats = getPathStats("advanced");
+
   return (
     <div
       className={`transition-opacity duration-200 ${fading ? "opacity-0" : "opacity-100"}`}
@@ -313,11 +368,14 @@ function PathSelector({ onSelect }: { onSelect: (path: Path) => void }) {
               <path strokeLinecap="round" strokeLinejoin="round" d="M15.59 14.37a6 6 0 0 1-5.84 7.38v-4.8m5.84-2.58a14.98 14.98 0 0 0 6.16-12.12A14.98 14.98 0 0 0 9.631 8.41m5.96 5.96a14.926 14.926 0 0 1-5.841 2.58m-.119-8.54a6 6 0 0 0-7.381 5.84h4.8m2.58-5.84a14.927 14.927 0 0 1-2.58 5.84m2.699 2.7c-.103.021-.207.041-.311.06a15.09 15.09 0 0 1-2.448-2.448 14.9 14.9 0 0 1 .06-.312m-2.24 2.39a4.493 4.493 0 0 0-1.757 4.306 4.493 4.493 0 0 0 4.306-1.758M16.5 9a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z" />
             </svg>
           </div>
-          <h3 className="font-space-grotesk text-xl font-bold text-on-surface mb-2">
+          <h3 className="font-space-grotesk text-xl font-bold text-on-surface mb-1">
             POCZĄTKUJĄCY
           </h3>
-          <p className="text-sm text-on-surface-muted leading-relaxed">
+          <p className="text-sm text-on-surface-muted leading-relaxed mb-3">
             Nigdy nie kodowałem — pokaż mi wszystko od zera
+          </p>
+          <p className="text-xs text-on-surface-muted font-space-grotesk">
+            {beginnerStats.count} kroków &middot; ~{beginnerStats.minutes} min
           </p>
         </button>
 
@@ -331,11 +389,14 @@ function PathSelector({ onSelect }: { onSelect: (path: Path) => void }) {
               <path strokeLinecap="round" strokeLinejoin="round" d="m3.75 13.5 10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75Z" />
             </svg>
           </div>
-          <h3 className="font-space-grotesk text-xl font-bold text-on-surface mb-2">
+          <h3 className="font-space-grotesk text-xl font-bold text-on-surface mb-1">
             ZAAWANSOWANY
           </h3>
-          <p className="text-sm text-on-surface-muted leading-relaxed">
+          <p className="text-sm text-on-surface-muted leading-relaxed mb-3">
             Mam doświadczenie z programowaniem — potrzebuję tylko AI tools
+          </p>
+          <p className="text-xs text-on-surface-muted font-space-grotesk">
+            {advancedStats.count} kroków &middot; ~{advancedStats.minutes} min
           </p>
         </button>
       </div>
@@ -376,7 +437,7 @@ function SubscriptionSelector({
     {
       key: "openrouter",
       label: "OpenRouter",
-      desc: "Nie mam subskrypcji — użyję klucza",
+      desc: "Dostanę klucz od organizatorów",
       icon: (
         <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 5.25a3 3 0 0 1 3 3m3 0a6 6 0 0 1-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1 1 21.75 8.25Z" />
@@ -442,23 +503,23 @@ function SubscriptionSelector({
 
 function SectionDivider({
   label,
-  showBeginnerBadge,
+  description,
 }: {
   label: string;
-  showBeginnerBadge?: boolean;
+  description?: string;
 }) {
   return (
-    <div className="flex items-center gap-4 mt-8 mb-4">
-      <div className="flex-1 h-px bg-outline" />
-      <span className="font-space-grotesk text-xs font-bold uppercase tracking-[0.2em] text-on-surface-muted flex items-center">
-        {label}
-        {showBeginnerBadge && (
-          <span className="ml-2 text-[10px] rounded-full px-2 py-0.5 bg-primary/10 text-primary-dim border border-primary/20">
-            początkujący
-          </span>
-        )}
-      </span>
-      <div className="flex-1 h-px bg-outline" />
+    <div className="mt-8 mb-4">
+      <div className="flex items-center gap-4">
+        <div className="flex-1 h-px bg-outline" />
+        <span className="font-space-grotesk text-xs font-bold uppercase tracking-[0.2em] text-on-surface-muted">
+          {label}
+        </span>
+        <div className="flex-1 h-px bg-outline" />
+      </div>
+      {description && (
+        <p className="text-center text-xs text-on-surface-muted mt-1.5">{description}</p>
+      )}
     </div>
   );
 }
@@ -488,11 +549,29 @@ function StepCard({
   onOSChange: (os: OS) => void;
   delay: number;
 }) {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const wasExpanded = useRef(expanded);
+
+  useEffect(() => {
+    if (expanded && !wasExpanded.current && cardRef.current) {
+      setTimeout(() => {
+        cardRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }, 100);
+    }
+    wasExpanded.current = expanded;
+  }, [expanded]);
+
   return (
     <div
+      ref={cardRef}
+      id={`step-${step.id}`}
       className={`rounded-xl overflow-hidden border transition-all duration-200 animate-fadeIn ${
         completed
           ? "bg-surface-low/60 border-primary/25 border-l-2 border-l-primary-dim"
+          : !step.required
+          ? expanded
+            ? "bg-surface-low/70 border-primary/15"
+            : "bg-surface-low/40 border-outline/60"
           : expanded
           ? "bg-surface-low/80 border-primary/20"
           : "bg-surface-low/60 border-outline"
@@ -501,7 +580,7 @@ function StepCard({
     >
       {/* Header */}
       <div
-        className="flex items-center gap-4 px-5 py-4 cursor-pointer transition-colors duration-150 hover:bg-surface-high/30"
+        className="flex items-center gap-3 px-5 py-4 cursor-pointer transition-colors duration-150 hover:bg-surface-high/30"
         onClick={onToggle}
         role="button"
         aria-expanded={expanded}
@@ -520,53 +599,68 @@ function StepCard({
           className={`flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center font-space-grotesk text-xs font-bold ${
             completed || expanded
               ? "bg-primary/20 text-primary-dim"
+              : !step.required
+              ? "bg-surface-high/60 text-on-surface-muted/60"
               : "bg-surface-high text-on-surface-muted"
           }`}
         >
-          {String(displayNumber).padStart(2, "0")}
+          {displayNumber}
         </div>
 
         {/* Title + time estimate */}
         <div className="flex-1 min-w-0">
-          <span
-            className={`font-space-grotesk text-sm font-semibold ${
-              completed ? "text-primary-dim" : "text-on-surface"
-            }`}
-          >
-            {step.title}
-            {!step.required && (
-              <span className="ml-2 text-[10px] text-on-surface-muted font-normal">(opcjonalny)</span>
-            )}
-          </span>
-          {step.estimatedMinutes && (
-            <span className="ml-2 text-[10px] text-on-surface-muted font-normal">
-              ~{step.estimatedMinutes} min
+          <div className="flex items-center gap-2 flex-wrap">
+            <span
+              className={`font-space-grotesk text-sm font-semibold ${
+                completed
+                  ? "text-primary-dim"
+                  : !step.required
+                  ? "text-on-surface/70"
+                  : "text-on-surface"
+              }`}
+            >
+              {step.title}
             </span>
-          )}
+            {!step.required && (
+              <span className="text-[10px] text-on-surface-muted/60 font-normal bg-surface-high/60 rounded px-1.5 py-0.5">opcjonalny</span>
+            )}
+            {step.estimatedMinutes && (
+              <span className="hidden sm:inline-flex items-center gap-0.5 text-[10px] text-on-surface-muted/60 font-normal">
+                <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                </svg>
+                {step.estimatedMinutes} min
+              </span>
+            )}
+          </div>
         </div>
 
-        {/* Checkbox */}
-        <StepCheckbox
-          checked={completed}
-          label={`Oznacz ${step.title} jako ukończone`}
-          onToggle={(e) => {
-            e.stopPropagation();
-            onToggleComplete();
-          }}
-        />
+        {/* Checkbox — bigger touch target */}
+        <div className="p-1.5 -m-1.5">
+          <StepCheckbox
+            checked={completed}
+            label={`Oznacz ${step.title} jako ukończone`}
+            onToggle={(e) => {
+              e.stopPropagation();
+              onToggleComplete();
+            }}
+          />
+        </div>
 
-        {/* Chevron */}
-        <svg
-          className={`w-5 h-5 text-on-surface-muted transition-transform duration-200 ${
-            expanded ? "rotate-180" : ""
-          }`}
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth={2}
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-        </svg>
+        {/* Chevron — bigger touch target */}
+        <div className="p-1.5 -m-1.5">
+          <svg
+            className={`w-5 h-5 text-on-surface-muted transition-transform duration-200 ${
+              expanded ? "rotate-180" : ""
+            }`}
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={2}
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+          </svg>
+        </div>
       </div>
 
       {/* Body */}
@@ -609,21 +703,21 @@ function StepCard({
               <OSTabs activeOS={activeOS} onOSChange={onOSChange} platforms={step.instructions.platforms} />
             )}
 
+            {/* Warnings — show before instructions so users see them first */}
+            {step.instructions.warnings && step.instructions.warnings.length > 0 && (
+              <div className="mb-4 flex flex-col gap-2">
+                {step.instructions.warnings.map((warn, i) => (
+                  <Callout key={`warn-${i}`} type="warning" text={warn} />
+                ))}
+              </div>
+            )}
+
             {/* Platform instructions */}
             <PlatformContent
               platforms={step.instructions.platforms}
               activeOS={activeOS}
               activeSubscription={activeSubscription}
             />
-
-            {/* Warnings */}
-            {step.instructions.warnings && step.instructions.warnings.length > 0 && (
-              <div className="mt-4 flex flex-col gap-2">
-                {step.instructions.warnings.map((warn, i) => (
-                  <Callout key={`warn-${i}`} type="warning" text={warn} />
-                ))}
-              </div>
-            )}
 
             {/* Tips */}
             {step.instructions.tips && step.instructions.tips.length > 0 && (
@@ -818,7 +912,7 @@ function CodeBlock({ code, output }: { code: string; output?: string }) {
       </div>
 
       {/* Code content */}
-      <div className="px-4 py-3 text-[13px] leading-relaxed overflow-x-auto">
+      <div className="px-4 py-3 text-[13px] leading-relaxed overflow-x-auto [mask-image:linear-gradient(to_right,black_calc(100%-2rem),transparent)] sm:[mask-image:none]">
         {lines.map((line, i) => {
           if (line.startsWith("#")) {
             return (

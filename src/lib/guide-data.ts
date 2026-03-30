@@ -1,6 +1,6 @@
 export type OS = "mac" | "windows" | "linux";
 export type Path = "beginner" | "advanced";
-export type Category = "fundamenty" | "ai-tools" | "bonus";
+export type Category = "fundamenty" | "ai-tools" | "bonus" | "weryfikacja";
 export type Subscription = "claude" | "openai" | "openrouter";
 
 export interface CodeStep {
@@ -14,7 +14,7 @@ export interface CodeStep {
 export const SUBSCRIPTION_LABELS: Record<Subscription, string> = {
   claude: "Claude Pro / Max",
   openai: "ChatGPT Plus / Pro",
-  openrouter: "Nie mam subskrypcji",
+  openrouter: "Klucz API od organizatorów",
 };
 
 export interface PlatformInstructions {
@@ -45,6 +45,14 @@ export const CATEGORY_LABELS: Record<Category, string> = {
   fundamenty: "FUNDAMENTY",
   "ai-tools": "AI TOOLS",
   bonus: "BONUS",
+  weryfikacja: "WERYFIKACJA",
+};
+
+export const CATEGORY_DESCRIPTIONS: Partial<Record<Category, string>> = {
+  fundamenty: "Zainstaluj podstawowe narzędzia — potem przejdź do AI Tools.",
+  "ai-tools": "Wybierz i skonfiguruj narzędzia AI do kodowania.",
+  bonus: "Inspiracje i porady — przejrzyj przed hackathonowym dniem.",
+  weryfikacja: "Ostatni krok — upewnij się, że wszystko działa.",
 };
 
 export const guideSteps: GuideStep[] = [
@@ -940,7 +948,7 @@ export const guideSteps: GuideStep[] = [
   {
     id: "test-drive",
     title: "Test drive — sprawdź że wszystko działa!",
-    category: "bonus",
+    category: "weryfikacja",
     paths: ["beginner", "advanced"],
     required: true,
     estimatedMinutes: 5,
@@ -951,22 +959,11 @@ export const guideSteps: GuideStep[] = [
         mac: {
           steps: [
             {
-              text: "Stwórz testowy folder i wejdź do niego:",
-              command: "mkdir ~/hackathon-test && cd ~/hackathon-test",
+              text: "Stwórz folder testowy, zainicjuj Git i uruchom Claude Code (wykonaj wszystko w jednym oknie terminala):",
+              command: "mkdir ~/hackathon-test && cd ~/hackathon-test\ngit init\nclaude",
             },
             {
-              text: "Zainicjuj repozytorium Git:",
-              command: "git init",
-            },
-            {
-              text: "Uruchom Claude Code i poproś o stworzenie prostego pliku:",
-              command: "claude",
-            },
-            {
-              text: 'W Claude Code wpisz: "Stwórz plik hello.js, który wypisuje Hello Hackathon!". Jeśli AI stworzy plik i go uruchomisz — jesteś gotowy!',
-            },
-            {
-              text: "Sprawdź efekt:",
+              text: 'W Claude Code wpisz: "Stwórz plik hello.js, który wypisuje Hello Hackathon!". Po zakończeniu wyjdź z Claude Code i sprawdź efekt:',
               command: "node hello.js",
               output: "Hello Hackathon!",
             },
@@ -975,22 +972,11 @@ export const guideSteps: GuideStep[] = [
         windows: {
           steps: [
             {
-              text: "Stwórz testowy folder i wejdź do niego:",
-              command: "mkdir %USERPROFILE%\\hackathon-test && cd %USERPROFILE%\\hackathon-test",
+              text: "Stwórz folder testowy, zainicjuj Git i uruchom Claude Code (wykonaj wszystko w jednym oknie terminala):",
+              command: "mkdir %USERPROFILE%\\hackathon-test && cd %USERPROFILE%\\hackathon-test\ngit init\nclaude",
             },
             {
-              text: "Zainicjuj repozytorium Git:",
-              command: "git init",
-            },
-            {
-              text: "Uruchom Claude Code i poproś o stworzenie prostego pliku:",
-              command: "claude",
-            },
-            {
-              text: 'W Claude Code wpisz: "Stwórz plik hello.js, który wypisuje Hello Hackathon!". Jeśli AI stworzy plik i go uruchomisz — jesteś gotowy!',
-            },
-            {
-              text: "Sprawdź efekt:",
+              text: 'W Claude Code wpisz: "Stwórz plik hello.js, który wypisuje Hello Hackathon!". Po zakończeniu wyjdź z Claude Code i sprawdź efekt:',
               command: "node hello.js",
               output: "Hello Hackathon!",
             },
@@ -999,22 +985,11 @@ export const guideSteps: GuideStep[] = [
         linux: {
           steps: [
             {
-              text: "Stwórz testowy folder i wejdź do niego:",
-              command: "mkdir ~/hackathon-test && cd ~/hackathon-test",
+              text: "Stwórz folder testowy, zainicjuj Git i uruchom Claude Code (wykonaj wszystko w jednym oknie terminala):",
+              command: "mkdir ~/hackathon-test && cd ~/hackathon-test\ngit init\nclaude",
             },
             {
-              text: "Zainicjuj repozytorium Git:",
-              command: "git init",
-            },
-            {
-              text: "Uruchom Claude Code i poproś o stworzenie prostego pliku:",
-              command: "claude",
-            },
-            {
-              text: 'W Claude Code wpisz: "Stwórz plik hello.js, który wypisuje Hello Hackathon!". Jeśli AI stworzy plik i go uruchomisz — jesteś gotowy!',
-            },
-            {
-              text: "Sprawdź efekt:",
+              text: 'W Claude Code wpisz: "Stwórz plik hello.js, który wypisuje Hello Hackathon!". Po zakończeniu wyjdź z Claude Code i sprawdź efekt:',
               command: "node hello.js",
               output: "Hello Hackathon!",
             },
