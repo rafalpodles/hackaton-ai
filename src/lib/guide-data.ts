@@ -359,7 +359,7 @@ export const guideSteps: GuideStep[] = [
         windows: {
           steps: [
             {
-              text: 'Pobierz instaler (.exe). WAŻNE: podczas instalacji zaznacz opcję "Add Python to PATH"!',
+              text: 'Pobierz instaler (.exe). WAŻNE: podczas instalacji zaznacz checkbox "Add Python to PATH" — bez tego komendy nie zadziałają w terminalu!',
             },
             {
               text: "Sprawdź czy działa:",
@@ -387,9 +387,6 @@ export const guideSteps: GuideStep[] = [
           label: "Pobierz Python",
           url: "https://www.python.org/downloads/",
         },
-      ],
-      warnings: [
-        'Na Windows koniecznie zaznacz "Add Python to PATH" podczas instalacji — bez tego komendy nie zadziałają w terminalu.',
       ],
     },
   },
