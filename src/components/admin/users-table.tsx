@@ -3,10 +3,11 @@
 import { useState, useTransition } from "react";
 import Image from "next/image";
 import type { Profile } from "@/lib/types";
-import { generateOpenRouterKey, deleteOpenRouterKey } from "@/lib/actions/admin";
+import { generateOpenRouterKey, deleteOpenRouterKey, toggleUserRole } from "@/lib/actions/admin";
 import ConfirmDialog from "@/components/ui/confirm-dialog";
 
 interface UsersTableProps {
+  currentUserId: string;
   users: (Profile & {
     project_name?: string | null;
     key_usage?: number | null;
@@ -16,13 +17,25 @@ interface UsersTableProps {
   })[];
 }
 
-export default function UsersTable({ users }: UsersTableProps) {
+export default function UsersTable({ currentUserId, users }: UsersTableProps) {
   const [isPending, startTransition] = useTransition();
   const [deleteTarget, setDeleteTarget] = useState<{ id: string; name: string } | null>(null);
   const [limits, setLimits] = useState<Record<string, number>>({});
   const [error, setError] = useState<string | null>(null);
 
   const getLimit = (userId: string) => limits[userId] ?? 5;
+
+  const handleToggleRole = (userId: string, currentRole: string) => {
+    setError(null);
+    const newRole = currentRole === "admin" ? "participant" : "admin";
+    startTransition(async () => {
+      try {
+        await toggleUserRole(userId, newRole);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Błąd zmiany roli");
+      }
+    });
+  };
 
   const handleGenerate = (userId: string) => {
     setError(null);
@@ -142,15 +155,24 @@ export default function UsersTable({ users }: UsersTableProps) {
                   )}
                 </td>
                 <td className="px-5 py-4">
-                  <span
-                    className={`inline-block rounded-full px-2.5 py-0.5 text-xs font-semibold ${
-                      user.role === "admin"
-                        ? "bg-primary/15 text-primary-dim"
-                        : "bg-surface-high text-on-surface-muted"
-                    }`}
-                  >
-                    {user.role === "admin" ? "Admin" : "Uczestnik"}
-                  </span>
+                  {user.id === currentUserId ? (
+                    <span className="inline-block rounded-full bg-red-500/15 px-2.5 py-0.5 text-xs font-semibold text-red-400">
+                      Admin (Ty)
+                    </span>
+                  ) : (
+                    <button
+                      disabled={isPending}
+                      onClick={() => handleToggleRole(user.id, user.role)}
+                      className={`inline-block rounded-full px-2.5 py-0.5 text-xs font-semibold transition-colors disabled:opacity-50 ${
+                        user.role === "admin"
+                          ? "bg-red-500/15 text-red-400 hover:bg-red-500/25"
+                          : "bg-surface-high text-on-surface-muted hover:bg-surface-bright"
+                      }`}
+                      title={user.role === "admin" ? "Kliknij aby usunąć admina" : "Kliknij aby nadać admina"}
+                    >
+                      {user.role === "admin" ? "Admin" : "Uczestnik"}
+                    </button>
+                  )}
                 </td>
                 <td className="px-5 py-4">
                   {user.openrouter_api_key ? (

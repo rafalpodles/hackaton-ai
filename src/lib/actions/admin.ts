@@ -26,6 +26,22 @@ export async function toggleVoting(open: boolean) {
   revalidatePath("/vote");
 }
 
+export async function toggleUserRole(userId: string, role: "admin" | "participant") {
+  const admin = await requireAdmin();
+  if (admin.id === userId) throw new Error("Nie możesz zmienić własnej roli");
+
+  const supabase = await createClient();
+
+  const { error } = await supabase
+    .from("profiles")
+    .update({ role })
+    .eq("id", userId);
+
+  if (error) throw new Error("Nie udało się zmienić roli");
+
+  revalidatePath("/admin");
+}
+
 export async function toggleSubmissions(open: boolean) {
   await requireAdmin();
   const supabase = await createClient();

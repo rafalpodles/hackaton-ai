@@ -6,9 +6,11 @@ import VotingToggle from "@/components/admin/voting-toggle";
 import DeadlinePicker from "@/components/admin/deadline-picker";
 import SubmissionToggle from "@/components/admin/submission-toggle";
 import { getOpenRouterKeyUsage } from "@/lib/actions/admin";
+import { getCurrentUser } from "@/lib/utils";
 import type { ProjectWithTeam, Profile } from "@/lib/types";
 
 export default async function AdminDashboardPage() {
+  const currentUser = await getCurrentUser();
   const supabase = await createClient();
 
   const [
@@ -134,7 +136,7 @@ export default async function AdminDashboardPage() {
         <h2 className="font-space-grotesk text-xl font-semibold text-on-surface">
           Użytkownicy
         </h2>
-        <UsersTable users={users} />
+        <UsersTable currentUserId={currentUser!.id} users={users} />
       </div>
     </div>
   );
