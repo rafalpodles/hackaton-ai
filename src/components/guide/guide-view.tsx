@@ -584,6 +584,26 @@ function StepCard({
               {step.instructions.description}
             </p>
 
+            {/* Links — show early so download links are visible first */}
+            {step.instructions.links && step.instructions.links.length > 0 && (
+              <div className="flex flex-wrap gap-3 mb-4">
+                {step.instructions.links.map((link) => (
+                  <a
+                    key={link.url}
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 text-sm font-medium text-primary-dim bg-primary/[0.08] border border-primary/20 rounded-lg px-3 py-1.5 hover:bg-primary/[0.15] transition-colors"
+                  >
+                    {link.label}
+                    <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+                    </svg>
+                  </a>
+                ))}
+              </div>
+            )}
+
             {/* OS Tabs — only show if step has platform-specific content */}
             {Object.keys(step.instructions.platforms).length > 1 && (
               <OSTabs activeOS={activeOS} onOSChange={onOSChange} platforms={step.instructions.platforms} />
@@ -595,23 +615,6 @@ function StepCard({
               activeOS={activeOS}
               activeSubscription={activeSubscription}
             />
-
-            {/* Links */}
-            {step.instructions.links && step.instructions.links.length > 0 && (
-              <div className="flex flex-wrap gap-3 mt-4">
-                {step.instructions.links.map((link) => (
-                  <a
-                    key={link.url}
-                    href={link.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-sm text-primary-dim underline decoration-primary-dim/30 hover:decoration-primary-dim transition-colors"
-                  >
-                    {link.label} &rarr;
-                  </a>
-                ))}
-              </div>
-            )}
 
             {/* Warnings */}
             {step.instructions.warnings && step.instructions.warnings.length > 0 && (
