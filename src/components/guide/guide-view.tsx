@@ -220,8 +220,8 @@ export function GuideView() {
           <div className="text-center text-xs text-on-surface-muted/60 mt-4 flex flex-col gap-1">
             <p>
               Masz problem? Napisz na kanale{" "}
-              <span className="font-semibold text-on-surface-muted">#hackathon-help</span>{" "}
-              na Teams/Slack — pomożemy!
+              <span className="font-semibold text-on-surface-muted">AI Enablement Hackaton</span>{" "}
+              na Teams — pomożemy!
             </p>
             <p>Ostatnia aktualizacja: marzec 2026</p>
           </div>
