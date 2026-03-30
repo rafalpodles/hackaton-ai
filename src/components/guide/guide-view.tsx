@@ -1,13 +1,15 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import {
   guideSteps,
   CATEGORY_LABELS,
+  SUBSCRIPTION_LABELS,
   type OS,
   type Path,
   type Category,
+  type Subscription,
   type GuideStep,
   type CodeStep,
 } from "@/lib/guide-data";
@@ -19,16 +21,17 @@ const STORAGE_KEY = "guide-state";
 
 interface PersistedState {
   selectedPath: Path | null;
+  selectedSubscription: Subscription | null;
   completedSteps: string[];
 }
 
 function loadState(): PersistedState {
-  if (typeof window === "undefined") return { selectedPath: null, completedSteps: [] };
+  if (typeof window === "undefined") return { selectedPath: null, selectedSubscription: null, completedSteps: [] };
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw) return JSON.parse(raw);
   } catch {}
-  return { selectedPath: null, completedSteps: [] };
+  return { selectedPath: null, selectedSubscription: null, completedSteps: [] };
 }
 
 function saveState(state: PersistedState) {
@@ -49,6 +52,7 @@ function detectOS(): OS {
 
 export function GuideView() {
   const [selectedPath, setSelectedPath] = useState<Path | null>(null);
+  const [selectedSubscription, setSelectedSubscription] = useState<Subscription | null>(null);
   const [completedSteps, setCompletedSteps] = useState<Set<string>>(new Set());
   const [expandedStep, setExpandedStep] = useState<string | null>(null);
   const [activeOS, setActiveOS] = useState<OS>("mac");
@@ -59,6 +63,7 @@ export function GuideView() {
   useEffect(() => {
     const persisted = loadState();
     setSelectedPath(persisted.selectedPath);
+    setSelectedSubscription(persisted.selectedSubscription);
     setCompletedSteps(new Set(persisted.completedSteps));
     setActiveOS(detectOS());
     setMounted(true);
@@ -68,8 +73,8 @@ export function GuideView() {
   // Save state on changes
   useEffect(() => {
     if (!mounted) return;
-    saveState({ selectedPath, completedSteps: Array.from(completedSteps) });
-  }, [selectedPath, completedSteps, mounted]);
+    saveState({ selectedPath, selectedSubscription, completedSteps: Array.from(completedSteps) });
+  }, [selectedPath, selectedSubscription, completedSteps, mounted]);
 
   const handlePathSelect = useCallback((path: Path) => {
     setSelectedPath(path);
@@ -89,16 +94,13 @@ export function GuideView() {
     });
   }, []);
 
-  // Filter steps for selected path
-  const visibleSteps = selectedPath
-    ? guideSteps.filter(
-        (s) =>
-          s.paths.includes(selectedPath) ||
-          (selectedPath === "advanced" && s.paths.includes("beginner") === false && s.paths.includes("advanced"))
-      )
-    : [];
+  const handleResetPath = useCallback(() => {
+    setSelectedPath(null);
+    setShowSteps(false);
+    setExpandedStep(null);
+  }, []);
 
-  // For advanced: only show steps that include "advanced"
+  // Filter steps for selected path
   const filteredSteps = selectedPath
     ? guideSteps.filter((s) => s.paths.includes(selectedPath))
     : [];
@@ -134,6 +136,7 @@ export function GuideView() {
         totalCount={requiredSteps.length}
         selectedPath={selectedPath}
         allDone={allDone}
+        onResetPath={handleResetPath}
       />
 
       {/* Path Selector */}
@@ -153,20 +156,35 @@ export function GuideView() {
                   group.category === "fundamenty"
                 }
               />
+
+              {/* Subscription selector — show at top of AI Tools section */}
+              {group.category === "ai-tools" && (
+                <SubscriptionSelector
+                  selected={selectedSubscription}
+                  onSelect={setSelectedSubscription}
+                />
+              )}
+
               <div className="flex flex-col gap-3">
-                {group.steps.map((step, si) => (
-                  <StepCard
-                    key={step.id}
-                    step={step}
-                    expanded={expandedStep === step.id}
-                    completed={completedSteps.has(step.id)}
-                    activeOS={activeOS}
-                    onToggle={() => toggleStep(step.id)}
-                    onToggleComplete={() => toggleComplete(step.id)}
-                    onOSChange={setActiveOS}
-                    delay={(gi * 3 + si) * 50}
-                  />
-                ))}
+                {group.steps.map((step, si) => {
+                  // Compute dynamic step number within the filtered path
+                  const globalIndex = filteredSteps.indexOf(step);
+                  return (
+                    <StepCard
+                      key={step.id}
+                      step={step}
+                      displayNumber={globalIndex + 1}
+                      expanded={expandedStep === step.id}
+                      completed={completedSteps.has(step.id)}
+                      activeOS={activeOS}
+                      activeSubscription={selectedSubscription}
+                      onToggle={() => toggleStep(step.id)}
+                      onToggleComplete={() => toggleComplete(step.id)}
+                      onOSChange={setActiveOS}
+                      delay={(gi * 3 + si) * 50}
+                    />
+                  );
+                })}
               </div>
             </div>
           ))}
@@ -187,12 +205,14 @@ function HeroHeader({
   totalCount,
   selectedPath,
   allDone,
+  onResetPath,
 }: {
   progress: number;
   completedCount: number;
   totalCount: number;
   selectedPath: Path | null;
   allDone: boolean;
+  onResetPath: () => void;
 }) {
   return (
     <div className="relative overflow-hidden rounded-2xl bg-surface-low/80 backdrop-blur-[20px] border border-outline p-8 pb-6">
@@ -234,7 +254,7 @@ function HeroHeader({
             {completedCount} / {totalCount}
           </span>
 
-          {selectedPath && <PathBadge path={selectedPath} />}
+          {selectedPath && <PathBadge path={selectedPath} onClick={onResetPath} />}
         </div>
       </div>
     </div>
@@ -243,9 +263,13 @@ function HeroHeader({
 
 // ─── Path Badge ──────────────────────────────────────────────────────
 
-function PathBadge({ path }: { path: Path }) {
+function PathBadge({ path, onClick }: { path: Path; onClick?: () => void }) {
   return (
-    <span className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 bg-primary/15 border border-primary/30 font-space-grotesk text-xs font-semibold uppercase tracking-wider text-primary-dim">
+    <button
+      onClick={onClick}
+      title="Kliknij, żeby zmienić ścieżkę"
+      className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 bg-primary/15 border border-primary/30 font-space-grotesk text-xs font-semibold uppercase tracking-wider text-primary-dim cursor-pointer hover:bg-primary/25 transition-colors"
+    >
       {path === "beginner" ? (
         <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M15.59 14.37a6 6 0 0 1-5.84 7.38v-4.8m5.84-2.58a14.98 14.98 0 0 0 6.16-12.12A14.98 14.98 0 0 0 9.631 8.41m5.96 5.96a14.926 14.926 0 0 1-5.841 2.58m-.119-8.54a6 6 0 0 0-7.381 5.84h4.8m2.58-5.84a14.927 14.927 0 0 1-2.58 5.84m2.699 2.7c-.103.021-.207.041-.311.06a15.09 15.09 0 0 1-2.448-2.448 14.9 14.9 0 0 1 .06-.312m-2.24 2.39a4.493 4.493 0 0 0-1.757 4.306 4.493 4.493 0 0 0 4.306-1.758M16.5 9a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z" />
@@ -256,7 +280,7 @@ function PathBadge({ path }: { path: Path }) {
         </svg>
       )}
       {path === "beginner" ? "POCZĄTKUJĄCY" : "ZAAWANSOWANY"}
-    </span>
+    </button>
   );
 }
 
@@ -319,6 +343,101 @@ function PathSelector({ onSelect }: { onSelect: (path: Path) => void }) {
   );
 }
 
+// ─── Subscription Selector ──────────────────────────────────────────
+
+function SubscriptionSelector({
+  selected,
+  onSelect,
+}: {
+  selected: Subscription | null;
+  onSelect: (sub: Subscription) => void;
+}) {
+  const options: { key: Subscription; label: string; desc: string; icon: React.ReactNode }[] = [
+    {
+      key: "claude",
+      label: "Claude Pro / Max",
+      desc: "Mam subskrypcję Anthropic",
+      icon: (
+        <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M4.709 15.955l4.397-10.986c.469-1.172 1.259-1.479 2.2-.879l8.228 5.238c.94.6.94 1.344 0 1.944l-8.228 5.238c-.941.6-1.731.293-2.2-.879L4.709 15.955z" />
+        </svg>
+      ),
+    },
+    {
+      key: "openai",
+      label: "ChatGPT Plus / Pro",
+      desc: "Mam subskrypcję OpenAI",
+      icon: (
+        <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M22.282 9.821a5.985 5.985 0 0 0-.516-4.91 6.046 6.046 0 0 0-6.51-2.9A6.065 6.065 0 0 0 4.981 4.18a5.985 5.985 0 0 0-3.998 2.9 6.046 6.046 0 0 0 .743 7.097 5.98 5.98 0 0 0 .51 4.911 6.051 6.051 0 0 0 6.515 2.9A5.985 5.985 0 0 0 13.26 24a6.056 6.056 0 0 0 5.772-4.206 5.99 5.99 0 0 0 3.997-2.9 6.056 6.056 0 0 0-.747-7.073zM13.26 22.43a4.476 4.476 0 0 1-2.876-1.04l.141-.081 4.779-2.758a.795.795 0 0 0 .392-.681v-6.737l2.02 1.168a.071.071 0 0 1 .038.052v5.583a4.504 4.504 0 0 1-4.494 4.494zM3.6 18.304a4.47 4.47 0 0 1-.535-3.014l.142.085 4.783 2.759a.771.771 0 0 0 .78 0l5.843-3.369v2.332a.08.08 0 0 1-.033.062L9.74 19.95a4.5 4.5 0 0 1-6.14-1.646zM2.34 7.896a4.485 4.485 0 0 1 2.366-1.973V11.6a.766.766 0 0 0 .388.676l5.815 3.355-2.02 1.168a.076.076 0 0 1-.071 0l-4.83-2.786A4.504 4.504 0 0 1 2.34 7.872zm16.597 3.855l-5.833-3.387L15.119 7.2a.076.076 0 0 1 .071 0l4.83 2.791a4.494 4.494 0 0 1-.676 8.105v-5.678a.79.79 0 0 0-.407-.667zm2.01-3.023l-.141-.085-4.774-2.782a.776.776 0 0 0-.785 0L9.409 9.23V6.897a.066.066 0 0 1 .028-.061l4.83-2.787a4.5 4.5 0 0 1 6.68 4.66zm-12.64 4.135l-2.02-1.164a.08.08 0 0 1-.038-.057V6.075a4.5 4.5 0 0 1 7.375-3.453l-.142.08L8.704 5.46a.795.795 0 0 0-.393.681zm1.097-2.365l2.602-1.5 2.607 1.5v2.999l-2.597 1.5-2.607-1.5z" />
+        </svg>
+      ),
+    },
+    {
+      key: "openrouter",
+      label: "OpenRouter",
+      desc: "Nie mam subskrypcji — użyję klucza",
+      icon: (
+        <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 5.25a3 3 0 0 1 3 3m3 0a6 6 0 0 1-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1 1 21.75 8.25Z" />
+        </svg>
+      ),
+    },
+  ];
+
+  return (
+    <div className="mb-6">
+      <p className="text-sm text-on-surface-muted mb-3">
+        Jaką subskrypcję AI posiadasz? Dostosujemy instrukcje konfiguracji.
+      </p>
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+        {options.map((opt) => (
+          <button
+            key={opt.key}
+            onClick={() => onSelect(opt.key)}
+            className={`group relative cursor-pointer rounded-lg p-3 text-left transition-all duration-200 border focus-visible:outline-2 focus-visible:outline-primary-dim focus-visible:outline-offset-2 ${
+              selected === opt.key
+                ? "bg-primary/10 border-primary/40 shadow-[0_0_20px_rgba(70,70,204,0.1)]"
+                : "bg-surface-high/40 border-outline hover:border-primary/25 hover:bg-surface-high/60"
+            }`}
+          >
+            <div className="flex items-center gap-2.5">
+              <div
+                className={`flex-shrink-0 w-8 h-8 rounded-md flex items-center justify-center transition-colors ${
+                  selected === opt.key
+                    ? "bg-primary/20 text-primary-dim"
+                    : "bg-surface-high text-on-surface-muted"
+                }`}
+              >
+                {opt.icon}
+              </div>
+              <div className="min-w-0">
+                <div
+                  className={`font-space-grotesk text-xs font-bold transition-colors ${
+                    selected === opt.key ? "text-primary-dim" : "text-on-surface"
+                  }`}
+                >
+                  {opt.label}
+                </div>
+                <div className="text-[11px] text-on-surface-muted truncate">
+                  {opt.desc}
+                </div>
+              </div>
+            </div>
+            {selected === opt.key && (
+              <div className="absolute top-1.5 right-1.5">
+                <svg className="w-4 h-4 text-primary-dim" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                </svg>
+              </div>
+            )}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 // ─── Section Divider ─────────────────────────────────────────────────
 
 function SectionDivider({
@@ -335,7 +454,7 @@ function SectionDivider({
         {label}
         {showBeginnerBadge && (
           <span className="ml-2 text-[10px] rounded-full px-2 py-0.5 bg-primary/10 text-primary-dim border border-primary/20">
-            beginner
+            początkujący
           </span>
         )}
       </span>
@@ -348,18 +467,22 @@ function SectionDivider({
 
 function StepCard({
   step,
+  displayNumber,
   expanded,
   completed,
   activeOS,
+  activeSubscription,
   onToggle,
   onToggleComplete,
   onOSChange,
   delay,
 }: {
   step: GuideStep;
+  displayNumber: number;
   expanded: boolean;
   completed: boolean;
   activeOS: OS;
+  activeSubscription: Subscription | null;
   onToggle: () => void;
   onToggleComplete: () => void;
   onOSChange: (os: OS) => void;
@@ -400,20 +523,27 @@ function StepCard({
               : "bg-surface-high text-on-surface-muted"
           }`}
         >
-          {String(step.number).padStart(2, "0")}
+          {String(displayNumber).padStart(2, "0")}
         </div>
 
-        {/* Title */}
-        <span
-          className={`flex-1 font-space-grotesk text-sm font-semibold ${
-            completed ? "text-primary-dim" : "text-on-surface"
-          }`}
-        >
-          {step.title}
-          {!step.required && (
-            <span className="ml-2 text-[10px] text-on-surface-muted font-normal">(opcjonalny)</span>
+        {/* Title + time estimate */}
+        <div className="flex-1 min-w-0">
+          <span
+            className={`font-space-grotesk text-sm font-semibold ${
+              completed ? "text-primary-dim" : "text-on-surface"
+            }`}
+          >
+            {step.title}
+            {!step.required && (
+              <span className="ml-2 text-[10px] text-on-surface-muted font-normal">(opcjonalny)</span>
+            )}
+          </span>
+          {step.estimatedMinutes && (
+            <span className="ml-2 text-[10px] text-on-surface-muted font-normal">
+              ~{step.estimatedMinutes} min
+            </span>
           )}
-        </span>
+        </div>
 
         {/* Checkbox */}
         <StepCheckbox
@@ -463,6 +593,7 @@ function StepCard({
             <PlatformContent
               platforms={step.instructions.platforms}
               activeOS={activeOS}
+              activeSubscription={activeSubscription}
             />
 
             {/* Links */}
@@ -478,6 +609,15 @@ function StepCard({
                   >
                     {link.label} &rarr;
                   </a>
+                ))}
+              </div>
+            )}
+
+            {/* Warnings */}
+            {step.instructions.warnings && step.instructions.warnings.length > 0 && (
+              <div className="mt-4 flex flex-col gap-2">
+                {step.instructions.warnings.map((warn, i) => (
+                  <Callout key={`warn-${i}`} type="warning" text={warn} />
                 ))}
               </div>
             )}
@@ -570,12 +710,21 @@ function OSTabs({
 
 // ─── Platform Content ────────────────────────────────────────────────
 
+function matchesSubscription(step: CodeStep, activeSub: Subscription | null): boolean {
+  if (!step.sub) return true; // no filter = always show
+  if (!activeSub) return true; // no selection = show all
+  if (Array.isArray(step.sub)) return step.sub.includes(activeSub);
+  return step.sub === activeSub;
+}
+
 function PlatformContent({
   platforms,
   activeOS,
+  activeSubscription,
 }: {
   platforms: GuideStep["instructions"]["platforms"];
   activeOS: OS;
+  activeSubscription: Subscription | null;
 }) {
   // Fallback: if current OS not available, use first available
   const platform =
@@ -586,9 +735,11 @@ function PlatformContent({
 
   if (!platform) return null;
 
+  const visibleSteps = platform.steps.filter((s) => matchesSubscription(s, activeSubscription));
+
   return (
     <div className="flex flex-col gap-3" role="tabpanel">
-      {platform.steps.map((step, i) => (
+      {visibleSteps.map((step, i) => (
         <div key={i}>
           {step.text && (
             <p className="text-sm text-on-surface-muted leading-relaxed mb-2">
@@ -650,14 +801,14 @@ function CodeBlock({ code, output }: { code: string; output?: string }) {
               <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
               </svg>
-              COPIED
+              SKOPIOWANO
             </>
           ) : (
             <>
               <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9.75a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 0 1-2.25 2.25H6.75A2.25 2.25 0 0 1 4.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 0 1 1.927-.184" />
               </svg>
-              COPY
+              KOPIUJ
             </>
           )}
         </button>
