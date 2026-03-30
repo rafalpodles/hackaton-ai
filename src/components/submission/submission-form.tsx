@@ -7,10 +7,11 @@ import { FileUploadZone } from "./file-upload-zone";
 
 interface SubmissionFormProps {
   project: Project;
+  submissionOpen?: boolean;
   deadline?: string | null;
 }
 
-export function SubmissionForm({ project, deadline }: SubmissionFormProps) {
+export function SubmissionForm({ project, submissionOpen = true, deadline }: SubmissionFormProps) {
   const [isPending, startTransition] = useTransition();
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [timeLeft, setTimeLeft] = useState("");
@@ -38,7 +39,8 @@ export function SubmissionForm({ project, deadline }: SubmissionFormProps) {
     return () => clearInterval(interval);
   }, [deadline]);
 
-  const isExpired = deadline ? new Date(deadline) < new Date() : false;
+  const isDeadlinePassed = deadline ? new Date(deadline) < new Date() : false;
+  const isClosed = !submissionOpen || isDeadlinePassed;
 
   const [name, setName] = useState(project.name);
   const [description, setDescription] = useState(project.description ?? "");
@@ -70,7 +72,11 @@ export function SubmissionForm({ project, deadline }: SubmissionFormProps) {
   const handleSubmit = () => {
     setSubmitError(null);
 
-    // Check deadline
+    // Check if submissions are open
+    if (!submissionOpen) {
+      setSubmitError("Zgłoszenia są zamknięte.");
+      return;
+    }
     if (deadline && new Date(deadline) < new Date()) {
       setSubmitError("Termin zgłoszeń minął.");
       return;
@@ -135,13 +141,13 @@ export function SubmissionForm({ project, deadline }: SubmissionFormProps) {
                 Pokaż co udało Ci się zbudować podczas hackathonu!
               </p>
             </div>
-            {deadline && (
-              <div className={`shrink-0 rounded-xl px-5 py-3 text-center ${isExpired ? "bg-secondary/10" : "bg-surface-low"}`}>
+            {(deadline || isClosed) && (
+              <div className={`shrink-0 rounded-xl px-5 py-3 text-center ${isClosed ? "bg-secondary/10" : "bg-surface-low"}`}>
                 <p className="font-space-grotesk text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-muted">
-                  {isExpired ? "Termin minął" : "Pozostało"}
+                  {!submissionOpen ? "Zamknięte" : isDeadlinePassed ? "Termin minął" : "Pozostało"}
                 </p>
-                <p className={`mt-1 font-mono text-lg font-bold ${isExpired ? "text-secondary" : "text-primary-dim"}`}>
-                  {isExpired ? "—" : timeLeft}
+                <p className={`mt-1 font-mono text-lg font-bold ${isClosed ? "text-secondary" : "text-primary-dim"}`}>
+                  {isClosed ? "—" : timeLeft}
                 </p>
               </div>
             )}
@@ -364,11 +370,11 @@ export function SubmissionForm({ project, deadline }: SubmissionFormProps) {
           <button
             type="button"
             onClick={handleSubmit}
-            disabled={isPending || isExpired}
+            disabled={isPending || isClosed}
             className="group flex h-20 w-full items-center justify-center gap-4 bg-gradient-to-br from-primary via-primary to-secondary transition-all hover:shadow-[0_0_40px_rgba(164,165,255,0.2)] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <span className="font-space-grotesk text-xl font-extrabold tracking-[0.2em] text-white">
-              {isExpired ? "TERMIN MINĄŁ" : isPending ? "WYSYŁANIE..." : "ZGŁOŚ PROJEKT"}
+              {isClosed ? (isDeadlinePassed ? "TERMIN MINĄŁ" : "ZGŁOSZENIA ZAMKNIĘTE") : isPending ? "WYSYŁANIE..." : "ZGŁOŚ PROJEKT"}
             </span>
             {!isPending && (
               <svg className="h-6 w-6 text-white transition-transform group-hover:translate-x-2" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">

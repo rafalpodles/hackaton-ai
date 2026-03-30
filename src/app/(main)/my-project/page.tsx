@@ -116,7 +116,7 @@ export default async function MyProjectPage() {
   // Fetch submission deadline
   const { data: settings } = await supabase
     .from("app_settings")
-    .select("submission_deadline")
+    .select("submission_open, submission_deadline")
     .eq("id", 1)
     .single();
 
@@ -124,6 +124,7 @@ export default async function MyProjectPage() {
   return (
     <SubmissionForm
       project={typedProject}
+      submissionOpen={settings?.submission_open ?? false}
       deadline={settings?.submission_deadline ?? null}
     />
   );
