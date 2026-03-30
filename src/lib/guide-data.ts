@@ -905,39 +905,44 @@ export const guideSteps: GuideStep[] = [
     category: "bonus",
     paths: ["beginner", "advanced"],
     required: false,
-    estimatedMinutes: 3,
+    estimatedMinutes: 5,
     instructions: {
       description:
-        "Dobre prompty to klucz do efektywnej pracy z AI. Oto sprawdzone szablony do vibecoding:",
+        "5 uniwersalnych promptów, które przeprowadzą Cię przez cały hackathon — od pomysłu do działającego kodu. Kopiuj i wklejaj do Claude Code / Cursor / ChatGPT.",
       platforms: {
         mac: {
           steps: [
             {
-              text: "Startowy prompt do nowego projektu:",
+              text: "1. Discovery — zrozum co budujesz, zanim zaczniesz kodować:",
               command:
-                "Stwórz projekt [typ aplikacji] w [framework]. Potrzebuję:\n- [funkcja 1]\n- [funkcja 2]\n- [funkcja 3]\nUżyj TypeScript, Tailwind CSS. Zacznij od struktury plików.",
+                "Chcę zbudować aplikację: [krótki opis]\n\nZadaj mi pytania, które pomogą doprecyzować:\n- cel aplikacji\n- użytkowników\n- główne funkcjonalności\n- ograniczenia techniczne\n\nNie proponuj jeszcze rozwiązania — tylko pytania i doprecyzowanie.",
             },
             {
-              text: "Prompt do debugowania:",
+              text: "2. Scope + MVP — żeby nie zrobić overengineeringu:",
               command:
-                "Mam błąd: [treść błędu]. Kod który go powoduje to [wklej kod].\nWyjaśnij co jest nie tak i zaproponuj fix.",
+                "Na podstawie tego opisu:\n[opis projektu]\n\nZdefiniuj:\n- MVP (co MUSI być)\n- rzeczy \"nice to have\"\n- czego NIE robić na początku\n\nUzasadnij krótko decyzje.",
             },
             {
-              text: "Prompt do code review:",
+              text: "3. Plan techniczny — zapisz go do pliku, żeby AI miało kontekst:",
               command:
-                "Przejrzyj ten kod pod kątem:\n- Wydajności\n- Bezpieczeństwa\n- Czytelności\n- Best practices\nZaproponuj konkretne poprawki.",
+                "Na podstawie projektu:\n[opis]\n\nZaproponuj:\n- architekturę (frontend, backend, baza danych)\n- stack technologiczny (z uzasadnieniem)\n- strukturę projektu\n- kolejność implementacji krok po kroku\n\nTraktuj mnie jak juniora — wyjaśniaj decyzje.\n\nZapisz plan do pliku PLAN.md w katalogu projektu.",
             },
             {
-              text: "Prompt do nauki:",
+              text: "4. Implementacja krok po kroku — najważniejsze: NIE wszystko naraz:",
               command:
-                "Wyjaśnij [koncept] jak dla programisty [junior/mid/senior].\nPokaż przykład w [język]. Podaj analogię z życia codziennego.",
+                "Chcę zbudować:\n[feature]\n\nPodziel to na małe kroki i prowadź mnie:\n- jeden krok = jedno zadanie\n- po każdym kroku poczekaj na moją odpowiedź\n\nDodawaj kod + krótkie wyjaśnienie.",
+            },
+            {
+              text: "5. Debug / code review — znajdź błędy i naucz mnie:",
+              command:
+                "Mam taki kod:\n[kod]\n\nZrób:\n- code review\n- znajdź błędy\n- zaproponuj poprawki\n- wyjaśnij DLACZEGO coś jest problemem\n\nNie tylko popraw — naucz mnie.",
             },
           ],
         },
       },
       tips: [
-        "Im bardziej precyzyjny prompt, tym lepszy wynik. Dodawaj kontekst!",
-        "Nie bój się iterować — jeśli wynik nie jest idealny, doprecyzuj prompt.",
+        "Traktuj AI jak seniora, który prowadzi Cię przez proces: rozmowa (1-2) → plan (3) → implementacja (4-5).",
+        "Zawsze dawaj kontekst i dziel na kroki. \"Zrób mi aplikację X\" to najgorszy prompt.",
         "Używaj Claude Code w katalogu projektu — wtedy AI widzi kontekst Twojego kodu.",
       ],
     },
