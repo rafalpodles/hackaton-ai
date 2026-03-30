@@ -108,26 +108,26 @@ export const guideSteps: GuideStep[] = [
     estimatedMinutes: 5,
     instructions: {
       description:
-        "Visual Studio Code to najpopularniejszy edytor kodu. Pobierz ze strony i zainstaluj jak zwykły program. Ma wbudowany terminal, więc możesz go używać od razu.",
+        "Visual Studio Code to najpopularniejszy edytor kodu. Ma wbudowany terminal, więc możesz go używać od razu do wpisywania komend.",
       platforms: {
         mac: {
           steps: [
             {
-              text: "Pobierz VS Code ze strony code.visualstudio.com. Przeciągnij do folderu Aplikacje i uruchom.",
+              text: "Pobierz instaler, przeciągnij do folderu Aplikacje i uruchom.",
             },
           ],
         },
         windows: {
           steps: [
             {
-              text: "Pobierz VS Code ze strony code.visualstudio.com. Uruchom instaler i przejdź przez instalację.",
+              text: "Pobierz instaler, uruchom i przejdź przez instalację (zostaw domyślne ustawienia).",
             },
           ],
         },
         linux: {
           steps: [
             {
-              text: "Pobierz VS Code ze strony code.visualstudio.com — dostępny jako .deb lub .rpm. Zainstaluj pobraną paczkę.",
+              text: "Pobierz paczkę .deb lub .rpm i zainstaluj.",
             },
           ],
         },
@@ -150,12 +150,12 @@ export const guideSteps: GuideStep[] = [
     estimatedMinutes: 10,
     instructions: {
       description:
-        "Git to system kontroli wersji, który pozwala śledzić zmiany w kodzie i współpracować z innymi. Pobierz instaler ze strony i zainstaluj jak zwykły program.",
+        "Git to system kontroli wersji, który pozwala śledzić zmiany w kodzie i współpracować z innymi.",
       platforms: {
         mac: {
           steps: [
             {
-              text: "Na macOS Git często jest już zainstalowany — sprawdź najpierw w terminalu:",
+              text: "Na macOS Git często jest już zainstalowany — sprawdź w terminalu:",
               command: "git --version",
               output: "git version 2.x.x",
             },
@@ -172,15 +172,15 @@ export const guideSteps: GuideStep[] = [
         windows: {
           steps: [
             {
-              text: "Pobierz instaler ze strony git-scm.com i zainstaluj. Podczas instalacji zostaw domyślne ustawienia.",
+              text: "Pobierz instaler i zainstaluj. Podczas instalacji zostaw domyślne ustawienia.",
             },
             {
-              text: 'Po instalacji otwórz terminal i skonfiguruj swoje dane. Zamień "Jan Kowalski" i email na swoje prawdziwe dane:',
+              text: 'Skonfiguruj swoje dane. Zamień "Jan Kowalski" i email na swoje prawdziwe dane:',
               command:
                 'git config --global user.name "Jan Kowalski"\ngit config --global user.email "jan.kowalski@spyrosoft.com"',
             },
             {
-              text: "Sprawdź instalację:",
+              text: "Sprawdź czy działa:",
               command: "git --version",
               output: "git version 2.x.x",
             },
@@ -278,15 +278,15 @@ export const guideSteps: GuideStep[] = [
     estimatedMinutes: 5,
     instructions: {
       description:
-        "Node.js to środowisko uruchomieniowe JavaScript. Potrzebujesz go, żeby uruchamiać narzędzia AI (Claude Code, Codex itp.). Pobierz instaler ze strony i zainstaluj jak zwykły program.",
+        "Node.js to środowisko uruchomieniowe JavaScript. Potrzebujesz go, żeby uruchamiać narzędzia AI (Claude Code, Codex itp.).",
       platforms: {
         mac: {
           steps: [
             {
-              text: "Pobierz instaler (.pkg) ze strony nodejs.org — wybierz wersję LTS (Long Term Support). Otwórz pobrany plik i przejdź przez instalację.",
+              text: "Pobierz instaler (.pkg) — wybierz wersję LTS (Long Term Support). Otwórz pobrany plik i przejdź przez instalację.",
             },
             {
-              text: "Po instalacji otwórz terminal i sprawdź:",
+              text: "Sprawdź czy działa:",
               command: "node --version && npm --version",
               output: "v22.x.x\n10.x.x",
             },
@@ -295,10 +295,10 @@ export const guideSteps: GuideStep[] = [
         windows: {
           steps: [
             {
-              text: "Pobierz instaler (.msi) ze strony nodejs.org — wybierz wersję LTS. Uruchom i przejdź przez instalację (zostaw domyślne ustawienia).",
+              text: "Pobierz instaler (.msi) — wybierz wersję LTS. Uruchom i przejdź przez instalację (zostaw domyślne ustawienia).",
             },
             {
-              text: "Po instalacji otwórz terminal i sprawdź:",
+              text: "Sprawdź czy działa:",
               command: "node --version && npm --version",
               output: "v22.x.x\n10.x.x",
             },
@@ -312,7 +312,7 @@ export const guideSteps: GuideStep[] = [
                 "curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -\nsudo apt install -y nodejs",
             },
             {
-              text: "Sprawdź instalację:",
+              text: "Sprawdź czy działa:",
               command: "node --version && npm --version",
               output: "v22.x.x\n10.x.x",
             },
@@ -334,15 +334,15 @@ export const guideSteps: GuideStep[] = [
     estimatedMinutes: 5,
     instructions: {
       description:
-        "Python to popularny język programowania, szczególnie w AI/ML. Jeśli planujesz projekt w Pythonie — pobierz instaler ze strony. Jeśli nie — możesz pominąć.",
+        "Python to popularny język programowania, szczególnie w AI/ML. Jeśli planujesz projekt w Pythonie — zainstaluj. Jeśli nie — możesz pominąć.",
       platforms: {
         mac: {
           steps: [
             {
-              text: "Pobierz instaler (.pkg) ze strony python.org — wybierz najnowszą wersję 3.13. Otwórz pobrany plik i przejdź przez instalację.",
+              text: "Pobierz instaler (.pkg) — wybierz najnowszą wersję 3.13. Otwórz pobrany plik i przejdź przez instalację.",
             },
             {
-              text: "Po instalacji otwórz terminal i sprawdź:",
+              text: "Sprawdź czy działa:",
               command: "python3 --version",
               output: "Python 3.13.x",
             },
@@ -351,10 +351,10 @@ export const guideSteps: GuideStep[] = [
         windows: {
           steps: [
             {
-              text: 'Pobierz instaler (.exe) ze strony python.org. WAŻNE: podczas instalacji zaznacz opcję "Add Python to PATH"!',
+              text: 'Pobierz instaler (.exe). WAŻNE: podczas instalacji zaznacz opcję "Add Python to PATH"!',
             },
             {
-              text: "Po instalacji otwórz terminal i sprawdź:",
+              text: "Sprawdź czy działa:",
               command: "python --version",
               output: "Python 3.13.x",
             },
@@ -404,7 +404,7 @@ export const guideSteps: GuideStep[] = [
                 '/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"',
             },
             {
-              text: "Sprawdź instalację:",
+              text: "Sprawdź czy działa:",
               command: "brew --version",
               output: "Homebrew 4.x.x",
             },
@@ -450,7 +450,7 @@ export const guideSteps: GuideStep[] = [
         mac: {
           steps: [
             {
-              text: "Pobierz Docker Desktop ze strony lub zainstaluj przez Homebrew:",
+              text: "Zainstaluj przez Homebrew lub pobierz instaler ze strony:",
               command: "brew install --cask docker",
             },
             {
@@ -463,7 +463,7 @@ export const guideSteps: GuideStep[] = [
         windows: {
           steps: [
             {
-              text: "Pobierz Docker Desktop ze strony lub zainstaluj przez winget:",
+              text: "Zainstaluj przez winget lub pobierz instaler ze strony:",
               command: "winget install Docker.DockerDesktop",
             },
             {
@@ -515,20 +515,20 @@ export const guideSteps: GuideStep[] = [
         mac: {
           steps: [
             {
-              text: "Claude Desktop — aplikacja desktopowa od Anthropic. Czat z Claude, wgrywanie plików, analiza obrazów. Pobierz ze strony claude.ai/download.",
+              text: "Claude Desktop — aplikacja desktopowa od Anthropic. Czat z Claude, wgrywanie plików, analiza obrazów.",
             },
             {
-              text: "ChatGPT Desktop — aplikacja od OpenAI z dostępem do GPT-4o. Pobierz ze strony openai.com/chatgpt/desktop.",
+              text: "ChatGPT Desktop — aplikacja od OpenAI z dostępem do GPT-4o. Podobne możliwości: czat, analiza kodu, generowanie.",
             },
           ],
         },
         windows: {
           steps: [
             {
-              text: "Claude Desktop — aplikacja desktopowa od Anthropic. Czat z Claude, wgrywanie plików, analiza obrazów. Pobierz ze strony claude.ai/download.",
+              text: "Claude Desktop — aplikacja desktopowa od Anthropic. Czat z Claude, wgrywanie plików, analiza obrazów.",
             },
             {
-              text: "ChatGPT Desktop — aplikacja od OpenAI z dostępem do GPT-4o. Pobierz ze strony openai.com/chatgpt/desktop.",
+              text: "ChatGPT Desktop — aplikacja od OpenAI z dostępem do GPT-4o. Podobne możliwości: czat, analiza kodu, generowanie.",
             },
           ],
         },
@@ -787,39 +787,13 @@ export const guideSteps: GuideStep[] = [
         mac: {
           steps: [
             {
-              text: "Google Antigravity — nowe IDE od Google oparte na VS Code z agentami Gemini. Wspiera też Claude i GPT. Darmowe w preview.",
+              text: "Google Antigravity — nowe IDE od Google z agentami Gemini. Wspiera też Claude i GPT. Darmowe w preview.",
             },
             {
               text: "Cursor — popularny edytor AI z wbudowanym czatem i autocomplete. Darmowy plan wystarczy na hackathon.",
             },
             {
               text: "Windsurf — edytor AI z agentem Cascade, który rozumie kontekst całego projektu.",
-            },
-          ],
-        },
-        windows: {
-          steps: [
-            {
-              text: "Google Antigravity — nowe IDE od Google oparte na VS Code z agentami Gemini. Wspiera też Claude i GPT. Darmowe w preview. Pobierz ze strony antigravity.google.",
-            },
-            {
-              text: "Cursor — popularny edytor AI z wbudowanym czatem i autocomplete. Darmowy plan wystarczy na hackathon. Pobierz ze strony cursor.sh.",
-            },
-            {
-              text: "Windsurf — edytor AI z agentem Cascade, który rozumie kontekst całego projektu. Pobierz ze strony windsurf.com.",
-            },
-          ],
-        },
-        linux: {
-          steps: [
-            {
-              text: "Google Antigravity — nowe IDE od Google oparte na VS Code z agentami Gemini. Wspiera też Claude i GPT. Darmowe w preview. Pobierz ze strony antigravity.google.",
-            },
-            {
-              text: "Cursor — dostępny jako .AppImage. Pobierz ze strony cursor.sh.",
-            },
-            {
-              text: "Windsurf — pobierz ze strony windsurf.com.",
             },
           ],
         },
@@ -858,30 +832,6 @@ export const guideSteps: GuideStep[] = [
             },
           ],
         },
-        windows: {
-          steps: [
-            {
-              text: "Stwórz plik CLAUDE.md w katalogu głównym projektu. Przykładowa zawartość:",
-              command:
-                '# Project\nNext.js 15 app with TypeScript, Tailwind CSS, Supabase.\n\n# Commands\n- npm run dev — start dev server\n- npm run build — build for production\n- npm run lint — run linter\n\n# Conventions\n- Use TypeScript strict mode\n- Components in src/components/\n- Use "use client" only when needed',
-            },
-            {
-              text: "Dla Cursor stwórz .cursorrules, dla Windsurf .windsurfrules — analogicznie.",
-            },
-          ],
-        },
-        linux: {
-          steps: [
-            {
-              text: "Stwórz plik CLAUDE.md w katalogu głównym projektu. Przykładowa zawartość:",
-              command:
-                '# Project\nNext.js 15 app with TypeScript, Tailwind CSS, Supabase.\n\n# Commands\n- npm run dev — start dev server\n- npm run build — build for production\n- npm run lint — run linter\n\n# Conventions\n- Use TypeScript strict mode\n- Components in src/components/\n- Use "use client" only when needed',
-            },
-            {
-              text: "Dla Cursor stwórz .cursorrules, dla Windsurf .windsurfrules — analogicznie.",
-            },
-          ],
-        },
       },
       tips: [
         "Im lepiej opiszesz swój projekt w CLAUDE.md, tym lepsze wyniki dostaniesz od AI.",
@@ -897,80 +847,12 @@ export const guideSteps: GuideStep[] = [
     category: "bonus",
     paths: ["beginner", "advanced"],
     required: false,
+    estimatedMinutes: 5,
     instructions: {
       description:
         "Nie wiesz co zbudować? Oto kilka pomysłów na projekty, które mogłyby realnie przydać się w biurze:",
       platforms: {
         mac: {
-          steps: [
-            {
-              text: "Office Food Alert — system powiadomień o dostawie jedzenia do biura. Subskrybujesz się i dostajesz alert, gdy pizza jest na miejscu.",
-            },
-            {
-              text: "Lunch Buddy Finder — kto idzie dziś na obiad? Aplikacja do spontanicznego organizowania się na lunch w grupach.",
-            },
-            {
-              text: "Parking Spot Notifier — rezerwacja miejsc parkingowych (albo biurek) w stylu hot-desk. Sprawdź dostępność, zarezerwuj, zwolnij.",
-            },
-            {
-              text: 'Meeting Room Finder — czatbot do szukania i rezerwacji salek konferencyjnych. Napisz "potrzebuję salki na 6 osób o 14:00" i gotowe.',
-            },
-            {
-              text: "Meeting Room Status — dashboard do salek konferencyjnych. Widać od razu, która salka jest wolna, która zajęta i do kiedy.",
-            },
-            {
-              text: "Weekly Sum-up — narzędzie generujące podsumowanie po spotkaniu na podstawie notatek lub transkrypcji (AI streszcza kluczowe ustalenia).",
-            },
-            {
-              text: "Piłeczka ze Spyro — aplikacja do organizowania meczy (piłka nożna, siatkówka itp.). Czat, zgłoszenia, statystyki, kalendarz spotkań.",
-            },
-            {
-              text: "Spyrosoft Event Calendar — kalendarz eventów firmowych: akcje charytatywne, integracje, linki do zbiórek, przypisywanie prezentów.",
-            },
-            {
-              text: "Strava Challenge Dashboard — dashboard do wyzwań sportowych. Synchronizacja z aktywnościami, ranking, motywacja zespołowa.",
-            },
-            {
-              text: "Campfire App — platforma do wewnętrznych eventów: zgłoszenia, akceptacje, nagrania, podsumowania AI, filtry po tematyce.",
-            },
-          ],
-        },
-        // Content is not platform-specific, but we need entries for fallback
-        windows: {
-          steps: [
-            {
-              text: "Office Food Alert — system powiadomień o dostawie jedzenia do biura. Subskrybujesz się i dostajesz alert, gdy pizza jest na miejscu.",
-            },
-            {
-              text: "Lunch Buddy Finder — kto idzie dziś na obiad? Aplikacja do spontanicznego organizowania się na lunch w grupach.",
-            },
-            {
-              text: "Parking Spot Notifier — rezerwacja miejsc parkingowych (albo biurek) w stylu hot-desk. Sprawdź dostępność, zarezerwuj, zwolnij.",
-            },
-            {
-              text: 'Meeting Room Finder — czatbot do szukania i rezerwacji salek konferencyjnych. Napisz "potrzebuję salki na 6 osób o 14:00" i gotowe.',
-            },
-            {
-              text: "Meeting Room Status — dashboard do salek konferencyjnych. Widać od razu, która salka jest wolna, która zajęta i do kiedy.",
-            },
-            {
-              text: "Weekly Sum-up — narzędzie generujące podsumowanie po spotkaniu na podstawie notatek lub transkrypcji (AI streszcza kluczowe ustalenia).",
-            },
-            {
-              text: "Piłeczka ze Spyro — aplikacja do organizowania meczy (piłka nożna, siatkówka itp.). Czat, zgłoszenia, statystyki, kalendarz spotkań.",
-            },
-            {
-              text: "Spyrosoft Event Calendar — kalendarz eventów firmowych: akcje charytatywne, integracje, linki do zbiórek, przypisywanie prezentów.",
-            },
-            {
-              text: "Strava Challenge Dashboard — dashboard do wyzwań sportowych. Synchronizacja z aktywnościami, ranking, motywacja zespołowa.",
-            },
-            {
-              text: "Campfire App — platforma do wewnętrznych eventów: zgłoszenia, akceptacje, nagrania, podsumowania AI, filtry po tematyce.",
-            },
-          ],
-        },
-        linux: {
           steps: [
             {
               text: "Office Food Alert — system powiadomień o dostawie jedzenia do biura. Subskrybujesz się i dostajesz alert, gdy pizza jest na miejscu.",
@@ -1018,59 +900,12 @@ export const guideSteps: GuideStep[] = [
     category: "bonus",
     paths: ["beginner", "advanced"],
     required: false,
+    estimatedMinutes: 3,
     instructions: {
       description:
         "Dobre prompty to klucz do efektywnej pracy z AI. Oto sprawdzone szablony do vibecoding:",
       platforms: {
         mac: {
-          steps: [
-            {
-              text: "Startowy prompt do nowego projektu:",
-              command:
-                "Stwórz projekt [typ aplikacji] w [framework]. Potrzebuję:\n- [funkcja 1]\n- [funkcja 2]\n- [funkcja 3]\nUżyj TypeScript, Tailwind CSS. Zacznij od struktury plików.",
-            },
-            {
-              text: "Prompt do debugowania:",
-              command:
-                "Mam błąd: [treść błędu]. Kod który go powoduje to [wklej kod].\nWyjaśnij co jest nie tak i zaproponuj fix.",
-            },
-            {
-              text: "Prompt do code review:",
-              command:
-                "Przejrzyj ten kod pod kątem:\n- Wydajności\n- Bezpieczeństwa\n- Czytelności\n- Best practices\nZaproponuj konkretne poprawki.",
-            },
-            {
-              text: "Prompt do nauki:",
-              command:
-                "Wyjaśnij [koncept] jak dla programisty [junior/mid/senior].\nPokaż przykład w [język]. Podaj analogię z życia codziennego.",
-            },
-          ],
-        },
-        windows: {
-          steps: [
-            {
-              text: "Startowy prompt do nowego projektu:",
-              command:
-                "Stwórz projekt [typ aplikacji] w [framework]. Potrzebuję:\n- [funkcja 1]\n- [funkcja 2]\n- [funkcja 3]\nUżyj TypeScript, Tailwind CSS. Zacznij od struktury plików.",
-            },
-            {
-              text: "Prompt do debugowania:",
-              command:
-                "Mam błąd: [treść błędu]. Kod który go powoduje to [wklej kod].\nWyjaśnij co jest nie tak i zaproponuj fix.",
-            },
-            {
-              text: "Prompt do code review:",
-              command:
-                "Przejrzyj ten kod pod kątem:\n- Wydajności\n- Bezpieczeństwa\n- Czytelności\n- Best practices\nZaproponuj konkretne poprawki.",
-            },
-            {
-              text: "Prompt do nauki:",
-              command:
-                "Wyjaśnij [koncept] jak dla programisty [junior/mid/senior].\nPokaż przykład w [język]. Podaj analogię z życia codziennego.",
-            },
-          ],
-        },
-        linux: {
           steps: [
             {
               text: "Startowy prompt do nowego projektu:",
