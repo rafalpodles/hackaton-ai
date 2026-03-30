@@ -568,10 +568,6 @@ function StepCard({
       className={`rounded-xl overflow-hidden border transition-all duration-200 animate-fadeIn ${
         completed
           ? "bg-surface-low/60 border-primary/25 border-l-2 border-l-primary-dim"
-          : !step.required
-          ? expanded
-            ? "bg-surface-low/70 border-primary/15"
-            : "bg-surface-low/40 border-outline/60"
           : expanded
           ? "bg-surface-low/80 border-primary/20"
           : "bg-surface-low/60 border-outline"
@@ -599,8 +595,6 @@ function StepCard({
           className={`flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center font-space-grotesk text-xs font-bold ${
             completed || expanded
               ? "bg-primary/20 text-primary-dim"
-              : !step.required
-              ? "bg-surface-high/60 text-on-surface-muted/60"
               : "bg-surface-high text-on-surface-muted"
           }`}
         >
@@ -612,11 +606,7 @@ function StepCard({
           <div className="flex items-center gap-2 flex-wrap">
             <span
               className={`font-space-grotesk text-sm font-semibold ${
-                completed
-                  ? "text-primary-dim"
-                  : !step.required
-                  ? "text-on-surface/70"
-                  : "text-on-surface"
+                completed ? "text-primary-dim" : "text-on-surface"
               }`}
             >
               {step.title}
