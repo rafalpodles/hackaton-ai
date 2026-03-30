@@ -130,10 +130,10 @@ export function GuideView() {
     ? guideSteps.filter((s) => s.paths.includes(selectedPath))
     : [];
 
-  const requiredSteps = filteredSteps.filter((s) => s.required);
-  const completedRequired = requiredSteps.filter((s) => completedSteps.has(s.id));
-  const progress = requiredSteps.length > 0 ? Math.round((completedRequired.length / requiredSteps.length) * 100) : 0;
-  const allDone = requiredSteps.length > 0 && completedRequired.length === requiredSteps.length;
+  const completedCount = filteredSteps.filter((s) => completedSteps.has(s.id)).length;
+  const totalCount = filteredSteps.length;
+  const progress = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
+  const allDone = totalCount > 0 && completedCount === totalCount;
 
   const totalEstimatedMinutes = filteredSteps.reduce((sum, s) => sum + (s.estimatedMinutes ?? 0), 0);
 
@@ -159,8 +159,8 @@ export function GuideView() {
       {/* Hero Header */}
       <HeroHeader
         progress={progress}
-        completedCount={completedRequired.length}
-        totalCount={requiredSteps.length}
+        completedCount={completedCount}
+        totalCount={totalCount}
         selectedPath={selectedPath}
         allDone={allDone}
         totalMinutes={totalEstimatedMinutes}
