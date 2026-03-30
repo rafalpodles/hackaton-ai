@@ -928,7 +928,7 @@ export const guideSteps: GuideStep[] = [
                 "Na podstawie projektu:\n[opis]\n\nZaproponuj:\n- architekturę (frontend, backend, baza danych)\n- stack technologiczny (z uzasadnieniem)\n- strukturę projektu\n- kolejność implementacji krok po kroku\n\nTraktuj mnie jak juniora — wyjaśniaj decyzje.\n\nZapisz plan do pliku PLAN.md w katalogu projektu.",
             },
             {
-              text: "4. Implementacja krok po kroku — najważniejsze: NIE wszystko naraz:",
+              text: "4. Implementacja krok po kroku — najważniejsze: NIE wszystko naraz. Po każdym ukończonym etapie zacznij nową rozmowę (nowy kontekst) — AI zużywa mniej tokenów, odpowiada szybciej i nie gubi się w starych błędach:",
               command:
                 "Chcę zbudować:\n[feature]\n\nPodziel to na małe kroki i prowadź mnie:\n- jeden krok = jedno zadanie\n- po każdym kroku poczekaj na moją odpowiedź\n\nDodawaj kod + krótkie wyjaśnienie.",
             },
