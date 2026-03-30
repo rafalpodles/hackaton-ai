@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
 import {
   guideSteps,
+  projectIdeas,
   CATEGORY_LABELS,
   CATEGORY_DESCRIPTIONS,
   SUBSCRIPTION_LABELS,
@@ -709,6 +710,9 @@ function StepCard({
               activeSubscription={activeSubscription}
             />
 
+            {/* Project ideas grid — special render for this step */}
+            {step.id === "project-ideas" && <ProjectIdeasGrid />}
+
             {/* Tips */}
             {step.instructions.tips && step.instructions.tips.length > 0 && (
               <div className="mt-4 flex flex-col gap-2">
@@ -955,6 +959,38 @@ function Callout({ type, text }: { type: "info" | "warning"; text: string }) {
         </svg>
       )}
       <span>{text}</span>
+    </div>
+  );
+}
+
+// ─── Project Ideas Grid ──────────────────────────────────────────────
+
+function ProjectIdeasGrid() {
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 mt-1">
+      {projectIdeas.map((idea) => (
+        <div
+          key={idea.name}
+          className="rounded-lg border border-outline/60 bg-surface-high/30 p-3.5 transition-colors hover:border-primary/25 hover:bg-surface-high/50"
+        >
+          <h4 className="font-space-grotesk text-sm font-bold text-on-surface mb-1">
+            {idea.name}
+          </h4>
+          <p className="text-xs text-on-surface-muted leading-relaxed mb-2.5">
+            {idea.description}
+          </p>
+          <div className="flex flex-wrap gap-1.5">
+            {idea.tags.map((tag) => (
+              <span
+                key={tag}
+                className="text-[10px] font-space-grotesk font-medium px-2 py-0.5 rounded-full bg-primary/8 text-primary-dim border border-primary/15"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+        </div>
+      ))}
     </div>
   );
 }
