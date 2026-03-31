@@ -19,6 +19,11 @@ const navItems = [
   { label: "Zgłoś projekt", href: "/my-project" },
 ];
 
+const guideSubItems = [
+  { label: "Prompty", href: "/prompts" },
+  { label: "Pomysły", href: "/ideas" },
+];
+
 const adminItems = [
   { label: "Panel", href: "/admin" },
   { label: "Wyniki", href: "/results" },
@@ -125,12 +130,26 @@ export default function Sidebar({ user, votingOpen }: SidebarProps) {
         {/* Navigation */}
         <nav className="flex-1 space-y-1 px-3">
           {navItems.map((item) => (
-            <NavLink
-              key={item.href}
-              href={item.href}
-              label={item.label}
-              active={isActive(item.href)}
-            />
+            <div key={item.href}>
+              <NavLink
+                href={item.href}
+                label={item.label}
+                active={isActive(item.href)}
+              />
+              {item.href === "/guide" && (
+                <div className="ml-4 space-y-0.5">
+                  {guideSubItems.map((sub) => (
+                    <NavLink
+                      key={sub.href}
+                      href={sub.href}
+                      label={sub.label}
+                      active={isActive(sub.href)}
+                      small
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
           ))}
 
           {/* Admin section */}
@@ -182,15 +201,21 @@ function NavLink({
   href,
   label,
   active,
+  small,
 }: {
   href: string;
   label: string;
   active: boolean;
+  small?: boolean;
 }) {
   return (
     <Link
       href={href}
-      className={`flex items-center rounded-lg px-3 py-2 font-space-grotesk text-xs uppercase tracking-wider transition-colors ${
+      className={`flex items-center rounded-lg font-space-grotesk uppercase tracking-wider transition-colors ${
+        small
+          ? "px-3 py-1.5 text-[10px]"
+          : "px-3 py-2 text-xs"
+      } ${
         active
           ? "border-l-2 border-primary-dim bg-primary/15 text-primary-dim"
           : "text-on-surface-muted hover:bg-surface-high hover:text-on-surface"
