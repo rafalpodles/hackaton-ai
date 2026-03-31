@@ -9,9 +9,9 @@ interface CastVoteInput {
 }
 
 const VALID_CATEGORIES: VoteCategory[] = [
-  "best_overall",
-  "best_demo_ux",
-  "most_creative",
+  "concept_to_reality",
+  "creativity",
+  "usefulness",
 ];
 
 export async function castVotes(votes: CastVoteInput[]) {

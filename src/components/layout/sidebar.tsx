@@ -12,16 +12,12 @@ interface SidebarProps {
 }
 
 const navItems = [
+  { label: "Garage Rules", href: "/rules" },
   { label: "Poradnik", href: "/guide" },
   { label: "Live", href: "/feed" },
   { label: "Projekty", href: "/" },
   { label: "Zespół", href: "/team" },
   { label: "Mój projekt", href: "/my-project" },
-];
-
-const guideSubItems = [
-  { label: "Prompty", href: "/prompts" },
-  { label: "Pomysły", href: "/ideas" },
 ];
 
 const adminItems = [
@@ -136,19 +132,6 @@ export default function Sidebar({ user, votingOpen }: SidebarProps) {
                 label={item.label}
                 active={isActive(item.href)}
               />
-              {item.href === "/guide" && (
-                <div className="ml-4 space-y-0.5">
-                  {guideSubItems.map((sub) => (
-                    <NavLink
-                      key={sub.href}
-                      href={sub.href}
-                      label={sub.label}
-                      active={isActive(sub.href)}
-                      small
-                    />
-                  ))}
-                </div>
-              )}
             </div>
           ))}
 

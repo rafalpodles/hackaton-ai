@@ -126,10 +126,10 @@ export default async function MyProjectPage() {
         <div className="space-y-4 rounded-xl border border-outline bg-surface-low p-6 text-sm">
           <InfoRow label="Nazwa" value={typedProject.name} />
           <InfoRow label="Opis" value={typedProject.description} />
-          <InfoRow label="Źródło pomysłu" value={typedProject.idea_origin} />
+          <InfoRow label="Czego się nauczyłeś" value={typedProject.idea_origin} />
           <InfoRow label="Droga" value={typedProject.journey} />
           <InfoRow
-            label="Technologie"
+            label="AI toole"
             value={
               (typedProject.tech_stack ?? []).length > 0
                 ? (typedProject.tech_stack ?? []).join(", ")

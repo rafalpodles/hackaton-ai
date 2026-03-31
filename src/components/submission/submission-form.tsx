@@ -187,7 +187,6 @@ export function SubmissionForm({ project, submissionOpen = true, deadline, canSu
               <div className="group relative">
                 <textarea
                   className="min-h-[140px] w-full resize-none border-none bg-black p-6 text-lg leading-relaxed text-on-surface placeholder:text-on-surface-muted/30 focus:outline-none focus:ring-0"
-                  maxLength={280}
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   onBlur={() => save({ description })}
@@ -195,15 +194,12 @@ export function SubmissionForm({ project, submissionOpen = true, deadline, canSu
                 />
                 <div className="absolute bottom-0 left-0 h-[2px] w-full origin-left scale-x-0 bg-gradient-to-r from-primary to-secondary transition-transform duration-500 group-focus-within:scale-x-100" />
               </div>
-              <p className="text-right font-space-grotesk text-[10px] tracking-widest text-on-surface-muted">
-                {description.length} / 280
-              </p>
             </div>
 
             {/* Idea Origin */}
             <div className="space-y-2">
               <h2 className="font-space-grotesk text-2xl font-bold text-on-surface">
-                Skąd wziął się pomysł?
+                Czego się nauczyłeś/nauczyliście?
               </h2>
               <div className="group relative">
                 <textarea
@@ -211,7 +207,7 @@ export function SubmissionForm({ project, submissionOpen = true, deadline, canSu
                   value={ideaOrigin}
                   onChange={(e) => setIdeaOrigin(e.target.value)}
                   onBlur={() => save({ idea_origin: ideaOrigin })}
-                  placeholder="Opowiedz o momencie 'Eureka'..."
+                  placeholder="Czego się nauczyłeś/nauczyliście podczas hackathonu?"
                 />
                 <div className="absolute bottom-0 left-0 h-[2px] w-full origin-left scale-x-0 bg-gradient-to-r from-primary to-secondary transition-transform duration-500 group-focus-within:scale-x-100" />
               </div>
@@ -237,7 +233,7 @@ export function SubmissionForm({ project, submissionOpen = true, deadline, canSu
             {/* Tech Stack */}
             <div className="space-y-4">
               <h2 className="font-space-grotesk text-2xl font-bold text-on-surface">
-                Użyte technologie
+                Użyte AI toole
               </h2>
               <div className="flex flex-wrap gap-3 bg-black p-6">
                 {techStack.map((tag) => (

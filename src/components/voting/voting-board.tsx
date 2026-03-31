@@ -8,9 +8,9 @@ import VotingCategory from "./voting-category";
 import VoteSubmitBar from "./vote-submit-bar";
 
 const CATEGORIES: { key: VoteCategory; label: string; icon: string }[] = [
-  { key: "best_overall", label: "Najlepszy projekt", icon: "\u25C6" },
-  { key: "best_demo_ux", label: "Najlepsze demo / UX", icon: "\u25C7" },
-  { key: "most_creative", label: "Najbardziej kreatywny", icon: "\u2726" },
+  { key: "concept_to_reality", label: "Droga od koncepcji do realizacji", icon: "\u26A1" },
+  { key: "creativity", label: "Kreatywno\u015b\u0107 pomys\u0142u", icon: "\u2728" },
+  { key: "usefulness", label: "Przydatno\u015b\u0107 / warto\u015b\u0107 u\u017cytkowa", icon: "\u2699" },
 ];
 
 interface VotingBoardProps {
@@ -34,9 +34,9 @@ export default function VotingBoard({
   const [selections, setSelections] = useState<
     Record<VoteCategory, string | null>
   >({
-    best_overall: null,
-    best_demo_ux: null,
-    most_creative: null,
+    concept_to_reality: null,
+    creativity: null,
+    usefulness: null,
   });
 
   if (hasVoted) {

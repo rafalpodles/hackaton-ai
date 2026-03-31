@@ -1,5 +1,5 @@
 export type Role = "participant" | "admin";
-export type VoteCategory = "best_overall" | "best_demo_ux" | "most_creative";
+export type VoteCategory = "concept_to_reality" | "creativity" | "usefulness";
 
 export interface Profile {
   id: string;

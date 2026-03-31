@@ -4,15 +4,15 @@ import { getCurrentUser } from "@/lib/utils";
 import type { VoteCategory, VoteResult } from "@/lib/types";
 
 const categoryLabels: Record<VoteCategory, string> = {
-  best_overall: "Najlepszy projekt 🏆",
-  best_demo_ux: "Najlepsze demo / UX 🎨",
-  most_creative: "Najbardziej kreatywny 🧠",
+  concept_to_reality: "Droga od koncepcji do realizacji \u26A1",
+  creativity: "Kreatywno\u015b\u0107 pomys\u0142u \u2728",
+  usefulness: "Przydatno\u015b\u0107 / warto\u015b\u0107 u\u017cytkowa \u2699\uFE0F",
 };
 
 const categories: VoteCategory[] = [
-  "best_overall",
-  "best_demo_ux",
-  "most_creative",
+  "concept_to_reality",
+  "creativity",
+  "usefulness",
 ];
 
 export default async function ResultsPage() {
@@ -61,9 +61,9 @@ export default async function ResultsPage() {
   const voteResults = Object.values(countMap);
 
   const grouped: Record<VoteCategory, VoteResult[]> = {
-    best_overall: [],
-    best_demo_ux: [],
-    most_creative: [],
+    concept_to_reality: [],
+    creativity: [],
+    usefulness: [],
   };
 
   for (const r of voteResults) {
