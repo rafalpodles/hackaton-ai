@@ -139,7 +139,7 @@ export const guideSteps: GuideStep[] = [
       ],
       tips: [
         "VS Code ma wbudowany terminal (Ctrl + `) — możesz go używać zamiast osobnej aplikacji terminala.",
-        "Do pisania kodu z AI możesz też użyć Cursor, Windsurf lub Antigravity (kroki niżej).",
+        "Do pisania kodu z AI możesz zainstalować GitHub Copilot (rozszerzenie) lub użyć Cursor, Windsurf, Antigravity (kroki niżej).",
       ],
     },
   },
@@ -274,7 +274,7 @@ export const guideSteps: GuideStep[] = [
     paths: ["beginner"],
     instructions: {
       description:
-        "Node.js to środowisko uruchomieniowe JavaScript. Potrzebujesz go, żeby uruchamiać narzędzia AI (Claude Code, Codex itp.).",
+        "Node.js to środowisko uruchomieniowe JavaScript. Instalując Node.js dostajesz też npm (menedżer pakietów) — potrzebujesz obu, żeby uruchamiać narzędzia AI (Claude Code, Codex itp.) i instalować zależności projektowe.",
       platforms: {
         mac: {
           steps: [
@@ -756,7 +756,7 @@ export const guideSteps: GuideStep[] = [
   },
   {
     id: "ai-editors",
-    title: "AI Edytory — Antigravity / Cursor / Windsurf",
+    title: "AI Edytory — Copilot / Antigravity / Cursor / Windsurf",
     category: "ai-tools",
     paths: ["beginner", "advanced"],
     instructions: {
@@ -765,6 +765,9 @@ export const guideSteps: GuideStep[] = [
       platforms: {
         mac: {
           steps: [
+            {
+              text: "GitHub Copilot — rozszerzenie do VS Code (i CLI). Wystarczy zainstalować rozszerzenie w VS Code. Ma też agenta w terminalu (gh copilot).",
+            },
             {
               text: "Google Antigravity — nowe IDE od Google z agentami Gemini. Wspiera też Claude i GPT. Darmowe w preview.",
             },
@@ -778,12 +781,14 @@ export const guideSteps: GuideStep[] = [
         },
       },
       links: [
+        { label: "GitHub Copilot", url: "https://github.com/features/copilot" },
         { label: "Google Antigravity", url: "https://antigravity.google/" },
         { label: "Cursor", url: "https://cursor.sh" },
         { label: "Windsurf", url: "https://windsurf.com" },
       ],
       tips: [
-        "Wszystkie trzy to forki VS Code — rozszerzenia i skróty klawiszowe działają tak samo.",
+        "GitHub Copilot działa jako rozszerzenie VS Code — nie musisz zmieniać edytora. Ma też CLI: gh copilot.",
+        "Antigravity, Cursor i Windsurf to forki VS Code — rozszerzenia i skróty klawiszowe działają tak samo.",
         "Nie musisz instalować wszystkich — wybierz jeden, który Ci pasuje.",
       ],
     },
