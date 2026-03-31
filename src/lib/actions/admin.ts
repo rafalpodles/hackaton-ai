@@ -224,12 +224,14 @@ export async function deleteOpenRouterKey(userId: string) {
     throw new Error("Nie udało się usunąć klucza z OpenRouter");
   }
 
-  // Clear from profile
+  // Clear from profile and reset request state
   const { error } = await supabase
     .from("profiles")
     .update({
       openrouter_api_key: null,
       openrouter_key_hash: null,
+      api_key_requested: false,
+      api_key_requested_at: null,
     })
     .eq("id", userId);
 

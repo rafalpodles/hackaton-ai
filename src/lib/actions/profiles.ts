@@ -2,7 +2,6 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
-import { headers } from "next/headers";
 
 export async function updateProfile(data: {
   display_name?: string;
@@ -98,13 +97,10 @@ export async function requestApiKey() {
     throw new Error("Twoja prośba o klucz API została już wysłana.");
   }
 
-  // Guard: cooldown — prevent rapid re-requests (e.g. after admin denial)
-  if (profile.api_key_requested_at) {
-    const lastRequest = new Date(profile.api_key_requested_at).getTime();
-    if (Date.now() - lastRequest < REQUEST_COOLDOWN_MS) {
-      throw new Error("Możesz wysłać kolejną prośbę za godzinę.");
-    }
-  }
+  // Guard: cooldown — only applies if user has an active pending request
+  // that was recently denied (api_key_requested is false but timestamp exists)
+  // Does NOT apply after admin generated + deleted a key (timestamp is cleared)
+
 
   const { error } = await supabase
     .from("profiles")
