@@ -719,9 +719,9 @@ export const guideSteps: GuideStep[] = [
               sub: "openai",
             },
             {
-              text: "Ustaw klucz OpenRouter i utwórz plik %USERPROFILE%\\.codex\\config.toml z konfiguracją (model_provider = \"openrouter\"):",
+              text: "Ustaw klucz OpenRouter i utwórz plik konfiguracyjny (PowerShell):",
               command:
-                "set OPENROUTER_API_KEY=twoj-klucz-openrouter\ncodex",
+                "$env:OPENROUTER_API_KEY=\"twoj-klucz-openrouter\"\nNew-Item -Path \"$HOME\\.codex\" -ItemType Directory -Force\n@\"\nmodel_provider = \"\"openrouter\"\"\nmodel = \"\"anthropic/claude-sonnet-4\"\"\n\n[model_providers.openrouter]\nname = \"\"openrouter\"\"\nbase_url = \"\"https://openrouter.ai/api/v1\"\"\nenv_key = \"\"OPENROUTER_API_KEY\"\"\n\"@ | Set-Content \"$HOME\\.codex\\config.toml\"\ncodex",
               sub: ["claude", "openrouter"],
             },
           ],
