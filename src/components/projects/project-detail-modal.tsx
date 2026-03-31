@@ -195,7 +195,7 @@ export function ProjectDetailModal({
             <div className="rounded-lg bg-surface-high/50 p-4">
               <h4 className="mb-2 flex items-center gap-2 font-space-grotesk text-[10px] font-bold uppercase tracking-[0.2em] text-primary-dim">
                 <span className="h-1 w-1 rounded-full bg-primary" />
-                Inspiracja
+                Czego si\u0119 nauczyli
               </h4>
               <p className="text-sm leading-relaxed text-on-surface-muted">
                 {project.idea_origin}
@@ -218,7 +218,12 @@ export function ProjectDetailModal({
 
           {/* Tech stack */}
           {techStack.length > 0 && (
-            <div className="flex flex-wrap gap-2">
+            <div>
+              <h4 className="mb-2 flex items-center gap-2 font-space-grotesk text-[10px] font-bold uppercase tracking-[0.2em] text-primary-dim">
+                <span className="h-1 w-1 rounded-full bg-primary" />
+                AI toole
+              </h4>
+              <div className="flex flex-wrap gap-2">
               {techStack.map((tag) => (
                 <span
                   key={tag}
@@ -227,6 +232,7 @@ export function ProjectDetailModal({
                   {tag}
                 </span>
               ))}
+              </div>
             </div>
           )}
 

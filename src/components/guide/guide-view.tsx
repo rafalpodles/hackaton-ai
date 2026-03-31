@@ -3,8 +3,6 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import {
   guideSteps,
-  projectIdeas,
-  usefulPrompts,
   CATEGORY_LABELS,
   CATEGORY_DESCRIPTIONS,
   SUBSCRIPTION_LABELS,
@@ -188,14 +186,6 @@ export function GuideView() {
               </div>
             </div>
           ))}
-
-          {/* Reference sections */}
-          <SectionDivider label="MATERIAŁY" description="Inspiracje i porady na hackathonowy dzień." />
-
-          <div className="flex flex-col gap-6">
-            <ProjectIdeasSection />
-            <PromptsSection />
-          </div>
 
           {/* Help footer */}
           <div className="text-center text-xs text-on-surface-muted/60 mt-4 flex flex-col gap-1">
@@ -870,78 +860,4 @@ function CollapsibleSection({
   );
 }
 
-function ProjectIdeasSection() {
-  return (
-    <CollapsibleSection
-      title="Pomysły na projekty"
-      subtitle="Nie wiesz co zbudować? Oto kilka inspiracji z biura."
-    >
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-        {projectIdeas.map((idea) => (
-          <div
-            key={idea.name}
-            className="rounded-lg border border-outline/60 bg-surface-high/30 p-3.5 transition-colors hover:border-primary/25 hover:bg-surface-high/50"
-          >
-            <h4 className="font-space-grotesk text-sm font-bold text-on-surface mb-1">
-              {idea.name}
-            </h4>
-            <p className="text-xs text-on-surface-muted leading-relaxed mb-2.5">
-              {idea.description}
-            </p>
-            <div className="flex flex-wrap gap-1.5">
-              {idea.tags.map((tag) => (
-                <span
-                  key={tag}
-                  className="text-[10px] font-space-grotesk font-medium px-2 py-0.5 rounded-full bg-primary/8 text-primary-dim border border-primary/15"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
-          </div>
-        ))}
-      </div>
-      <p className="text-xs text-on-surface-muted mt-3">
-        To tylko inspiracje — możesz zbudować cokolwiek! Liczy się realizacja i wykorzystanie AI.
-      </p>
-    </CollapsibleSection>
-  );
-}
-
-function PromptsSection() {
-  return (
-    <CollapsibleSection
-      title="Przydatne prompty"
-      subtitle="5 promptów, które przeprowadzą Cię od pomysłu do kodu."
-    >
-      <p className="text-xs text-on-surface-muted mb-4">
-        Traktuj AI jak seniora, który prowadzi Cię przez proces: rozmowa (1-2) → plan (3) → implementacja (4-5).
-      </p>
-      <div className="flex flex-col gap-3">
-        {usefulPrompts.map((p) => (
-          <div key={p.number} className="rounded-lg border border-outline/60 bg-surface-high/30 overflow-hidden">
-            <div className="px-4 py-3">
-              <div className="flex items-center gap-2 mb-1">
-                <span className="flex-shrink-0 w-6 h-6 rounded-md bg-primary/15 text-primary-dim flex items-center justify-center font-space-grotesk text-xs font-bold">
-                  {p.number}
-                </span>
-                <h4 className="font-space-grotesk text-sm font-bold text-on-surface">
-                  {p.title}
-                </h4>
-              </div>
-              <p className="text-xs text-on-surface-muted leading-relaxed mb-2 pl-8">
-                {p.description}
-              </p>
-            </div>
-            <CodeBlock code={p.prompt} />
-          </div>
-        ))}
-      </div>
-      <Callout
-        type="info"
-        text='Zawsze dawaj kontekst i dziel na kroki. "Zrób mi aplikację X" to najgorszy prompt.'
-      />
-    </CollapsibleSection>
-  );
-}
 
