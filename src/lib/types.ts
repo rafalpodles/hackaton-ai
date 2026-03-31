@@ -14,6 +14,8 @@ export interface Profile {
   role: Role;
   openrouter_api_key: string | null;
   openrouter_key_hash: string | null;
+  api_key_requested: boolean;
+  api_key_requested_at: string | null;
   created_at: string;
   updated_at: string;
 }

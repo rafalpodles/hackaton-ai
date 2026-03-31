@@ -142,10 +142,14 @@ export default function UsersTable({ currentUserId, users }: UsersTableProps) {
             </tr>
           </thead>
           <tbody>
-            {filteredUsers.map((user) => (
+            {filteredUsers.map((user) => {
+              const hasKeyRequest = user.api_key_requested && !user.openrouter_api_key;
+              return (
               <tr
                 key={user.id}
-                className="border-b border-outline/50 last:border-b-0"
+                className={`border-b border-outline/50 last:border-b-0 ${
+                  hasKeyRequest ? "bg-yellow-500/5" : ""
+                }`}
               >
                 <td className="px-5 py-4">
                   <div className="flex items-center gap-3">
@@ -268,6 +272,12 @@ export default function UsersTable({ currentUserId, users }: UsersTableProps) {
                       )}
                     </div>
                   ) : (
+                    <div className="space-y-2">
+                      {hasKeyRequest && (
+                        <span className="inline-block rounded-full bg-yellow-500/15 px-2.5 py-0.5 text-xs font-semibold text-yellow-400">
+                          Prośba o klucz
+                        </span>
+                      )}
                     <div className="flex items-center gap-2">
                       <div className="flex items-center gap-1 rounded bg-surface-high px-2 py-1">
                         <span className="text-xs text-on-surface-muted">$</span>
@@ -293,10 +303,12 @@ export default function UsersTable({ currentUserId, users }: UsersTableProps) {
                         {isPending ? "..." : "Generuj"}
                       </button>
                     </div>
+                    </div>
                   )}
                 </td>
               </tr>
-            ))}
+              );
+            })}
             {filteredUsers.length === 0 && (
               <tr>
                 <td

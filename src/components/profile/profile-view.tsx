@@ -3,7 +3,7 @@
 import { useCallback, useRef, useState, useTransition } from "react";
 import Image from "next/image";
 import { createClient } from "@/lib/supabase/client";
-import { updateProfile } from "@/lib/actions/profiles";
+import { updateProfile, requestApiKey } from "@/lib/actions/profiles";
 import { leaveProject } from "@/lib/actions/projects";
 import ConfirmDialog from "@/components/ui/confirm-dialog";
 import type { Profile, Project } from "@/lib/types";
@@ -412,57 +412,100 @@ export default function ProfileView({
       </div>
 
       {/* API Key Card */}
-      {user.openrouter_api_key && (
-        <div className="mt-4 rounded-2xl bg-surface-low p-6">
-          <p className="mb-4 font-space-grotesk text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-muted">
-            Klucz API
-          </p>
-          <div className="flex items-center gap-3">
-            <code className="flex-1 overflow-x-auto rounded-lg bg-black px-4 py-3 font-mono text-sm text-primary-dim">
-              {user.openrouter_api_key}
-            </code>
+      <div className="mt-4 rounded-2xl bg-surface-low p-6">
+        <p className="mb-4 font-space-grotesk text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-muted">
+          Klucz API
+        </p>
+
+        {user.openrouter_api_key ? (
+          <>
+            <div className="flex items-center gap-3">
+              <code className="flex-1 overflow-x-auto rounded-lg bg-black px-4 py-3 font-mono text-sm text-primary-dim">
+                {user.openrouter_api_key}
+              </code>
+              <button
+                type="button"
+                onClick={() => {
+                  navigator.clipboard.writeText(user.openrouter_api_key!);
+                }}
+                className="shrink-0 rounded-lg bg-surface-high px-3 py-2 font-space-grotesk text-xs font-semibold uppercase tracking-wider text-on-surface-muted transition-colors hover:bg-surface-bright hover:text-on-surface"
+              >
+                Kopiuj
+              </button>
+            </div>
+            {keyLimit != null && (
+              <div className="mt-4 space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="font-space-grotesk text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-muted">
+                    Zużycie
+                  </span>
+                  <span className="font-mono text-xs text-on-surface-muted">
+                    ${(keyUsage ?? 0).toFixed(2)} / ${keyLimit}
+                  </span>
+                </div>
+                <div className="h-2 overflow-hidden rounded-full bg-surface-high">
+                  <div
+                    className={`h-full rounded-full transition-all ${
+                      (keyUsage ?? 0) / keyLimit > 0.8
+                        ? "bg-secondary"
+                        : "bg-gradient-to-r from-primary to-primary-dim"
+                    }`}
+                    style={{
+                      width: `${Math.min(
+                        ((keyUsage ?? 0) / keyLimit) * 100,
+                        100
+                      )}%`,
+                    }}
+                  />
+                </div>
+              </div>
+            )}
+            <p className="mt-3 text-xs text-on-surface-muted">
+              Użyj tego klucza do połączenia z OpenRouter API. Nie udostępniaj go nikomu.
+            </p>
+          </>
+        ) : user.api_key_requested ? (
+          <div className="flex items-center gap-3 rounded-xl border border-yellow-500/20 bg-yellow-500/5 p-4">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-yellow-500/15">
+              <svg className="h-4 w-4 text-yellow-400" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+              </svg>
+            </div>
+            <div>
+              <p className="text-sm font-semibold text-yellow-400">
+                Prośba wysłana
+              </p>
+              <p className="text-xs text-on-surface-muted">
+                Admin przygotuje Twój klucz API. Wróć tu później.
+              </p>
+            </div>
+          </div>
+        ) : (
+          <div className="space-y-4">
+            <p className="text-sm text-on-surface-muted">
+              Nie masz subskrypcji AI lub chcesz zabezpieczyć się na wypadek wyczerpania limitów?
+              Poproś o klucz API — dostaniesz $5 na tokeny OpenRouter.
+            </p>
             <button
               type="button"
+              disabled={isPending}
               onClick={() => {
-                navigator.clipboard.writeText(user.openrouter_api_key!);
+                setError(null);
+                startTransition(async () => {
+                  try {
+                    await requestApiKey();
+                  } catch (err) {
+                    setError(err instanceof Error ? err.message : "Nie udało się wysłać prośby");
+                  }
+                });
               }}
-              className="shrink-0 rounded-lg bg-surface-high px-3 py-2 font-space-grotesk text-xs font-semibold uppercase tracking-wider text-on-surface-muted transition-colors hover:bg-surface-bright hover:text-on-surface"
+              className="w-full rounded-xl bg-gradient-to-r from-primary to-secondary py-3 font-space-grotesk text-sm font-bold uppercase tracking-wider text-white transition-opacity hover:opacity-90 disabled:opacity-50"
             >
-              Kopiuj
+              {isPending ? "Wysyłanie..." : "Poproś o klucz API"}
             </button>
           </div>
-          {keyLimit != null && (
-            <div className="mt-4 space-y-2">
-              <div className="flex items-center justify-between">
-                <span className="font-space-grotesk text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-muted">
-                  Zużycie
-                </span>
-                <span className="font-mono text-xs text-on-surface-muted">
-                  ${(keyUsage ?? 0).toFixed(2)} / ${keyLimit}
-                </span>
-              </div>
-              <div className="h-2 overflow-hidden rounded-full bg-surface-high">
-                <div
-                  className={`h-full rounded-full transition-all ${
-                    (keyUsage ?? 0) / keyLimit > 0.8
-                      ? "bg-secondary"
-                      : "bg-gradient-to-r from-primary to-primary-dim"
-                  }`}
-                  style={{
-                    width: `${Math.min(
-                      ((keyUsage ?? 0) / keyLimit) * 100,
-                      100
-                    )}%`,
-                  }}
-                />
-              </div>
-            </div>
-          )}
-          <p className="mt-3 text-xs text-on-surface-muted">
-            Użyj tego klucza do połączenia z OpenRouter API. Nie udostępniaj go nikomu.
-          </p>
-        </div>
-      )}
+        )}
+      </div>
 
       {/* Leave Team Confirm Dialog */}
       {showLeaveConfirm && (

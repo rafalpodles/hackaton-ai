@@ -179,12 +179,13 @@ export async function generateOpenRouterKey(
   const apiKey: string = data.key;
   const keyHash: string = data.data?.hash ?? data.hash;
 
-  // Save to profile
+  // Save to profile and clear request flag
   const { error } = await supabase
     .from("profiles")
     .update({
       openrouter_api_key: apiKey,
       openrouter_key_hash: keyHash,
+      api_key_requested: false,
     })
     .eq("id", userId);
 

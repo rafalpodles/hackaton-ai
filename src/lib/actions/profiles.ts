@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { headers } from "next/headers";
 
 export async function updateProfile(data: {
   display_name?: string;
@@ -67,4 +68,53 @@ export async function updateProfile(data: {
 
   revalidatePath("/profile");
   revalidatePath("/");
+}
+
+const REQUEST_COOLDOWN_MS = 60 * 60 * 1000; // 1 hour
+
+export async function requestApiKey() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) throw new Error("Nie jesteś zalogowany");
+
+  // Fetch current profile state
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("openrouter_api_key, api_key_requested, api_key_requested_at")
+    .eq("id", user.id)
+    .single();
+
+  if (!profile) throw new Error("Nie znaleziono profilu");
+
+  // Guard: already has a key
+  if (profile.openrouter_api_key) {
+    throw new Error("Masz już przydzielony klucz API.");
+  }
+
+  // Guard: already requested
+  if (profile.api_key_requested) {
+    throw new Error("Twoja prośba o klucz API została już wysłana.");
+  }
+
+  // Guard: cooldown — prevent rapid re-requests (e.g. after admin denial)
+  if (profile.api_key_requested_at) {
+    const lastRequest = new Date(profile.api_key_requested_at).getTime();
+    if (Date.now() - lastRequest < REQUEST_COOLDOWN_MS) {
+      throw new Error("Możesz wysłać kolejną prośbę za godzinę.");
+    }
+  }
+
+  const { error } = await supabase
+    .from("profiles")
+    .update({
+      api_key_requested: true,
+      api_key_requested_at: new Date().toISOString(),
+    })
+    .eq("id", user.id);
+
+  if (error) throw new Error("Nie udało się wysłać prośby");
+
+  revalidatePath("/profile");
 }
