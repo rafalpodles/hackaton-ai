@@ -15,7 +15,7 @@ const supabase = createClient(SUPABASE_URL, SERVICE_ROLE_KEY);
 
 // Format: { email, firstName, lastName }
 const users: { email: string; firstName: string; lastName: string }[] = [
-  { email: "rafal.podles@graviteesource.com", firstName: "Rafał", lastName: "Podleś" },
+  // Add users here: { email: "user@example.com", firstName: "Jan", lastName: "Kowalski" },
 ];
 
 async function main() {
