@@ -15,6 +15,18 @@ export default function ProjectsTable({ projects }: ProjectsTableProps) {
     name: string;
   } | null>(null);
   const [isPending, startTransition] = useTransition();
+  const [search, setSearch] = useState("");
+
+  const filteredProjects = search.trim()
+    ? projects.filter((p) => {
+        const q = search.toLowerCase();
+        return (
+          p.name?.toLowerCase().includes(q) ||
+          p.description?.toLowerCase().includes(q) ||
+          (p.tech_stack ?? []).some((t) => t.toLowerCase().includes(q))
+        );
+      })
+    : projects;
 
   const handleDelete = () => {
     if (!deleteTarget) return;
@@ -26,6 +38,40 @@ export default function ProjectsTable({ projects }: ProjectsTableProps) {
 
   return (
     <>
+      <div className="relative mb-4">
+        <svg
+          className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-on-surface-muted/50"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={2}
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+          />
+        </svg>
+        <input
+          type="text"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Szukaj po nazwie, opisie, AI toolach..."
+          className="w-full rounded-xl border border-outline bg-surface-low/60 py-2.5 pl-10 pr-4 text-sm text-on-surface placeholder:text-on-surface-muted/40 focus:border-primary/40 focus:outline-none focus:ring-0"
+        />
+        {search && (
+          <button
+            type="button"
+            onClick={() => setSearch("")}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-muted/50 hover:text-on-surface"
+          >
+            <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
+            </svg>
+          </button>
+        )}
+      </div>
+
       <div className="overflow-x-auto rounded-xl border border-outline bg-surface-low/60 backdrop-blur-md">
         <table className="w-full">
           <thead>
@@ -45,7 +91,7 @@ export default function ProjectsTable({ projects }: ProjectsTableProps) {
             </tr>
           </thead>
           <tbody>
-            {projects.map((project) => (
+            {filteredProjects.map((project) => (
               <tr
                 key={project.id}
                 className="border-b border-outline/50 last:border-b-0"
@@ -80,7 +126,7 @@ export default function ProjectsTable({ projects }: ProjectsTableProps) {
                 </td>
               </tr>
             ))}
-            {projects.length === 0 && (
+            {filteredProjects.length === 0 && (
               <tr>
                 <td
                   colSpan={4}
