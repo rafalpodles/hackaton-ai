@@ -15,7 +15,8 @@ const navItems = [
   { label: "Poradnik", href: "/guide" },
   { label: "Live", href: "/feed" },
   { label: "Projekty", href: "/" },
-  { label: "Zgłoś", href: "/my-project" },
+  { label: "Zespół", href: "/team" },
+  { label: "Zgłoś projekt", href: "/my-project" },
 ];
 
 const adminItems = [

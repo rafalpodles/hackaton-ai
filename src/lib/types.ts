@@ -9,11 +9,41 @@ export interface Profile {
   last_name: string | null;
   avatar_url: string | null;
   project_id: string | null;
+  team_id: string | null;
+  is_solo: boolean;
   role: Role;
   openrouter_api_key: string | null;
   openrouter_key_hash: string | null;
   created_at: string;
   updated_at: string;
+}
+
+export interface Team {
+  id: string;
+  name: string;
+  leader_id: string;
+  project_id: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface TeamWithMembers extends Team {
+  members: Pick<Profile, "id" | "display_name" | "avatar_url" | "email">[];
+}
+
+export interface TeamRequest {
+  id: string;
+  user_id: string;
+  team_id: string;
+  created_at: string;
+}
+
+export interface TeamRequestWithUser extends TeamRequest {
+  user: Pick<Profile, "id" | "display_name" | "email">;
+}
+
+export interface TeamRequestWithTeam extends TeamRequest {
+  team: Pick<Team, "id" | "name">;
 }
 
 export interface Project {

@@ -31,6 +31,17 @@ export default async function VotePage() {
 
   const projects = await getSubmittedProjects();
 
+  // Determine user's own project (solo or via team)
+  let ownProjectId = user.project_id;
+  if (user.team_id) {
+    const { data: team } = await supabase
+      .from("teams")
+      .select("project_id")
+      .eq("id", user.team_id)
+      .single();
+    ownProjectId = team?.project_id ?? null;
+  }
+
   const { data: userVotes } = await supabase
     .from("votes")
     .select("category, project_id")
@@ -57,7 +68,7 @@ export default async function VotePage() {
 
       <VotingBoard
         projects={projects}
-        ownProjectId={user.project_id}
+        ownProjectId={ownProjectId}
         hasVoted={hasVoted}
         votedFor={votedFor}
       />

@@ -4,25 +4,57 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 
-export async function createProject(name: string) {
-  if (!name?.trim()) throw new Error("Nazwa projektu jest wymagana");
-
+async function getAuthUser() {
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) throw new Error("Nie jesteś zalogowany");
+  return { supabase, user };
+}
 
-  // Check user doesn't already have a project
+/** Get the project ID for the current user (from team or solo) */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function getUserProjectId(supabase: any, userId: string) {
   const { data: profile } = await supabase
     .from("profiles")
-    .select("project_id")
-    .eq("id", user.id)
+    .select("project_id, team_id, is_solo")
+    .eq("id", userId)
     .single();
 
-  if (profile?.project_id) {
-    throw new Error("Już należysz do projektu");
+  if (!profile) throw new Error("Nie znaleziono profilu");
+
+  // Solo user → uses profile.project_id
+  if (profile.is_solo && !profile.team_id) {
+    return { projectId: profile.project_id, isSolo: true, teamId: null };
   }
+
+  // Team member → uses team.project_id
+  if (profile.team_id) {
+    const { data: team } = await supabase
+      .from("teams")
+      .select("project_id, leader_id")
+      .eq("id", profile.team_id)
+      .single();
+
+    return {
+      projectId: team?.project_id ?? null,
+      isSolo: false,
+      teamId: profile.team_id,
+      isLeader: team?.leader_id === userId,
+    };
+  }
+
+  return { projectId: null, isSolo: false, teamId: null };
+}
+
+export async function createProject(name: string) {
+  if (!name?.trim()) throw new Error("Nazwa projektu jest wymagana");
+
+  const { supabase, user } = await getAuthUser();
+  const ctx = await getUserProjectId(supabase, user.id);
+
+  if (ctx.projectId) throw new Error("Już masz projekt");
 
   const projectId = crypto.randomUUID();
 
@@ -32,54 +64,20 @@ export async function createProject(name: string) {
 
   if (error) throw new Error(`Nie udało się utworzyć projektu: ${error.message}`);
 
-  const { error: updateError } = await supabase
-    .from("profiles")
-    .update({ project_id: projectId })
-    .eq("id", user.id);
-
-  if (updateError) throw new Error("Nie udało się przypisać Cię do projektu");
-
-  revalidatePath("/");
-  redirect("/my-project");
-}
-
-export async function joinProject(projectId: string) {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) throw new Error("Nie jesteś zalogowany");
-
-  // Check user doesn't already have a project
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("project_id")
-    .eq("id", user.id)
-    .single();
-
-  if (profile?.project_id) {
-    throw new Error("Już należysz do projektu. Najpierw go opuść.");
+  if (ctx.isSolo) {
+    await supabase
+      .from("profiles")
+      .update({ project_id: projectId })
+      .eq("id", user.id);
+  } else if (ctx.teamId) {
+    await supabase
+      .from("teams")
+      .update({ project_id: projectId })
+      .eq("id", ctx.teamId);
   }
 
-  // Check project exists and is not yet submitted (open for joining)
-  const { data: project } = await supabase
-    .from("projects")
-    .select("id, is_submitted")
-    .eq("id", projectId)
-    .single();
-
-  if (!project) throw new Error("Nie znaleziono projektu");
-  if (project.is_submitted) throw new Error("Nie można dołączyć do zgłoszonego projektu");
-
-  const { error } = await supabase
-    .from("profiles")
-    .update({ project_id: projectId })
-    .eq("id", user.id);
-
-  if (error) throw new Error("Nie udało się dołączyć do projektu");
-
   revalidatePath("/");
-  redirect("/my-project");
+  revalidatePath("/my-project");
 }
 
 export async function updateProject(
@@ -96,19 +94,10 @@ export async function updateProject(
     thumbnail_url?: string | null;
   }
 ) {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) throw new Error("Nie jesteś zalogowany");
+  const { supabase, user } = await getAuthUser();
+  const ctx = await getUserProjectId(supabase, user.id);
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("project_id")
-    .eq("id", user.id)
-    .single();
-
-  if (profile?.project_id !== projectId) {
+  if (ctx.projectId !== projectId) {
     throw new Error("Nie jesteś członkiem tego projektu");
   }
 
@@ -122,7 +111,6 @@ export async function updateProject(
     throw new Error("Nie można edytować zgłoszonego projektu");
   }
 
-  // Only allow known fields
   const allowed = {
     ...(data.name !== undefined && { name: data.name }),
     ...(data.description !== undefined && { description: data.description }),
@@ -146,20 +134,16 @@ export async function updateProject(
 }
 
 export async function submitProject(projectId: string) {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) throw new Error("Nie jesteś zalogowany");
+  const { supabase, user } = await getAuthUser();
+  const ctx = await getUserProjectId(supabase, user.id);
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("project_id")
-    .eq("id", user.id)
-    .single();
-
-  if (profile?.project_id !== projectId) {
+  if (ctx.projectId !== projectId) {
     throw new Error("Nie jesteś członkiem tego projektu");
+  }
+
+  // Only leader or solo can submit
+  if (!ctx.isSolo && !ctx.isLeader) {
+    throw new Error("Tylko lider zespołu może zgłosić projekt");
   }
 
   const { data: project } = await supabase
@@ -190,38 +174,33 @@ export async function submitProject(projectId: string) {
 }
 
 export async function leaveProject() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) throw new Error("Nie jesteś zalogowany");
+  const { supabase, user } = await getAuthUser();
 
-  // Check project isn't submitted
   const { data: profile } = await supabase
     .from("profiles")
-    .select("project_id")
+    .select("project_id, is_solo")
     .eq("id", user.id)
     .single();
 
-  if (profile?.project_id) {
-    const { data: project } = await supabase
-      .from("projects")
-      .select("is_submitted")
-      .eq("id", profile.project_id)
-      .single();
-
-    if (project?.is_submitted) {
-      throw new Error("Nie można opuścić zgłoszonego projektu");
-    }
+  if (!profile?.is_solo || !profile.project_id) {
+    throw new Error("Nie masz projektu solo do opuszczenia");
   }
 
-  const { error } = await supabase
+  const { data: project } = await supabase
+    .from("projects")
+    .select("is_submitted")
+    .eq("id", profile.project_id)
+    .single();
+
+  if (project?.is_submitted) {
+    throw new Error("Nie można opuścić zgłoszonego projektu");
+  }
+
+  await supabase
     .from("profiles")
     .update({ project_id: null })
     .eq("id", user.id);
 
-  if (error) throw new Error("Nie udało się opuścić projektu");
-
   revalidatePath("/");
-  redirect("/onboarding");
+  revalidatePath("/my-project");
 }

@@ -7,7 +7,7 @@ import DeadlinePicker from "@/components/admin/deadline-picker";
 import SubmissionToggle from "@/components/admin/submission-toggle";
 import { getOpenRouterKeyUsage } from "@/lib/actions/admin";
 import { getCurrentUser } from "@/lib/utils";
-import type { ProjectWithTeam, Profile } from "@/lib/types";
+import type { Project, Profile } from "@/lib/types";
 
 export default async function AdminDashboardPage() {
   const currentUser = await getCurrentUser();
@@ -33,7 +33,7 @@ export default async function AdminDashboardPage() {
       .select("*", { count: "exact", head: true }),
     supabase
       .from("projects")
-      .select("*, team:profiles!project_id(id, display_name, avatar_url)"),
+      .select("*"),
     supabase
       .from("app_settings")
       .select("voting_open, submission_open, submission_deadline")
@@ -41,7 +41,7 @@ export default async function AdminDashboardPage() {
       .single(),
     supabase
       .from("profiles")
-      .select("*, project:projects!project_id(name)")
+      .select("*, project:projects!project_id(name), team:teams!team_id(name)")
       .order("created_at", { ascending: true }),
   ]);
 
@@ -57,7 +57,7 @@ export default async function AdminDashboardPage() {
     );
   }
 
-  const projects = (projectsRaw ?? []) as ProjectWithTeam[];
+  const projects = (projectsRaw ?? []) as Project[];
 
   // Fetch auth users to get login status
   const { data: authData } = await supabase.auth.admin.listUsers({ perPage: 1000 });
@@ -77,6 +77,7 @@ export default async function AdminDashboardPage() {
     return {
       ...u as Profile,
       project_name: (u.project as { name: string } | null)?.name ?? null,
+      team_name: (u.team as { name: string } | null)?.name ?? null,
       confirmed_at: auth?.confirmed_at ?? null,
       last_sign_in_at: auth?.last_sign_in_at ?? null,
     };

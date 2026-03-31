@@ -67,6 +67,8 @@ export default function ChangePasswordPage() {
 
           <p className="text-on-surface-muted text-sm text-center mb-8">
             Utwórz nowe hasło, które będziesz używać do logowania.
+            <br />
+            <span className="text-secondary">Nie używaj hasła do systemów korporacyjnych.</span>
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-6">

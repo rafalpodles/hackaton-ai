@@ -3,19 +3,76 @@ import { getCurrentUser } from "@/lib/utils";
 import { createClient } from "@/lib/supabase/server";
 import type { Project, Profile } from "@/lib/types";
 import { SubmissionForm } from "@/components/submission/submission-form";
+import { createProject } from "@/lib/actions/projects";
+import { GlassCard } from "@/components/ui/glass-card";
+import { GradientButton } from "@/components/ui/gradient-button";
 
 export default async function MyProjectPage() {
   const user = await getCurrentUser();
-  if (!user || !user.project_id) {
+  if (!user) redirect("/login");
+
+  // Must have team or be solo
+  if (!user.team_id && !user.is_solo) {
     redirect("/onboarding");
   }
 
   const supabase = await createClient();
 
+  // Determine project ID
+  let projectId: string | null = null;
+  let isLeader = false;
+
+  if (user.is_solo && !user.team_id) {
+    projectId = user.project_id;
+    isLeader = true; // solo users can submit
+  } else if (user.team_id) {
+    const { data: team } = await supabase
+      .from("teams")
+      .select("project_id, leader_id")
+      .eq("id", user.team_id)
+      .single();
+
+    projectId = team?.project_id ?? null;
+    isLeader = team?.leader_id === user.id;
+  }
+
+  // No project yet — show create form
+  if (!projectId) {
+    async function handleCreate(formData: FormData) {
+      "use server";
+      const name = formData.get("name") as string;
+      if (!name?.trim()) return;
+      await createProject(name.trim());
+    }
+
+    return (
+      <div className="mx-auto max-w-2xl space-y-8 py-8">
+        <h1 className="font-space-grotesk text-3xl font-bold text-on-surface">
+          Zgłoś projekt
+        </h1>
+        <GlassCard>
+          <h2 className="font-space-grotesk text-lg font-semibold text-on-surface mb-4">
+            Utwórz projekt
+          </h2>
+          <form action={handleCreate} className="flex gap-3">
+            <input
+              name="name"
+              type="text"
+              required
+              placeholder="Nazwa projektu"
+              className="flex-1 rounded-md border border-outline bg-surface-low px-4 py-3 text-on-surface placeholder:text-on-surface-muted focus:outline-none focus:ring-2 focus:ring-primary-dim"
+            />
+            <GradientButton type="submit">Utwórz</GradientButton>
+          </form>
+        </GlassCard>
+      </div>
+    );
+  }
+
   const { data: project } = await supabase
     .from("projects")
     .select("*")
-    .eq("id", user.project_id)
+    .eq("id", projectId)
     .single();
 
   if (!project) {
@@ -26,15 +83,15 @@ export default async function MyProjectPage() {
 
   // Already submitted — read-only view
   if (typedProject.is_submitted) {
-    const { data: members } = await supabase
-      .from("profiles")
-      .select("id, display_name, avatar_url")
-      .eq("project_id", typedProject.id);
-
-    const team = (members ?? []) as Pick<
-      Profile,
-      "id" | "display_name" | "avatar_url"
-    >[];
+    // Get team members
+    let team: Pick<Profile, "id" | "display_name" | "avatar_url">[] = [];
+    if (user.team_id) {
+      const { data: members } = await supabase
+        .from("profiles")
+        .select("id, display_name, avatar_url")
+        .eq("team_id", user.team_id);
+      team = (members ?? []) as Pick<Profile, "id" | "display_name" | "avatar_url">[];
+    }
 
     return (
       <div className="mx-auto max-w-3xl space-y-8">
@@ -78,7 +135,6 @@ export default async function MyProjectPage() {
           />
         </div>
 
-        {/* Team members */}
         {team.length > 0 && (
           <div className="space-y-3">
             <h2 className="font-space-grotesk text-sm font-bold uppercase tracking-wider text-on-surface-muted">
@@ -120,12 +176,12 @@ export default async function MyProjectPage() {
     .eq("id", 1)
     .single();
 
-  // Not submitted — show form
   return (
     <SubmissionForm
       project={typedProject}
       submissionOpen={settings?.submission_open ?? false}
       deadline={settings?.submission_deadline ?? null}
+      canSubmit={isLeader}
     />
   );
 }

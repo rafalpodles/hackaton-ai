@@ -115,11 +115,6 @@ function LoginForm() {
               {loading ? "Logowanie..." : "Zaloguj się"}
             </GradientButton>
           </form>
-
-          {/* Footer text */}
-          <p className="text-on-surface-muted text-sm text-center mt-6">
-            Użyj danych otrzymanych w mailu od organizatora.
-          </p>
         </GlassCard>
       </div>
     </div>

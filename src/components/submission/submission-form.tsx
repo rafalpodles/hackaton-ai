@@ -9,9 +9,10 @@ interface SubmissionFormProps {
   project: Project;
   submissionOpen?: boolean;
   deadline?: string | null;
+  canSubmit?: boolean;
 }
 
-export function SubmissionForm({ project, submissionOpen = true, deadline }: SubmissionFormProps) {
+export function SubmissionForm({ project, submissionOpen = true, deadline, canSubmit = true }: SubmissionFormProps) {
   const [isPending, startTransition] = useTransition();
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [timeLeft, setTimeLeft] = useState("");
@@ -367,24 +368,32 @@ export function SubmissionForm({ project, submissionOpen = true, deadline }: Sub
             </p>
           )}
 
-          <button
-            type="button"
-            onClick={handleSubmit}
-            disabled={isPending || isClosed}
-            className="group flex h-20 w-full items-center justify-center gap-4 bg-gradient-to-br from-primary via-primary to-secondary transition-all hover:shadow-[0_0_40px_rgba(164,165,255,0.2)] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            <span className="font-space-grotesk text-xl font-extrabold tracking-[0.2em] text-white">
-              {isClosed ? (isDeadlinePassed ? "TERMIN MINĄŁ" : "ZGŁOSZENIA ZAMKNIĘTE") : isPending ? "WYSYŁANIE..." : "ZGŁOŚ PROJEKT"}
-            </span>
-            {!isPending && (
-              <svg className="h-6 w-6 text-white transition-transform group-hover:translate-x-2" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
-              </svg>
-            )}
-          </button>
-          <p className="mt-4 text-center font-space-grotesk text-[10px] uppercase tracking-widest text-on-surface-muted">
-            Klikając, potwierdzasz że wszystko się zgadza.
-          </p>
+          {canSubmit ? (
+            <>
+              <button
+                type="button"
+                onClick={handleSubmit}
+                disabled={isPending || isClosed}
+                className="group flex h-20 w-full items-center justify-center gap-4 bg-gradient-to-br from-primary via-primary to-secondary transition-all hover:shadow-[0_0_40px_rgba(164,165,255,0.2)] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <span className="font-space-grotesk text-xl font-extrabold tracking-[0.2em] text-white">
+                  {isClosed ? (isDeadlinePassed ? "TERMIN MINĄŁ" : "ZGŁOSZENIA ZAMKNIĘTE") : isPending ? "WYSYŁANIE..." : "ZGŁOŚ PROJEKT"}
+                </span>
+                {!isPending && (
+                  <svg className="h-6 w-6 text-white transition-transform group-hover:translate-x-2" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+                  </svg>
+                )}
+              </button>
+              <p className="mt-4 text-center font-space-grotesk text-[10px] uppercase tracking-widest text-on-surface-muted">
+                Klikając, potwierdzasz że wszystko się zgadza.
+              </p>
+            </>
+          ) : (
+            <p className="py-6 text-center font-space-grotesk text-sm text-on-surface-muted">
+              Tylko lider zespołu może zgłosić projekt.
+            </p>
+          )}
         </div>
       </div>
     </div>

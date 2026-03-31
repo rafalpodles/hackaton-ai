@@ -64,11 +64,11 @@ export async function updateSession(request: NextRequest) {
       if (!skipOnboardingCheck) {
         const { data: profile } = await supabase
           .from("profiles")
-          .select("project_id, role")
+          .select("team_id, is_solo, role")
           .eq("id", user.id)
           .single();
 
-        if (profile && !profile.project_id && profile.role !== "admin") {
+        if (profile && !profile.team_id && !profile.is_solo && profile.role !== "admin") {
           return NextResponse.redirect(getRedirectUrl(request, "/onboarding"));
         }
       }

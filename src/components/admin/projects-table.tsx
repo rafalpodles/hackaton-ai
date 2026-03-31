@@ -1,12 +1,12 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import type { ProjectWithTeam } from "@/lib/types";
+import type { Project } from "@/lib/types";
 import { deleteProject } from "@/lib/actions/admin";
 import ConfirmDialog from "@/components/ui/confirm-dialog";
 
 interface ProjectsTableProps {
-  projects: ProjectWithTeam[];
+  projects: Project[];
 }
 
 export default function ProjectsTable({ projects }: ProjectsTableProps) {
@@ -65,7 +65,7 @@ export default function ProjectsTable({ projects }: ProjectsTableProps) {
                   </span>
                 </td>
                 <td className="px-5 py-4 text-sm text-on-surface-muted">
-                  {project.team.map((m) => m.display_name).join(", ")}
+                  —
                 </td>
                 <td className="px-5 py-4 text-right">
                   <button

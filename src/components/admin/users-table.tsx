@@ -10,6 +10,7 @@ interface UsersTableProps {
   currentUserId: string;
   users: (Profile & {
     project_name?: string | null;
+    team_name?: string | null;
     key_usage?: number | null;
     key_limit?: number | null;
     confirmed_at?: string | null;
@@ -123,10 +124,12 @@ export default function UsersTable({ currentUserId, users }: UsersTableProps) {
                   {user.email}
                 </td>
                 <td className="px-5 py-4">
-                  {user.project_name ? (
+                  {user.team_name ? (
                     <span className="text-sm text-on-surface">
-                      {user.project_name}
+                      {user.team_name}
                     </span>
+                  ) : user.is_solo ? (
+                    <span className="text-sm text-on-surface-muted">Solo</span>
                   ) : (
                     <span className="text-sm text-on-surface-muted">—</span>
                   )}
