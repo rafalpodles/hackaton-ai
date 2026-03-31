@@ -559,9 +559,9 @@ export const guideSteps: GuideStep[] = [
               sub: "claude",
             },
             {
-              text: "Skonfiguruj klucz OpenRouter i uruchom (ANTHROPIC_API_KEY musi być pusty):",
+              text: "Skonfiguruj klucz OpenRouter i uruchom (ANTHROPIC_API_KEY musi być pusty). Jeśli byłeś zalogowany, najpierw /logout:",
               command:
-                "export ANTHROPIC_BASE_URL=https://openrouter.ai/api\nexport ANTHROPIC_AUTH_TOKEN=twoj-klucz-openrouter\nexport ANTHROPIC_API_KEY=\"\"\nclaude",
+                "export OPENROUTER_API_KEY=twoj-klucz-openrouter\nexport ANTHROPIC_BASE_URL=https://openrouter.ai/api\nexport ANTHROPIC_AUTH_TOKEN=$OPENROUTER_API_KEY\nexport ANTHROPIC_API_KEY=\"\"\nclaude",
               sub: ["openai", "openrouter"],
             },
           ],
@@ -578,9 +578,9 @@ export const guideSteps: GuideStep[] = [
               sub: "claude",
             },
             {
-              text: "Skonfiguruj klucz OpenRouter i uruchom (ANTHROPIC_API_KEY musi być pusty):",
+              text: "Skonfiguruj klucz OpenRouter i uruchom (ANTHROPIC_API_KEY musi być pusty). Jeśli byłeś zalogowany, najpierw /logout:",
               command:
-                "set ANTHROPIC_BASE_URL=https://openrouter.ai/api\nset ANTHROPIC_AUTH_TOKEN=twoj-klucz-openrouter\nset ANTHROPIC_API_KEY=\nclaude",
+                "set OPENROUTER_API_KEY=twoj-klucz-openrouter\nset ANTHROPIC_BASE_URL=https://openrouter.ai/api\nset ANTHROPIC_AUTH_TOKEN=%OPENROUTER_API_KEY%\nset ANTHROPIC_API_KEY=\nclaude",
               sub: ["openai", "openrouter"],
             },
           ],
@@ -597,9 +597,9 @@ export const guideSteps: GuideStep[] = [
               sub: "claude",
             },
             {
-              text: "Skonfiguruj klucz OpenRouter i uruchom (ANTHROPIC_API_KEY musi być pusty):",
+              text: "Skonfiguruj klucz OpenRouter i uruchom (ANTHROPIC_API_KEY musi być pusty). Jeśli byłeś zalogowany, najpierw /logout:",
               command:
-                "export ANTHROPIC_BASE_URL=https://openrouter.ai/api\nexport ANTHROPIC_AUTH_TOKEN=twoj-klucz-openrouter\nexport ANTHROPIC_API_KEY=\"\"\nclaude",
+                "export OPENROUTER_API_KEY=twoj-klucz-openrouter\nexport ANTHROPIC_BASE_URL=https://openrouter.ai/api\nexport ANTHROPIC_AUTH_TOKEN=$OPENROUTER_API_KEY\nexport ANTHROPIC_API_KEY=\"\"\nclaude",
               sub: ["openai", "openrouter"],
             },
           ],

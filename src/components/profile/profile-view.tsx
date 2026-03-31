@@ -485,8 +485,9 @@ export default function ProfileView({
                   Wyloguj się z Claude Code (<code className="text-primary-dim">/logout</code>) jeśli byłeś zalogowany, a następnie ustaw zmienne:
                 </p>
                 <code className="block whitespace-pre-wrap rounded bg-surface-high/50 px-3 py-2 font-mono text-[11px] leading-relaxed text-primary-dim">
-{`export ANTHROPIC_BASE_URL=https://openrouter.ai/api
-export ANTHROPIC_AUTH_TOKEN=${user.openrouter_api_key}
+{`export OPENROUTER_API_KEY=${user.openrouter_api_key}
+export ANTHROPIC_BASE_URL=https://openrouter.ai/api
+export ANTHROPIC_AUTH_TOKEN=$OPENROUTER_API_KEY
 export ANTHROPIC_API_KEY=""`}
                 </code>
                 <p className="mt-2 text-xs text-on-surface-muted">
