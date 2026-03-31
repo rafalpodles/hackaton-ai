@@ -51,14 +51,14 @@ export function ProjectDetailModal({
     >
       {/* Modal container — absolute positioned with explicit insets */}
       <div
-        className="absolute left-[2.5%] top-[2.5%] right-[2.5%] bottom-[2.5%] flex overflow-hidden rounded-2xl bg-surface-low"
+        className="absolute inset-0 flex flex-col overflow-hidden bg-surface-low sm:inset-[2.5%] sm:flex-row sm:rounded-2xl"
         style={{
           boxShadow:
             "0 0 0 1px rgba(70,70,204,0.15), 0 0 60px -10px rgba(70,70,204,0.2), 0 0 100px -20px rgba(255,77,41,0.1)",
         }}
       >
         {/* ===== LEFT: Media ===== */}
-        <div className="flex flex-1 flex-col overflow-hidden bg-surface">
+        <div className="flex min-h-0 flex-1 flex-col overflow-hidden bg-surface">
           {/* Toggle bar */}
           <div className="flex items-center justify-between px-6 py-4">
             <div className="relative flex rounded-xl bg-surface-high/80 p-1">
@@ -125,7 +125,7 @@ export function ProjectDetailModal({
         </div>
 
         {/* ===== RIGHT: Info panel ===== */}
-        <div className="flex w-[340px] shrink-0 flex-col gap-5 overflow-y-auto border-l border-outline bg-surface-low p-6">
+        <div className="flex shrink-0 flex-col gap-5 overflow-y-auto border-t border-outline bg-surface-low p-4 sm:w-[340px] sm:border-l sm:border-t-0 sm:p-6">
           {/* Close button */}
           <div className="flex justify-end">
             <button

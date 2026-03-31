@@ -1,40 +1,49 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { GlassCard } from "@/components/ui/glass-card";
 import { GradientButton } from "@/components/ui/gradient-button";
-import { Suspense } from "react";
 
-function LoginForm() {
-  const [email, setEmail] = useState("");
+export default function ChangePasswordPage() {
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const searchParams = useSearchParams();
-  const passwordChanged = searchParams.get("password_changed") === "true";
   const router = useRouter();
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
+
+    if (password.length < 6) {
+      setError("Hasło musi mieć co najmniej 6 znaków.");
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setError("Hasła nie są identyczne.");
+      return;
+    }
+
     setLoading(true);
 
     try {
       const supabase = createClient();
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
+
+      const { error: updateError } = await supabase.auth.updateUser({
         password,
+        data: { must_change_password: false },
       });
 
-      if (error) {
-        setError("Nieprawidłowy email lub hasło.");
+      if (updateError) {
+        setError(updateError.message);
         return;
       }
 
-      router.push("/");
-      router.refresh();
+      await supabase.auth.signOut();
+      router.push("/login?password_changed=true");
     } catch {
       setError("Coś poszło nie tak. Spróbuj ponownie.");
     } finally {
@@ -44,53 +53,29 @@ function LoginForm() {
 
   return (
     <div className="min-h-screen bg-surface flex items-center justify-center relative overflow-hidden">
-      {/* Gradient overlay */}
       <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-secondary/10 pointer-events-none" />
 
       <div className="relative z-10 w-full max-w-md px-4">
         <GlassCard>
-          {/* Title */}
           <h1 className="font-space-grotesk text-center text-xs tracking-[0.3em] uppercase bg-gradient-to-r from-primary-dim to-secondary-dim bg-clip-text text-transparent mb-6">
             Spyrosoft AI Hackathon
           </h1>
 
-          {/* Heading */}
-          <h2 className="font-space-grotesk text-2xl font-bold text-on-surface text-center mb-8">
-            Witaj, hackerze!
+          <h2 className="font-space-grotesk text-2xl font-bold text-on-surface text-center mb-4">
+            Zmień hasło
           </h2>
 
-          {passwordChanged && (
-            <p className="text-green-400 text-sm text-center mb-4">
-              Hasło zostało zmienione. Zaloguj się nowym hasłem.
-            </p>
-          )}
+          <p className="text-on-surface-muted text-sm text-center mb-8">
+            Utwórz nowe hasło, które będziesz używać do logowania.
+          </p>
 
-          {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
-              <label
-                htmlFor="email"
-                className="block font-space-grotesk text-xs tracking-wide uppercase text-on-surface-muted mb-2"
-              >
-                Email
-              </label>
-              <input
-                id="email"
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="ty@example.com"
-                className="w-full bg-surface-low text-on-surface placeholder:text-on-surface-muted/40 border-b-2 border-secondary focus:border-primary-dim outline-none px-4 py-3 rounded-t-md transition-colors duration-200"
-              />
-            </div>
-
             <div>
               <label
                 htmlFor="password"
                 className="block font-space-grotesk text-xs tracking-wide uppercase text-on-surface-muted mb-2"
               >
-                Hasło
+                Nowe hasło
               </label>
               <input
                 id="password"
@@ -98,7 +83,25 @@ function LoginForm() {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
+                placeholder="Min. 6 znaków"
+                className="w-full bg-surface-low text-on-surface placeholder:text-on-surface-muted/40 border-b-2 border-secondary focus:border-primary-dim outline-none px-4 py-3 rounded-t-md transition-colors duration-200"
+              />
+            </div>
+
+            <div>
+              <label
+                htmlFor="confirmPassword"
+                className="block font-space-grotesk text-xs tracking-wide uppercase text-on-surface-muted mb-2"
+              >
+                Powtórz hasło
+              </label>
+              <input
+                id="confirmPassword"
+                type="password"
+                required
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                placeholder="Powtórz nowe hasło"
                 className="w-full bg-surface-low text-on-surface placeholder:text-on-surface-muted/40 border-b-2 border-secondary focus:border-primary-dim outline-none px-4 py-3 rounded-t-md transition-colors duration-200"
               />
             </div>
@@ -110,30 +113,13 @@ function LoginForm() {
             <GradientButton
               type="submit"
               fullWidth
-              disabled={loading || !email || !password}
+              disabled={loading || !password || !confirmPassword}
             >
-              {loading ? "Logowanie..." : "Zaloguj się"}
+              {loading ? "Zapisywanie..." : "Ustaw nowe hasło"}
             </GradientButton>
           </form>
-
-          {/* Footer text */}
-          <p className="text-on-surface-muted text-sm text-center mt-6">
-            Użyj danych otrzymanych w mailu od organizatora.
-          </p>
         </GlassCard>
       </div>
     </div>
-  );
-}
-
-export default function LoginPage() {
-  return (
-    <Suspense fallback={
-      <div className="min-h-screen bg-surface flex items-center justify-center">
-        <div className="inline-block w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-      </div>
-    }>
-      <LoginForm />
-    </Suspense>
   );
 }

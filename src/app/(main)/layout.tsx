@@ -24,7 +24,7 @@ export default async function MainLayout({
   return (
     <div className="min-h-screen">
       <Sidebar user={user} votingOpen={settings?.voting_open ?? false} />
-      <main className="ml-60 p-8">{children}</main>
+      <main className="p-4 pt-16 lg:ml-60 lg:p-8">{children}</main>
     </div>
   );
 }

@@ -36,7 +36,7 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const publicPaths = ["/login", "/auth/callback", "/auth/confirm", "/auth/handle-token"];
+  const publicPaths = ["/login", "/change-password"];
   const isPublicPath = publicPaths.some((p) =>
     request.nextUrl.pathname.startsWith(p)
   );
@@ -45,26 +45,38 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(getRedirectUrl(request, "/login"));
   }
 
-  if (user && !isPublicPath) {
-    const skipOnboardingCheck = ["/onboarding", "/admin"].some((p) =>
-      request.nextUrl.pathname.startsWith(p)
-    );
+  if (user) {
+    const mustChangePassword = user.user_metadata?.must_change_password === true;
 
-    if (!skipOnboardingCheck) {
-      const { data: profile } = await supabase
-        .from("profiles")
-        .select("project_id, role")
-        .eq("id", user.id)
-        .single();
+    if (mustChangePassword && request.nextUrl.pathname !== "/change-password") {
+      return NextResponse.redirect(getRedirectUrl(request, "/change-password"));
+    }
 
-      if (profile && !profile.project_id && profile.role !== "admin") {
-        return NextResponse.redirect(getRedirectUrl(request, "/onboarding"));
+    if (!mustChangePassword && request.nextUrl.pathname === "/change-password") {
+      return NextResponse.redirect(getRedirectUrl(request, "/"));
+    }
+
+    if (!isPublicPath) {
+      const skipOnboardingCheck = ["/onboarding", "/admin"].some((p) =>
+        request.nextUrl.pathname.startsWith(p)
+      );
+
+      if (!skipOnboardingCheck) {
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("project_id, role")
+          .eq("id", user.id)
+          .single();
+
+        if (profile && !profile.project_id && profile.role !== "admin") {
+          return NextResponse.redirect(getRedirectUrl(request, "/onboarding"));
+        }
       }
     }
-  }
 
-  if (user && request.nextUrl.pathname === "/login") {
-    return NextResponse.redirect(getRedirectUrl(request, "/"));
+    if (request.nextUrl.pathname === "/login") {
+      return NextResponse.redirect(getRedirectUrl(request, "/"));
+    }
   }
 
   return supabaseResponse;

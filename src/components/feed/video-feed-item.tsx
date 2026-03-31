@@ -48,7 +48,7 @@ export function VideoFeedItem({
   return (
     <div
       ref={containerRef}
-      className="relative flex h-screen snap-start flex-col items-center justify-center px-6"
+      className="relative flex h-screen snap-start flex-col items-center justify-center px-4 sm:px-6"
     >
       {/* Counter */}
       <div className="absolute right-6 top-6 rounded-full bg-surface-high/80 px-3 py-1 text-sm font-medium text-on-surface-muted backdrop-blur-sm">
@@ -89,7 +89,7 @@ export function VideoFeedItem({
           <p className="text-xs font-medium uppercase tracking-wider text-primary-dim">
             Projekt #{projectNumber}
           </p>
-          <h2 className="font-space-grotesk text-2xl font-bold text-on-surface">
+          <h2 className="font-space-grotesk text-xl font-bold text-on-surface sm:text-2xl">
             {project.name}
           </h2>
           {project.description && (
