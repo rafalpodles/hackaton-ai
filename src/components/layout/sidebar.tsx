@@ -11,13 +11,21 @@ interface SidebarProps {
   votingOpen: boolean;
 }
 
-const navItems = [
+const startItems = [
   { label: "Garage Rules", href: "/rules" },
   { label: "Poradnik", href: "/guide" },
-  { label: "Live", href: "/feed" },
-  { label: "Projekty", href: "/" },
+  { label: "Pomysły na projekty", href: "/ideas" },
+  { label: "Przydatne prompty", href: "/prompts" },
+];
+
+const hackathonItems = [
   { label: "Zespół", href: "/team" },
   { label: "Mój projekt", href: "/my-project" },
+];
+
+const galleryItems = [
+  { label: "Projekty", href: "/" },
+  { label: "Live", href: "/feed" },
 ];
 
 const adminItems = [
@@ -125,14 +133,42 @@ export default function Sidebar({ user, votingOpen }: SidebarProps) {
 
         {/* Navigation */}
         <nav className="flex-1 space-y-1 px-3">
-          {navItems.map((item) => (
-            <div key={item.href}>
-              <NavLink
-                href={item.href}
-                label={item.label}
-                active={isActive(item.href)}
-              />
-            </div>
+          <p className="mb-2 px-2 font-space-grotesk text-xs uppercase tracking-wider text-on-surface-muted">
+            Na start
+          </p>
+          {startItems.map((item) => (
+            <NavLink
+              key={item.href}
+              href={item.href}
+              label={item.label}
+              active={isActive(item.href)}
+            />
+          ))}
+
+          <div className="my-4 border-t border-outline" />
+          <p className="mb-2 px-2 font-space-grotesk text-xs uppercase tracking-wider text-on-surface-muted">
+            Hackathon
+          </p>
+          {hackathonItems.map((item) => (
+            <NavLink
+              key={item.href}
+              href={item.href}
+              label={item.label}
+              active={isActive(item.href)}
+            />
+          ))}
+
+          <div className="my-4 border-t border-outline" />
+          <p className="mb-2 px-2 font-space-grotesk text-xs uppercase tracking-wider text-on-surface-muted">
+            Galeria
+          </p>
+          {galleryItems.map((item) => (
+            <NavLink
+              key={item.href}
+              href={item.href}
+              label={item.label}
+              active={isActive(item.href)}
+            />
           ))}
 
           {/* Admin section */}

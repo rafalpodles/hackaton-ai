@@ -137,6 +137,23 @@ export default async function MyProjectPage() {
             }
           />
           <InfoRow
+            label="Repozytorium"
+            value={
+              typedProject.repo_url ? (
+                <a
+                  href={typedProject.repo_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary-dim underline underline-offset-2 hover:text-primary"
+                >
+                  {typedProject.repo_url}
+                </a>
+              ) : (
+                "\u2014"
+              )
+            }
+          />
+          <InfoRow
             label="Wideo"
             value={
               typedProject.video_url
@@ -205,7 +222,7 @@ export default async function MyProjectPage() {
   );
 }
 
-function InfoRow({ label, value }: { label: string; value: string }) {
+function InfoRow({ label, value }: { label: string; value: React.ReactNode }) {
   return (
     <div className="flex gap-4">
       <span className="w-28 shrink-0 font-semibold uppercase tracking-wider text-on-surface-muted">

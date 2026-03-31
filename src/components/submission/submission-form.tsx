@@ -52,6 +52,7 @@ export function SubmissionForm({ project, submissionOpen = true, deadline, canSu
     project.tech_stack ?? []
   );
   const [tagInput, setTagInput] = useState("");
+  const [repoUrl, setRepoUrl] = useState(project.repo_url ?? "");
 
   const [videoUrl, setVideoUrl] = useState(project.video_url);
   const [videoDuration, setVideoDuration] = useState(project.video_duration);
@@ -265,6 +266,24 @@ export function SubmissionForm({ project, submissionOpen = true, deadline, canSu
                   }}
                   placeholder="Dodaj..."
                 />
+              </div>
+            </div>
+            {/* Repo URL */}
+            <div className="space-y-2">
+              <h2 className="font-space-grotesk text-2xl font-bold text-on-surface">
+                Link do repozytorium
+              </h2>
+              <p className="text-xs text-on-surface-muted">Opcjonalne</p>
+              <div className="group relative">
+                <input
+                  className="w-full border-none bg-black p-6 text-lg text-on-surface placeholder:text-on-surface-muted/30 focus:outline-none focus:ring-0"
+                  type="url"
+                  value={repoUrl}
+                  onChange={(e) => setRepoUrl(e.target.value)}
+                  onBlur={() => save({ repo_url: repoUrl || null })}
+                  placeholder="https://github.com/..."
+                />
+                <div className="absolute bottom-0 left-0 h-[2px] w-full origin-left scale-x-0 bg-gradient-to-r from-primary to-secondary transition-transform duration-500 group-focus-within:scale-x-100" />
               </div>
             </div>
           </div>

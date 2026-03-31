@@ -97,6 +97,7 @@ export async function updateProject(
     video_duration?: number | null;
     pdf_url?: string | null;
     thumbnail_url?: string | null;
+    repo_url?: string | null;
   }
 ) {
   const { supabase, user } = await getAuthUser();
@@ -126,6 +127,7 @@ export async function updateProject(
     ...(data.video_duration !== undefined && { video_duration: data.video_duration }),
     ...(data.pdf_url !== undefined && { pdf_url: data.pdf_url }),
     ...(data.thumbnail_url !== undefined && { thumbnail_url: data.thumbnail_url }),
+    ...(data.repo_url !== undefined && { repo_url: data.repo_url }),
   };
 
   const { error } = await supabase

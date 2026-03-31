@@ -57,6 +57,7 @@ export interface Project {
   video_duration: number | null;
   pdf_url: string | null;
   thumbnail_url: string | null;
+  repo_url: string | null;
   is_submitted: boolean;
   created_at: string;
   updated_at: string;
