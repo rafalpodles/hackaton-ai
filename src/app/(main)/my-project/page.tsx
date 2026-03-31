@@ -36,8 +36,27 @@ export default async function MyProjectPage() {
     isLeader = team?.leader_id === user.id;
   }
 
-  // No project yet — show create form
+  // No project yet
   if (!projectId) {
+    // Non-leader team member — show waiting message
+    if (!isLeader) {
+      return (
+        <div className="mx-auto max-w-2xl space-y-8 py-8">
+          <h1 className="font-space-grotesk text-3xl font-bold text-on-surface">
+            Mój projekt
+          </h1>
+          <GlassCard>
+            <div className="text-center py-4">
+              <p className="text-on-surface-muted">
+                Lider zespołu jeszcze nie utworzył projektu. Czekaj na lidera.
+              </p>
+            </div>
+          </GlassCard>
+        </div>
+      );
+    }
+
+    // Leader or solo — show create form
     async function handleCreate(formData: FormData) {
       "use server";
       const name = formData.get("name") as string;
@@ -48,7 +67,7 @@ export default async function MyProjectPage() {
     return (
       <div className="mx-auto max-w-2xl space-y-8 py-8">
         <h1 className="font-space-grotesk text-3xl font-bold text-on-surface">
-          Zgłoś projekt
+          Mój projekt
         </h1>
         <GlassCard>
           <h2 className="font-space-grotesk text-lg font-semibold text-on-surface mb-4">

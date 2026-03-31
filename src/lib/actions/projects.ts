@@ -56,6 +56,11 @@ export async function createProject(name: string) {
 
   if (ctx.projectId) throw new Error("Już masz projekt");
 
+  // Only leader or solo can create project
+  if (!ctx.isSolo && !ctx.isLeader) {
+    throw new Error("Tylko lider zespołu może utworzyć projekt");
+  }
+
   const projectId = crypto.randomUUID();
 
   const { error } = await supabase

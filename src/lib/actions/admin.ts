@@ -74,6 +74,21 @@ export async function setSubmissionDeadline(deadline: string | null) {
   revalidatePath("/");
 }
 
+export async function setHackathonDate(date: string | null) {
+  await requireAdmin();
+  const supabase = await createClient();
+
+  const { error } = await supabase
+    .from("app_settings")
+    .update({ hackathon_date: date })
+    .eq("id", 1);
+
+  if (error) throw new Error("Nie udało się ustawić daty hackathonu");
+
+  revalidatePath("/admin");
+  revalidatePath("/");
+}
+
 export async function deleteProject(projectId: string) {
   await requireAdmin();
   const supabase = await createClient();

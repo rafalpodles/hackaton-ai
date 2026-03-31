@@ -57,8 +57,11 @@ export async function updateSession(request: NextRequest) {
     }
 
     if (!isPublicPath) {
-      const skipOnboardingCheck = ["/onboarding", "/admin"].some((p) =>
-        request.nextUrl.pathname.startsWith(p)
+      const skipOnboardingCheck = [
+        "/onboarding", "/admin",
+        "/guide", "/prompts", "/ideas", "/feed", "/profile",
+      ].some((p) =>
+        request.nextUrl.pathname === "/" || request.nextUrl.pathname.startsWith(p)
       );
 
       if (!skipOnboardingCheck) {

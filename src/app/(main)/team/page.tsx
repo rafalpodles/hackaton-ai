@@ -62,7 +62,18 @@ export default async function TeamPage() {
       .select("*, members:profiles!team_id(id, display_name, avatar_url, email)")
       .order("created_at", { ascending: false });
 
-    return <NoTeamView teams={(teams ?? []) as TeamWithMembers[]} isSolo />;
+    // Check if solo user has unsubmitted project
+    let hasUnsubmittedProject = false;
+    if (user.project_id) {
+      const { data: proj } = await supabase
+        .from("projects")
+        .select("is_submitted")
+        .eq("id", user.project_id)
+        .single();
+      hasUnsubmittedProject = !!proj && !proj.is_submitted;
+    }
+
+    return <NoTeamView teams={(teams ?? []) as TeamWithMembers[]} isSolo hasUnsubmittedProject={hasUnsubmittedProject} />;
   }
 
   // User is in a team

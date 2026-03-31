@@ -4,6 +4,7 @@ import ProjectsTable from "@/components/admin/projects-table";
 import UsersTable from "@/components/admin/users-table";
 import VotingToggle from "@/components/admin/voting-toggle";
 import DeadlinePicker from "@/components/admin/deadline-picker";
+import HackathonDatePicker from "@/components/admin/hackathon-date-picker";
 import SubmissionToggle from "@/components/admin/submission-toggle";
 import { getOpenRouterKeyUsage } from "@/lib/actions/admin";
 import { getCurrentUser } from "@/lib/utils";
@@ -36,7 +37,7 @@ export default async function AdminDashboardPage() {
       .select("*"),
     supabase
       .from("app_settings")
-      .select("voting_open, submission_open, submission_deadline")
+      .select("voting_open, submission_open, submission_deadline, hackathon_date")
       .eq("id", 1)
       .single(),
     supabase
@@ -122,7 +123,10 @@ export default async function AdminDashboardPage() {
         </div>
       </div>
 
-      <DeadlinePicker currentDeadline={settings?.submission_deadline ?? null} />
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+        <HackathonDatePicker currentDate={settings?.hackathon_date ?? null} />
+        <DeadlinePicker currentDeadline={settings?.submission_deadline ?? null} />
+      </div>
 
       <StatsCards stats={stats} />
 

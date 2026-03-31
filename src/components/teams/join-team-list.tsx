@@ -7,9 +7,10 @@ import type { TeamWithMembers } from "@/lib/types";
 
 interface JoinTeamListProps {
   teams: TeamWithMembers[];
+  hasUnsubmittedProject?: boolean;
 }
 
-export function JoinTeamList({ teams }: JoinTeamListProps) {
+export function JoinTeamList({ teams, hasUnsubmittedProject }: JoinTeamListProps) {
   const [loadingId, setLoadingId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [successId, setSuccessId] = useState<string | null>(null);
@@ -37,6 +38,11 @@ export function JoinTeamList({ teams }: JoinTeamListProps) {
 
   return (
     <div>
+      {hasUnsubmittedProject && (
+        <p className="mb-4 rounded-lg border border-yellow-500/30 bg-yellow-500/5 px-4 py-2 text-sm text-yellow-400">
+          Uwaga: dołączenie do zespołu usunie Twój obecny projekt solo.
+        </p>
+      )}
       {error && (
         <p className="mb-4 rounded-lg border border-secondary/30 bg-secondary/5 px-4 py-2 text-sm text-secondary">
           {error}

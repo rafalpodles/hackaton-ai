@@ -7,9 +7,10 @@ import type { TeamWithMembers } from "@/lib/types";
 interface NoTeamViewProps {
   teams: TeamWithMembers[];
   isSolo?: boolean;
+  hasUnsubmittedProject?: boolean;
 }
 
-export function NoTeamView({ teams, isSolo }: NoTeamViewProps) {
+export function NoTeamView({ teams, isSolo, hasUnsubmittedProject }: NoTeamViewProps) {
   async function handleCreateTeam(formData: FormData) {
     "use server";
     const name = formData.get("name") as string;
@@ -56,7 +57,7 @@ export function NoTeamView({ teams, isSolo }: NoTeamViewProps) {
         <h2 className="font-space-grotesk text-lg font-semibold text-on-surface mb-4">
           Dołącz do zespołu
         </h2>
-        <JoinTeamList teams={teams} />
+        <JoinTeamList teams={teams} hasUnsubmittedProject={hasUnsubmittedProject} />
       </GlassCard>
 
       {/* Solo option (only if not already solo) */}

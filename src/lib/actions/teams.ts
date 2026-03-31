@@ -46,15 +46,32 @@ export async function createTeam(name: string) {
 
   if (error) throw new Error(`Nie udało się utworzyć zespołu: ${error.message}`);
 
-  // Clear solo project if user was solo
-  const updateData: Record<string, unknown> = { team_id: teamId, is_solo: false };
+  // Clean up solo project if user was solo
   if (profile?.is_solo) {
-    updateData.project_id = null;
+    const { data: soloProfile } = await supabase
+      .from("profiles")
+      .select("project_id")
+      .eq("id", user.id)
+      .single();
+
+    if (soloProfile?.project_id) {
+      const { data: soloProject } = await supabase
+        .from("projects")
+        .select("is_submitted")
+        .eq("id", soloProfile.project_id)
+        .single();
+
+      if (soloProject?.is_submitted) {
+        throw new Error("Nie możesz założyć zespołu — Twój projekt solo jest już zatwierdzony.");
+      }
+
+      await supabase.from("projects").delete().eq("id", soloProfile.project_id);
+    }
   }
 
   await supabase
     .from("profiles")
-    .update(updateData)
+    .update({ team_id: teamId, is_solo: false, project_id: null })
     .eq("id", user.id);
 
   revalidatePath("/");
@@ -92,11 +109,24 @@ export async function requestJoinTeam(teamId: string) {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("team_id")
+    .select("team_id, is_solo, project_id")
     .eq("id", user.id)
     .single();
 
   if (profile?.team_id) throw new Error("Już należysz do zespołu");
+
+  // Block if solo user has a submitted project
+  if (profile?.is_solo && profile.project_id) {
+    const { data: project } = await supabase
+      .from("projects")
+      .select("is_submitted")
+      .eq("id", profile.project_id)
+      .single();
+
+    if (project?.is_submitted) {
+      throw new Error("Nie możesz dołączyć do zespołu — Twój projekt solo jest już zatwierdzony.");
+    }
+  }
 
   // Check team exists and has room
   const { data: members } = await supabase
@@ -177,7 +207,33 @@ export async function approveRequest(requestId: string) {
     throw new Error("Zespół jest pełny (max 5 osób)");
   }
 
-  // Add user to team, clear solo status and solo project
+  // Check if joining user has a solo project to clean up
+  const { data: joiningProfile } = await supabase
+    .from("profiles")
+    .select("project_id, is_solo")
+    .eq("id", request.user_id)
+    .single();
+
+  if (joiningProfile?.is_solo && joiningProfile.project_id) {
+    // Check if project is submitted — block if so
+    const { data: soloProject } = await supabase
+      .from("projects")
+      .select("is_submitted")
+      .eq("id", joiningProfile.project_id)
+      .single();
+
+    if (soloProject?.is_submitted) {
+      throw new Error("Ten użytkownik ma zatwierdzony projekt solo i nie może dołączyć.");
+    }
+
+    // Delete unsubmitted solo project
+    await supabase
+      .from("projects")
+      .delete()
+      .eq("id", joiningProfile.project_id);
+  }
+
+  // Add user to team, clear solo status and project
   await supabase
     .from("profiles")
     .update({ team_id: team.id, is_solo: false, project_id: null })
@@ -314,6 +370,19 @@ export async function deleteTeam() {
 
   if (!team || team.leader_id !== user.id) {
     throw new Error("Nie jesteś liderem tego zespołu");
+  }
+
+  // Delete unsubmitted project (submitted projects stay for voting history)
+  if (team.project_id) {
+    const { data: project } = await supabase
+      .from("projects")
+      .select("is_submitted")
+      .eq("id", team.project_id)
+      .single();
+
+    if (project && !project.is_submitted) {
+      await supabase.from("projects").delete().eq("id", team.project_id);
+    }
   }
 
   // Remove all members from team
