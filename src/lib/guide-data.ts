@@ -26,8 +26,8 @@ export interface GuideStep {
   title: string;
   category: Category;
   paths: Path[];
-  required: boolean;
-  estimatedMinutes?: number;
+  /** If set, only show this step when one of these subscriptions is selected */
+  showForSubs?: Subscription[];
   instructions: {
     description: string;
     platforms: {
@@ -60,8 +60,6 @@ export const guideSteps: GuideStep[] = [
     title: "Terminal — twój nowy przyjaciel",
     category: "fundamenty",
     paths: ["beginner"],
-    required: true,
-    estimatedMinutes: 2,
     instructions: {
       description:
         "Terminal to podstawowe narzędzie każdego programisty. Pozwala uruchamiać komendy, instalować narzędzia i zarządzać projektami.",
@@ -110,8 +108,6 @@ export const guideSteps: GuideStep[] = [
     title: "VS Code — edytor kodu",
     category: "fundamenty",
     paths: ["beginner"],
-    required: true,
-    estimatedMinutes: 5,
     instructions: {
       description:
         "Visual Studio Code to najpopularniejszy edytor kodu. Ma wbudowany terminal, więc możesz go używać od razu do wpisywania komend.",
@@ -152,8 +148,6 @@ export const guideSteps: GuideStep[] = [
     title: "Git — kontrola wersji",
     category: "fundamenty",
     paths: ["beginner"],
-    required: true,
-    estimatedMinutes: 10,
     instructions: {
       description:
         "Git to system kontroli wersji, który pozwala śledzić zmiany w kodzie i współpracować z innymi.",
@@ -216,8 +210,6 @@ export const guideSteps: GuideStep[] = [
     title: "Konto GitHub",
     category: "fundamenty",
     paths: ["beginner"],
-    required: true,
-    estimatedMinutes: 10,
     instructions: {
       description:
         "GitHub to platforma do przechowywania kodu i współpracy. Będziesz go potrzebować, żeby wrzucić swój projekt. Załóż konto i skonfiguruj autoryzację.",
@@ -280,8 +272,6 @@ export const guideSteps: GuideStep[] = [
     title: "Node.js",
     category: "fundamenty",
     paths: ["beginner"],
-    required: true,
-    estimatedMinutes: 5,
     instructions: {
       description:
         "Node.js to środowisko uruchomieniowe JavaScript. Potrzebujesz go, żeby uruchamiać narzędzia AI (Claude Code, Codex itp.).",
@@ -336,8 +326,6 @@ export const guideSteps: GuideStep[] = [
     title: "Python",
     category: "fundamenty",
     paths: ["beginner"],
-    required: false,
-    estimatedMinutes: 5,
     instructions: {
       description:
         "Python to popularny język programowania, szczególnie w AI/ML. Jeśli planujesz projekt w Pythonie — zainstaluj. Jeśli nie — możesz pominąć.",
@@ -393,8 +381,6 @@ export const guideSteps: GuideStep[] = [
     title: "Homebrew / Winget",
     category: "fundamenty",
     paths: ["advanced"],
-    required: false,
-    estimatedMinutes: 5,
     instructions: {
       description:
         "Menedżer pakietów pozwala łatwo instalować i aktualizować narzędzia programistyczne z poziomu terminala. Jako zaawansowany użytkownik pewnie już go masz.",
@@ -444,8 +430,6 @@ export const guideSteps: GuideStep[] = [
     title: "Docker Desktop",
     category: "fundamenty",
     paths: ["advanced"],
-    required: false,
-    estimatedMinutes: 10,
     instructions: {
       description:
         "Docker pozwala uruchamiać aplikacje w kontenerach — izolowanych środowiskach z wszystkimi zależnościami. Przydatny, ale nie wymagany na hackathon.",
@@ -509,8 +493,6 @@ export const guideSteps: GuideStep[] = [
     title: "Natywne aplikacje AI",
     category: "ai-tools",
     paths: ["beginner", "advanced"],
-    required: false,
-    estimatedMinutes: 5,
     instructions: {
       description:
         "Jeśli wolisz pracować w aplikacji desktopowej zamiast terminala — te narzędzia mają graficzny interfejs i są łatwiejsze na start. Idealne do planowania projektu i burzy mózgów.",
@@ -560,8 +542,7 @@ export const guideSteps: GuideStep[] = [
     title: "Claude Code",
     category: "ai-tools",
     paths: ["beginner", "advanced"],
-    required: true,
-    estimatedMinutes: 5,
+    showForSubs: ["claude", "openrouter"],
     instructions: {
       description:
         "Claude Code to narzędzie AI od Anthropic, które pomaga pisać i debugować kod bezpośrednio w terminalu. To główne narzędzie na nasz hackathon!",
@@ -645,8 +626,6 @@ export const guideSteps: GuideStep[] = [
     title: "Gemini CLI",
     category: "ai-tools",
     paths: ["beginner", "advanced"],
-    required: false,
-    estimatedMinutes: 3,
     instructions: {
       description:
         "Gemini CLI to narzędzie od Google do interakcji z modelami Gemini z poziomu terminala. Autoryzacja kontem Google jest darmowa!",
@@ -704,8 +683,7 @@ export const guideSteps: GuideStep[] = [
     title: "Codex (OpenAI)",
     category: "ai-tools",
     paths: ["beginner", "advanced"],
-    required: false,
-    estimatedMinutes: 3,
+    showForSubs: ["openai", "openrouter"],
     instructions: {
       description:
         "Codex CLI od OpenAI to narzędzie do generowania kodu z poziomu terminala, korzystające z modeli GPT/o-series.",
@@ -781,8 +759,6 @@ export const guideSteps: GuideStep[] = [
     title: "AI Edytory — Antigravity / Cursor / Windsurf",
     category: "ai-tools",
     paths: ["beginner", "advanced"],
-    required: false,
-    estimatedMinutes: 5,
     instructions: {
       description:
         "Edytory kodu z wbudowanym AI — wyglądają jak VS Code, ale mają zintegrowanych agentów AI. Wystarczy zainstalować jeden z nich.",
@@ -817,8 +793,6 @@ export const guideSteps: GuideStep[] = [
     title: "CLAUDE.md — konfiguracja AI pod projekt",
     category: "ai-tools",
     paths: ["advanced"],
-    required: false,
-    estimatedMinutes: 5,
     instructions: {
       description:
         "CLAUDE.md to plik konfiguracyjny, który mówi Claude Code jak pracować z Twoim projektem — jakie konwencje stosować, jak uruchamiać testy, jaki stack używasz. Cursor i Windsurf mają odpowiedniki (.cursorrules, .windsurfrules).",
@@ -849,8 +823,6 @@ export const guideSteps: GuideStep[] = [
     title: "Test drive — sprawdź że wszystko działa!",
     category: "weryfikacja",
     paths: ["beginner", "advanced"],
-    required: true,
-    estimatedMinutes: 5,
     instructions: {
       description:
         "Ostatni krok — upewnij się, że wszystko jest gotowe do hackatonu. Stwórz testowy folder i sprawdź, czy narzędzia AI działają.",

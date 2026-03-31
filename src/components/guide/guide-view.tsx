@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
-import Link from "next/link";
 import {
   guideSteps,
   projectIdeas,
@@ -16,7 +15,6 @@ import {
   type GuideStep,
   type CodeStep,
 } from "@/lib/guide-data";
-import { GradientButton } from "@/components/ui/gradient-button";
 
 // ─── State persistence ───────────────────────────────────────────────
 
@@ -25,16 +23,15 @@ const STORAGE_KEY = "guide-state";
 interface PersistedState {
   selectedPath: Path | null;
   selectedSubscription: Subscription | null;
-  completedSteps: string[];
 }
 
 function loadState(): PersistedState {
-  if (typeof window === "undefined") return { selectedPath: null, selectedSubscription: null, completedSteps: [] };
+  if (typeof window === "undefined") return { selectedPath: null, selectedSubscription: null };
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw) return JSON.parse(raw);
   } catch {}
-  return { selectedPath: null, selectedSubscription: null, completedSteps: [] };
+  return { selectedPath: null, selectedSubscription: null };
 }
 
 function saveState(state: PersistedState) {
@@ -56,7 +53,6 @@ function detectOS(): OS {
 export function GuideView() {
   const [selectedPath, setSelectedPath] = useState<Path | null>(null);
   const [selectedSubscription, setSelectedSubscription] = useState<Subscription | null>(null);
-  const [completedSteps, setCompletedSteps] = useState<Set<string>>(new Set());
   const [expandedSteps, setExpandedSteps] = useState<Set<string>>(new Set());
   const [activeOS, setActiveOS] = useState<OS>("mac");
   const [mounted, setMounted] = useState(false);
@@ -67,7 +63,6 @@ export function GuideView() {
     const persisted = loadState();
     setSelectedPath(persisted.selectedPath);
     setSelectedSubscription(persisted.selectedSubscription);
-    setCompletedSteps(new Set(persisted.completedSteps));
     setActiveOS(detectOS());
     setMounted(true);
     if (persisted.selectedPath) setShowSteps(true);
@@ -77,7 +72,6 @@ export function GuideView() {
     if (hash) {
       const step = guideSteps.find((s) => s.id === hash);
       if (step) {
-        // Auto-select path if needed
         if (!persisted.selectedPath && step.paths.length > 0) {
           setSelectedPath(step.paths[0]);
           setShowSteps(true);
@@ -93,8 +87,8 @@ export function GuideView() {
   // Save state on changes
   useEffect(() => {
     if (!mounted) return;
-    saveState({ selectedPath, selectedSubscription, completedSteps: Array.from(completedSteps) });
-  }, [selectedPath, selectedSubscription, completedSteps, mounted]);
+    saveState({ selectedPath, selectedSubscription });
+  }, [selectedPath, selectedSubscription, mounted]);
 
   const handlePathSelect = useCallback((path: Path) => {
     setSelectedPath(path);
@@ -110,33 +104,20 @@ export function GuideView() {
     });
   }, []);
 
-  const toggleComplete = useCallback((stepId: string) => {
-    setCompletedSteps((prev) => {
-      const next = new Set(prev);
-      if (next.has(stepId)) next.delete(stepId);
-      else next.add(stepId);
-      return next;
-    });
-  }, []);
-
   const handleResetPath = useCallback(() => {
     setSelectedPath(null);
     setShowSteps(false);
     setExpandedSteps(new Set());
-    setCompletedSteps(new Set());
   }, []);
 
-  // Filter steps for selected path
+  // Filter steps for selected path + subscription
   const filteredSteps = selectedPath
-    ? guideSteps.filter((s) => s.paths.includes(selectedPath))
+    ? guideSteps.filter((s) => {
+        if (!s.paths.includes(selectedPath)) return false;
+        if (s.showForSubs && selectedSubscription && !s.showForSubs.includes(selectedSubscription)) return false;
+        return true;
+      })
     : [];
-
-  const completedCount = filteredSteps.filter((s) => completedSteps.has(s.id)).length;
-  const totalCount = filteredSteps.length;
-  const progress = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
-  const allDone = totalCount > 0 && completedCount === totalCount;
-
-  const totalEstimatedMinutes = filteredSteps.reduce((sum, s) => sum + (s.estimatedMinutes ?? 0), 0);
 
   // Group steps by category
   const categories: Category[] = ["fundamenty", "ai-tools", "weryfikacja"];
@@ -159,12 +140,7 @@ export function GuideView() {
     <div className="mx-auto max-w-4xl py-4 flex flex-col gap-10">
       {/* Hero Header */}
       <HeroHeader
-        progress={progress}
-        completedCount={completedCount}
-        totalCount={totalCount}
         selectedPath={selectedPath}
-        allDone={allDone}
-        totalMinutes={totalEstimatedMinutes}
         onResetPath={handleResetPath}
       />
 
@@ -201,11 +177,9 @@ export function GuideView() {
                       step={step}
                       displayNumber={globalIndex + 1}
                       expanded={expandedSteps.has(step.id)}
-                      completed={completedSteps.has(step.id)}
                       activeOS={activeOS}
                       activeSubscription={selectedSubscription}
                       onToggle={() => toggleStep(step.id)}
-                      onToggleComplete={() => toggleComplete(step.id)}
                       onOSChange={setActiveOS}
                       delay={(gi * 3 + si) * 50}
                     />
@@ -215,10 +189,7 @@ export function GuideView() {
             </div>
           ))}
 
-          {/* Completion Banner */}
-          {allDone && <CompletionBanner />}
-
-          {/* Reference sections — not part of the checklist */}
+          {/* Reference sections */}
           <SectionDivider label="MATERIAŁY" description="Inspiracje i porady na hackathonowy dzień." />
 
           <div className="flex flex-col gap-6">
@@ -244,20 +215,10 @@ export function GuideView() {
 // ─── Hero Header ─────────────────────────────────────────────────────
 
 function HeroHeader({
-  progress,
-  completedCount,
-  totalCount,
   selectedPath,
-  allDone,
-  totalMinutes,
   onResetPath,
 }: {
-  progress: number;
-  completedCount: number;
-  totalCount: number;
   selectedPath: Path | null;
-  allDone: boolean;
-  totalMinutes: number;
   onResetPath: () => void;
 }) {
   return (
@@ -267,47 +228,20 @@ function HeroHeader({
       <div className="absolute -bottom-16 -left-16 w-48 h-48 bg-secondary/15 rounded-full blur-[80px] pointer-events-none" />
 
       <div className="relative z-10">
-        <h1 className="font-space-grotesk text-4xl md:text-5xl font-bold tracking-tight">
-          <span className="bg-gradient-to-r from-primary-dim to-secondary bg-clip-text text-transparent">
-            PRZYGOTUJ
-          </span>{" "}
-          <span className="text-on-surface">SIĘ</span>
-        </h1>
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <h1 className="font-space-grotesk text-4xl md:text-5xl font-bold tracking-tight">
+              <span className="bg-gradient-to-r from-primary-dim to-secondary bg-clip-text text-transparent">
+                PRZYGOTUJ
+              </span>{" "}
+              <span className="text-on-surface">SIĘ</span>
+            </h1>
 
-        <p className="text-on-surface-muted text-base mt-2 max-w-xl">
-          Przejdź przez wszystkie kroki przed hackathonowym dniem. Nie chcesz
-          tracić czasu na instalacje!
-        </p>
-
-        {/* Progress */}
-        <div className="flex items-center gap-4 mt-6">
-          <div
-            className="flex-1 h-2 rounded-full bg-surface-high overflow-hidden"
-            role="progressbar"
-            aria-valuenow={progress}
-            aria-valuemin={0}
-            aria-valuemax={100}
-          >
-            <div
-              className={`h-full rounded-full transition-all duration-500 ease-out bg-gradient-to-r from-primary to-secondary ${
-                allDone ? "shadow-[0_0_12px_rgba(70,70,204,0.5)]" : ""
-              }`}
-              style={{ width: `${progress}%` }}
-            />
+            <p className="text-on-surface-muted text-base mt-2 max-w-xl">
+              Przejdź przez wszystkie kroki przed hackathonowym dniem. Nie chcesz
+              tracić czasu na instalacje!
+            </p>
           </div>
-
-          <span className="font-space-grotesk text-sm font-bold text-on-surface tabular-nums">
-            {completedCount} / {totalCount}
-          </span>
-
-          {selectedPath && totalMinutes > 0 && (
-            <span className="hidden sm:inline-flex items-center gap-1 text-xs text-on-surface-muted font-space-grotesk">
-              <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-              </svg>
-              ~{totalMinutes} min
-            </span>
-          )}
 
           {selectedPath && <PathBadge path={selectedPath} onClick={onResetPath} />}
         </div>
@@ -349,15 +283,8 @@ function PathSelector({ onSelect }: { onSelect: (path: Path) => void }) {
     setTimeout(() => onSelect(path), 200);
   };
 
-  // Compute stats for each path
-  const getPathStats = (path: Path) => {
-    const steps = guideSteps.filter((s) => s.paths.includes(path));
-    const totalMin = steps.reduce((sum, s) => sum + (s.estimatedMinutes ?? 0), 0);
-    return { count: steps.length, minutes: totalMin };
-  };
-
-  const beginnerStats = getPathStats("beginner");
-  const advancedStats = getPathStats("advanced");
+  const beginnerCount = guideSteps.filter((s) => s.paths.includes("beginner")).length;
+  const advancedCount = guideSteps.filter((s) => s.paths.includes("advanced")).length;
 
   return (
     <div
@@ -385,7 +312,7 @@ function PathSelector({ onSelect }: { onSelect: (path: Path) => void }) {
             Nigdy nie kodowałem — pokaż mi wszystko od zera
           </p>
           <p className="text-xs text-on-surface-muted font-space-grotesk">
-            {beginnerStats.count} kroków &middot; ~{beginnerStats.minutes} min
+            {beginnerCount} kroków
           </p>
         </button>
 
@@ -406,7 +333,7 @@ function PathSelector({ onSelect }: { onSelect: (path: Path) => void }) {
             Mam doświadczenie z programowaniem — potrzebuję tylko AI tools
           </p>
           <p className="text-xs text-on-surface-muted font-space-grotesk">
-            {advancedStats.count} kroków &middot; ~{advancedStats.minutes} min
+            {advancedCount} kroków
           </p>
         </button>
       </div>
@@ -540,22 +467,18 @@ function StepCard({
   step,
   displayNumber,
   expanded,
-  completed,
   activeOS,
   activeSubscription,
   onToggle,
-  onToggleComplete,
   onOSChange,
   delay,
 }: {
   step: GuideStep;
   displayNumber: number;
   expanded: boolean;
-  completed: boolean;
   activeOS: OS;
   activeSubscription: Subscription | null;
   onToggle: () => void;
-  onToggleComplete: () => void;
   onOSChange: (os: OS) => void;
   delay: number;
 }) {
@@ -576,9 +499,7 @@ function StepCard({
       ref={cardRef}
       id={`step-${step.id}`}
       className={`rounded-xl overflow-hidden border transition-all duration-200 animate-fadeIn ${
-        completed
-          ? "bg-surface-low/60 border-primary/25 border-l-2 border-l-primary-dim"
-          : expanded
+        expanded
           ? "bg-surface-low/80 border-primary/20"
           : "bg-surface-low/60 border-outline"
       }`}
@@ -603,7 +524,7 @@ function StepCard({
         {/* Step number */}
         <div
           className={`flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center font-space-grotesk text-xs font-bold ${
-            completed || expanded
+            expanded
               ? "bg-primary/20 text-primary-dim"
               : "bg-surface-high text-on-surface-muted"
           }`}
@@ -611,43 +532,12 @@ function StepCard({
           {displayNumber}
         </div>
 
-        {/* Title + time estimate */}
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 flex-wrap">
-            <span
-              className={`font-space-grotesk text-sm font-semibold ${
-                completed ? "text-primary-dim" : "text-on-surface"
-              }`}
-            >
-              {step.title}
-            </span>
-            {!step.required && (
-              <span className="text-[10px] text-on-surface-muted/60 font-normal bg-surface-high/60 rounded px-1.5 py-0.5">opcjonalny</span>
-            )}
-            {step.estimatedMinutes && (
-              <span className="hidden sm:inline-flex items-center gap-0.5 text-[10px] text-on-surface-muted/60 font-normal">
-                <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                </svg>
-                {step.estimatedMinutes} min
-              </span>
-            )}
-          </div>
-        </div>
+        {/* Title */}
+        <span className="flex-1 min-w-0 font-space-grotesk text-sm font-semibold text-on-surface">
+          {step.title}
+        </span>
 
-        {/* Checkbox — bigger touch target */}
-        <div className="p-1.5 -m-1.5">
-          <StepCheckbox
-            checked={completed}
-            label={`Oznacz ${step.title} jako ukończone`}
-            onToggle={(e) => {
-              e.stopPropagation();
-              onToggleComplete();
-            }}
-          />
-        </div>
-
-        {/* Chevron — bigger touch target */}
+        {/* Chevron */}
         <div className="p-1.5 -m-1.5">
           <svg
             className={`w-5 h-5 text-on-surface-muted transition-transform duration-200 ${
@@ -731,38 +621,6 @@ function StepCard({
         </div>
       </div>
     </div>
-  );
-}
-
-// ─── Step Checkbox ───────────────────────────────────────────────────
-
-function StepCheckbox({
-  checked,
-  label,
-  onToggle,
-}: {
-  checked: boolean;
-  label: string;
-  onToggle: (e: React.MouseEvent) => void;
-}) {
-  return (
-    <button
-      role="checkbox"
-      aria-checked={checked}
-      aria-label={label}
-      onClick={onToggle}
-      className={`w-6 h-6 rounded-md flex items-center justify-center transition-all duration-200 cursor-pointer flex-shrink-0 focus-visible:outline-2 focus-visible:outline-primary-dim focus-visible:outline-offset-2 ${
-        checked
-          ? "bg-gradient-to-br from-primary to-primary-dim border-0 shadow-[0_0_8px_rgba(164,165,255,0.3)]"
-          : "border-2 border-outline hover:border-primary-dim/50"
-      }`}
-    >
-      {checked && (
-        <svg className="w-3.5 h-3.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-        </svg>
-      )}
-    </button>
   );
 }
 
@@ -1087,47 +945,3 @@ function PromptsSection() {
   );
 }
 
-// ─── Completion Banner ───────────────────────────────────────────────
-
-function CompletionBanner() {
-  // Scattered glow dots positions
-  const dots = [
-    "top-4 left-8",
-    "top-6 right-12",
-    "bottom-8 left-16",
-    "bottom-4 right-8",
-    "top-12 left-1/3",
-    "bottom-12 right-1/3",
-    "top-3 right-1/4",
-    "bottom-6 left-1/4",
-  ];
-
-  return (
-    <div className="relative overflow-hidden rounded-2xl p-8 text-center bg-surface-low/80 backdrop-blur-[20px] border border-primary/30 animate-bannerIn">
-      {/* Ambient gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-secondary/10 pointer-events-none" />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-32 bg-primary/15 rounded-full blur-[80px] pointer-events-none" />
-
-      {/* Glow dots */}
-      {dots.map((pos, i) => (
-        <div
-          key={i}
-          className={`absolute ${pos} w-1.5 h-1.5 rounded-full bg-gradient-to-r from-primary-dim to-secondary opacity-40 animate-pulse`}
-          style={{ animationDelay: `${i * 200}ms` }}
-        />
-      ))}
-
-      <div className="relative z-10">
-        <h2 className="font-space-grotesk text-3xl font-bold bg-gradient-to-r from-primary-dim to-secondary bg-clip-text text-transparent">
-          JESTEŚ GOTOWY!
-        </h2>
-        <p className="text-on-surface-muted text-base mt-2 mb-6">
-          Wszystkie kroki ukończone. Do zobaczenia na hackatonie!
-        </p>
-        <Link href="/my-project">
-          <GradientButton>ZGŁOŚ PROJEKT</GradientButton>
-        </Link>
-      </div>
-    </div>
-  );
-}
