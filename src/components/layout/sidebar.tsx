@@ -16,7 +16,7 @@ const navItems = [
   { label: "Live", href: "/feed" },
   { label: "Projekty", href: "/" },
   { label: "Zespół", href: "/team" },
-  { label: "Zgłoś projekt", href: "/my-project" },
+  { label: "Mój projekt", href: "/my-project" },
 ];
 
 const guideSubItems = [

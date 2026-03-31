@@ -15,6 +15,7 @@ interface SubmissionFormProps {
 export function SubmissionForm({ project, submissionOpen = true, deadline, canSubmit = true }: SubmissionFormProps) {
   const [isPending, startTransition] = useTransition();
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [saved, setSaved] = useState(false);
   const [timeLeft, setTimeLeft] = useState("");
 
   // Countdown timer
@@ -136,10 +137,10 @@ export function SubmissionForm({ project, submissionOpen = true, deadline, canSu
           <div className="flex items-start justify-between gap-4">
             <div>
               <h1 className="font-space-grotesk text-5xl font-extrabold tracking-tighter text-on-surface">
-                ZGŁOSZENIE PROJEKTU
+                MÓJ PROJEKT
               </h1>
               <p className="mt-2 max-w-2xl text-lg font-light text-on-surface-muted">
-                Pokaż co udało Ci się zbudować podczas hackathonu!
+                Uzupełniaj na bieżąco. Zatwierdź gdy będziesz gotowy.
               </p>
             </div>
             {(deadline || isClosed) && (
@@ -353,12 +354,39 @@ export function SubmissionForm({ project, submissionOpen = true, deadline, canSu
           </div>
         </div>
 
-        {/* Submit section */}
-        <div className="mt-16">
-          {/* Warning */}
-          <div className="mb-6 rounded-lg bg-secondary/5 p-4">
+        {/* Save & Submit section */}
+        <div className="mt-16 space-y-6">
+          {/* Save button */}
+          <button
+            type="button"
+            onClick={() => {
+              startTransition(async () => {
+                try {
+                  await updateProject(project.id, {
+                    name, description, idea_origin: ideaOrigin, journey,
+                    tech_stack: techStack, video_url: videoUrl,
+                    video_duration: videoDuration, thumbnail_url: thumbnailUrl,
+                    pdf_url: pdfUrl,
+                  });
+                  setSaved(true);
+                  setTimeout(() => setSaved(false), 2000);
+                } catch {
+                  setSubmitError("Nie udało się zapisać");
+                }
+              });
+            }}
+            disabled={isPending}
+            className="flex h-14 w-full items-center justify-center gap-3 rounded-lg border border-outline bg-surface-high/60 transition-all hover:bg-surface-high active:scale-[0.99] disabled:opacity-50"
+          >
+            <span className="font-space-grotesk text-sm font-bold uppercase tracking-[0.15em] text-on-surface">
+              {saved ? "ZAPISANO!" : isPending ? "ZAPISYWANIE..." : "ZAPISZ ZMIANY"}
+            </span>
+          </button>
+
+          {/* Submit section */}
+          <div className="rounded-lg bg-secondary/5 p-4">
             <p className="text-xs text-secondary-dim">
-              <strong>Uwaga:</strong> Po zgłoszeniu nie będzie można edytować projektu. Upewnij się, że wszystko jest poprawne.
+              <strong>Uwaga:</strong> Po zatwierdzeniu nie będzie można edytować projektu. Upewnij się, że wszystko jest poprawne.
             </p>
           </div>
 
@@ -377,7 +405,7 @@ export function SubmissionForm({ project, submissionOpen = true, deadline, canSu
                 className="group flex h-20 w-full items-center justify-center gap-4 bg-gradient-to-br from-primary via-primary to-secondary transition-all hover:shadow-[0_0_40px_rgba(164,165,255,0.2)] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <span className="font-space-grotesk text-xl font-extrabold tracking-[0.2em] text-white">
-                  {isClosed ? (isDeadlinePassed ? "TERMIN MINĄŁ" : "ZGŁOSZENIA ZAMKNIĘTE") : isPending ? "WYSYŁANIE..." : "ZGŁOŚ PROJEKT"}
+                  {isClosed ? (isDeadlinePassed ? "TERMIN MINĄŁ" : "ZGŁOSZENIA ZAMKNIĘTE") : isPending ? "WYSYŁANIE..." : "ZATWIERDŹ PROJEKT"}
                 </span>
                 {!isPending && (
                   <svg className="h-6 w-6 text-white transition-transform group-hover:translate-x-2" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
@@ -391,7 +419,7 @@ export function SubmissionForm({ project, submissionOpen = true, deadline, canSu
             </>
           ) : (
             <p className="py-6 text-center font-space-grotesk text-sm text-on-surface-muted">
-              Tylko lider zespołu może zgłosić projekt.
+              Tylko lider zespołu może zatwierdzić projekt.
             </p>
           )}
         </div>
