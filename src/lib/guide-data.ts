@@ -559,9 +559,9 @@ export const guideSteps: GuideStep[] = [
               sub: "claude",
             },
             {
-              text: "Skonfiguruj klucz OpenRouter i uruchom:",
+              text: "Skonfiguruj klucz OpenRouter i uruchom (ANTHROPIC_API_KEY musi być pusty):",
               command:
-                "export ANTHROPIC_BASE_URL=https://openrouter.ai/api/v1\nexport ANTHROPIC_API_KEY=twoj-klucz-openrouter\nclaude",
+                "export ANTHROPIC_BASE_URL=https://openrouter.ai/api\nexport ANTHROPIC_AUTH_TOKEN=twoj-klucz-openrouter\nexport ANTHROPIC_API_KEY=\"\"\nclaude",
               sub: ["openai", "openrouter"],
             },
           ],
@@ -578,9 +578,9 @@ export const guideSteps: GuideStep[] = [
               sub: "claude",
             },
             {
-              text: "Skonfiguruj klucz OpenRouter i uruchom:",
+              text: "Skonfiguruj klucz OpenRouter i uruchom (ANTHROPIC_API_KEY musi być pusty):",
               command:
-                "set ANTHROPIC_BASE_URL=https://openrouter.ai/api/v1\nset ANTHROPIC_API_KEY=twoj-klucz-openrouter\nclaude",
+                "set ANTHROPIC_BASE_URL=https://openrouter.ai/api\nset ANTHROPIC_AUTH_TOKEN=twoj-klucz-openrouter\nset ANTHROPIC_API_KEY=\nclaude",
               sub: ["openai", "openrouter"],
             },
           ],
@@ -597,9 +597,9 @@ export const guideSteps: GuideStep[] = [
               sub: "claude",
             },
             {
-              text: "Skonfiguruj klucz OpenRouter i uruchom:",
+              text: "Skonfiguruj klucz OpenRouter i uruchom (ANTHROPIC_API_KEY musi być pusty):",
               command:
-                "export ANTHROPIC_BASE_URL=https://openrouter.ai/api/v1\nexport ANTHROPIC_API_KEY=twoj-klucz-openrouter\nclaude",
+                "export ANTHROPIC_BASE_URL=https://openrouter.ai/api\nexport ANTHROPIC_AUTH_TOKEN=twoj-klucz-openrouter\nexport ANTHROPIC_API_KEY=\"\"\nclaude",
               sub: ["openai", "openrouter"],
             },
           ],

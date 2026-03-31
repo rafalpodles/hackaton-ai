@@ -23,7 +23,7 @@ export function GarageRulesView({ hackathonDate }: GarageRulesViewProps) {
           Garage Rules
         </h1>
         <p className="text-xl font-medium text-on-surface">
-          Nie buduj ladnego. Buduj uzytecznego.
+          Nie buduj ładnego. Buduj użytecznego.
         </p>
         {hackathonDate && (
           <p className="font-space-grotesk text-sm uppercase tracking-widest text-on-surface-muted">
@@ -36,18 +36,18 @@ export function GarageRulesView({ hackathonDate }: GarageRulesViewProps) {
       <Section title="Czym jest ten hackathon">
         <p className="text-lg leading-relaxed text-on-surface/80">
           ~3h warsztat budowania <Strong>realnych rzeczy z AI</Strong>. Nie
-          event teoretyczny. Nie prezentacja slajdow. Zero teorii o modelach.
+          event teoretyczny. Nie prezentacja slajdów. Zero teorii o modelach.
           Tylko praktyka.
         </p>
         <ul className="mt-4 space-y-2">
           <BulletItem>Solo lub grupy 2&ndash;3 osoby</BulletItem>
           <BulletItem>
             Otwarte dla wszystkich &mdash; nie tylko developerzy. QA, PM,
-            Backoffice &mdash; kazdy mile widziany
+            Backoffice &mdash; każdy mile widziany
           </BulletItem>
           <BulletItem>
-            Cel: pokazac, ze <Strong>kazdy moze zbudowac cos uzytecznego</Strong>{" "}
-            z pomoca AI
+            Cel: pokazać, że <Strong>każdy może zbudować coś użytecznego</Strong>{" "}
+            z pomocą AI
           </BulletItem>
         </ul>
       </Section>
@@ -56,18 +56,18 @@ export function GarageRulesView({ hackathonDate }: GarageRulesViewProps) {
       <Section title="Zasady gry">
         <div className="grid gap-4 sm:grid-cols-2">
           <RuleCard emoji="01" title="Vibecoduj">
-            Buduj aplikacje bez glebokiego pisania kodu. AI pisze &mdash; Ty
+            Buduj aplikację bez głębokiego pisania kodu. AI pisze &mdash; Ty
             sterujesz.
           </RuleCard>
           <RuleCard emoji="02" title="Nowy projekt">
-            Stworz cos nowego. Nie kontynuuj starych projektow.
+            Stwórz coś nowego. Nie kontynuuj starych projektów.
           </RuleCard>
-          <RuleCard emoji="03" title="Liczy sie pomysl + AI">
-            Nie oceniamy jakosci kodu. Liczy sie pomysl i to, jak
-            wykorzystales AI.
+          <RuleCard emoji="03" title="Liczy się pomysł + AI">
+            Nie oceniamy jakości kodu. Liczy się pomysł i to, jak
+            wykorzystałeś AI.
           </RuleCard>
           <RuleCard emoji="04" title="Automatyzuj irytacje">
-            Jesli cos Cie irytuje w codziennej pracy &mdash; zautomatyzuj to.
+            Jeśli coś Cię irytuje w codziennej pracy &mdash; zautomatyzuj to.
             To jest ten moment.
           </RuleCard>
         </div>
@@ -76,20 +76,20 @@ export function GarageRulesView({ hackathonDate }: GarageRulesViewProps) {
       {/* ── Before you come ── */}
       <Section title="Zanim przyjdziesz">
         <p className="mb-6 text-on-surface/60">
-          Hackathon to czas na budowanie, nie na konfiguracje. Przygotuj sie
-          wczesniej.
+          Hackathon to czas na budowanie, nie na konfigurację. Przygotuj się
+          wcześniej.
         </p>
 
         <div className="space-y-3">
           <CheckItem checked>Firmowy laptop (nie prywatny)</CheckItem>
-          <CheckItem checked>Siec firmowa (nie hotspot)</CheckItem>
+          <CheckItem checked>Sieć firmowa (nie hotspot)</CheckItem>
           <CheckItem checked>
-            Zalogowane narzedzie AI &mdash; sprawdz{" "}
+            Zalogowane narzędzie AI &mdash; sprawdź{" "}
             <Strong>przed</Strong> hackatonem
           </CheckItem>
-          <CheckItem checked>Mozliwosc instalowania paczek</CheckItem>
+          <CheckItem checked>Możliwość instalowania paczek</CheckItem>
           <CheckItem checked>
-            Konto GitHub &mdash; zaloz wczesniej jesli nie masz
+            Konto GitHub &mdash; załóż wcześniej jeśli nie masz
           </CheckItem>
         </div>
 
@@ -98,8 +98,8 @@ export function GarageRulesView({ hackathonDate }: GarageRulesViewProps) {
             Tokeny AI
           </p>
           <p className="mt-2 text-on-surface/80">
-            Kazdy uczestnik otrzyma <Strong>API key</Strong> jesli nie ma
-            subskrypcji lub skoncza mu sie limity podczas hackathonu. Limit:{" "}
+            Każdy uczestnik otrzyma <Strong>API key</Strong> jeśli nie ma
+            subskrypcji lub skończą mu się limity podczas hackathonu. Limit:{" "}
             <Strong>$5 na tokeny</Strong> per osoba. Klucz znajdziesz w swoim{" "}
             <a
               href="/profile"
@@ -113,12 +113,12 @@ export function GarageRulesView({ hackathonDate }: GarageRulesViewProps) {
 
         <div className="mt-4 rounded-xl border border-red-500/20 bg-red-500/5 p-5">
           <p className="font-space-grotesk text-sm font-bold uppercase tracking-wider text-red-400">
-            Nie przychodz zeby
+            Nie przychodź żeby
           </p>
           <ul className="mt-2 space-y-1 text-on-surface/70">
-            <li>&bull; Instalowac wszystko od zera</li>
-            <li>&bull; Pracowac na prywatnym komputerze</li>
-            <li>&bull; Laczyc sie przez hotspot</li>
+            <li>&bull; Instalować wszystko od zera</li>
+            <li>&bull; Pracować na prywatnym komputerze</li>
+            <li>&bull; Łączyć się przez hotspot</li>
           </ul>
         </div>
       </Section>
@@ -126,7 +126,7 @@ export function GarageRulesView({ hackathonDate }: GarageRulesViewProps) {
       {/* ── Prizes ── */}
       <Section title="Nagrody">
         <p className="mb-6 text-on-surface/60">
-          3 kategorie, 3 zwyciezcow.
+          3 kategorie, 3 zwycięzców.
         </p>
         <div className="grid gap-4 sm:grid-cols-3">
           <PrizeCard
@@ -136,7 +136,7 @@ export function GarageRulesView({ hackathonDate }: GarageRulesViewProps) {
               </svg>
             }
             title="Droga od koncepcji do realizacji"
-            description="Jak doszles od pomyslu do dzialajacego projektu"
+            description="Jak doszedłeś od pomysłu do działającego projektu"
           />
           <PrizeCard
             icon={
@@ -144,8 +144,8 @@ export function GarageRulesView({ hackathonDate }: GarageRulesViewProps) {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 18v-5.25m0 0a6.01 6.01 0 001.5-.189m-1.5.189a6.01 6.01 0 01-1.5-.189m3.75 7.478a12.06 12.06 0 01-4.5 0m3.75 2.383a14.406 14.406 0 01-3 0M14.25 18v-.192c0-.983.658-1.823 1.508-2.316a7.5 7.5 0 10-7.517 0c.85.493 1.509 1.333 1.509 2.316V18" />
               </svg>
             }
-            title="Kreatywnosc pomyslu"
-            description="Oryginalnosc i nieszablonowe podejscie"
+            title="Kreatywność pomysłu"
+            description="Oryginalność i nieszablonowe podejście"
           />
           <PrizeCard
             icon={
@@ -153,8 +153,8 @@ export function GarageRulesView({ hackathonDate }: GarageRulesViewProps) {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M11.42 15.17l-5.1-3.06a1.5 1.5 0 01-.75-1.3V6.75a1.5 1.5 0 01.75-1.3l5.1-3.06a1.5 1.5 0 011.5 0l5.1 3.06a1.5 1.5 0 01.75 1.3v4.06a1.5 1.5 0 01-.75 1.3l-5.1 3.06a1.5 1.5 0 01-1.5 0z" />
               </svg>
             }
-            title="Przydatnosc / wartosc uzytkowa"
-            description="Cos, co realnie rozwiazuje problem w pracy"
+            title="Przydatność / wartość użytkowa"
+            description="Coś, co realnie rozwiązuje problem w pracy"
           />
         </div>
       </Section>
@@ -170,7 +170,7 @@ export function GarageRulesView({ hackathonDate }: GarageRulesViewProps) {
           />
           <TimelineItem
             time="30 min"
-            title="Zatwierdzanie projektow + zakonczenie"
+            title="Zatwierdzanie projektów + zakończenie"
             last
           />
         </div>

@@ -30,6 +30,7 @@ export default function ProfileView({
   const [showLeaveConfirm, setShowLeaveConfirm] = useState(false);
   const [avatarUploading, setAvatarUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const initial =
@@ -427,10 +428,16 @@ export default function ProfileView({
                 type="button"
                 onClick={() => {
                   navigator.clipboard.writeText(user.openrouter_api_key!);
+                  setCopied(true);
+                  setTimeout(() => setCopied(false), 2000);
                 }}
-                className="shrink-0 rounded-lg bg-surface-high px-3 py-2 font-space-grotesk text-xs font-semibold uppercase tracking-wider text-on-surface-muted transition-colors hover:bg-surface-bright hover:text-on-surface"
+                className={`shrink-0 rounded-lg px-3 py-2 font-space-grotesk text-xs font-semibold uppercase tracking-wider transition-colors ${
+                  copied
+                    ? "bg-green-500/15 text-green-400"
+                    : "bg-surface-high text-on-surface-muted hover:bg-surface-bright hover:text-on-surface"
+                }`}
               >
-                Kopiuj
+                {copied ? "Skopiowano!" : "Kopiuj"}
               </button>
             </div>
             {keyLimit != null && (
@@ -461,8 +468,52 @@ export default function ProfileView({
               </div>
             )}
             <p className="mt-3 text-xs text-on-surface-muted">
-              Użyj tego klucza do połączenia z OpenRouter API. Nie udostępniaj go nikomu.
+              Nie udostępniaj tego klucza nikomu. Poniżej znajdziesz jak go skonfigurować.
             </p>
+
+            {/* Setup instructions */}
+            <div className="mt-4 space-y-3">
+              <p className="font-space-grotesk text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-muted">
+                Jak użyć klucza
+              </p>
+
+              <div className="rounded-lg bg-black p-4">
+                <p className="mb-2 font-space-grotesk text-xs font-bold text-on-surface">
+                  Claude Code
+                </p>
+                <p className="mb-2 text-xs text-on-surface-muted">
+                  Wyloguj się z Claude Code (<code className="text-primary-dim">/logout</code>) jeśli byłeś zalogowany, a następnie ustaw zmienne:
+                </p>
+                <code className="block whitespace-pre-wrap rounded bg-surface-high/50 px-3 py-2 font-mono text-[11px] leading-relaxed text-primary-dim">
+{`export ANTHROPIC_BASE_URL=https://openrouter.ai/api
+export ANTHROPIC_AUTH_TOKEN=${user.openrouter_api_key}
+export ANTHROPIC_API_KEY=""`}
+                </code>
+                <p className="mt-2 text-xs text-on-surface-muted">
+                  Następnie uruchom <code className="text-primary-dim">claude</code> i sprawdź połączenie przez <code className="text-primary-dim">/status</code>.
+                </p>
+              </div>
+
+              <div className="rounded-lg bg-black p-4">
+                <p className="mb-2 font-space-grotesk text-xs font-bold text-on-surface">
+                  Codex (OpenAI)
+                </p>
+                <p className="mb-2 text-xs text-on-surface-muted">
+                  Ustaw zmienne środowiskowe w terminalu:
+                </p>
+                <code className="block whitespace-pre-wrap rounded bg-surface-high/50 px-3 py-2 font-mono text-[11px] leading-relaxed text-primary-dim">
+{`export OPENAI_BASE_URL=https://openrouter.ai/api/v1
+export OPENAI_API_KEY=${user.openrouter_api_key}`}
+                </code>
+                <p className="mt-2 text-xs text-on-surface-muted">
+                  Następnie uruchom <code className="text-primary-dim">codex</code> w terminalu.
+                </p>
+              </div>
+
+              <p className="text-[10px] text-on-surface-muted/60">
+                Dodaj te zmienne do <code className="text-on-surface-muted">~/.zshrc</code> lub <code className="text-on-surface-muted">~/.bashrc</code> żeby nie wpisywać ich za każdym razem.
+              </p>
+            </div>
           </>
         ) : user.api_key_requested ? (
           <div className="flex items-center gap-3 rounded-xl border border-yellow-500/20 bg-yellow-500/5 p-4">
@@ -483,7 +534,7 @@ export default function ProfileView({
         ) : (
           <div className="space-y-4">
             <p className="text-sm text-on-surface-muted">
-              Nie masz subskrypcji AI lub chcesz zabezpieczyć się na wypadek wyczerpania limitów?
+              Nie masz subskrypcji AI lub wyczerpałeś tokeny podczas hackathonu?
               Poproś o klucz API — dostaniesz $5 na tokeny OpenRouter.
             </p>
             <button
