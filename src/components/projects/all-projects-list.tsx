@@ -105,32 +105,9 @@ export function AllProjectsList({ projects }: AllProjectsListProps) {
 
                 {/* Members */}
                 {project.members.length > 0 && (
-                  <div className="mt-3 flex items-center gap-2">
-                    <div className="flex -space-x-1.5">
-                      {project.members.slice(0, 5).map((m) =>
-                        m.avatar_url ? (
-                          <Image
-                            key={m.id}
-                            src={m.avatar_url}
-                            alt={m.display_name}
-                            width={24}
-                            height={24}
-                            className="h-6 w-6 rounded-full border-2 border-surface-high object-cover"
-                          />
-                        ) : (
-                          <div
-                            key={m.id}
-                            className="flex h-6 w-6 items-center justify-center rounded-full border-2 border-surface-high bg-primary/20 text-[10px] font-bold text-primary-dim"
-                          >
-                            {m.display_name?.charAt(0).toUpperCase() ?? "?"}
-                          </div>
-                        )
-                      )}
-                    </div>
-                    <span className="text-xs text-on-surface-muted">
-                      {project.members.map((m) => m.display_name).join(", ")}
-                    </span>
-                  </div>
+                  <p className="mt-2 text-xs text-on-surface-muted">
+                    {project.members.map((m) => m.display_name).join(", ")}
+                  </p>
                 )}
               </div>
             </div>
