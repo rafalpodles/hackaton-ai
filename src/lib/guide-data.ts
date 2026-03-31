@@ -700,9 +700,9 @@ export const guideSteps: GuideStep[] = [
               sub: "openai",
             },
             {
-              text: "Skonfiguruj klucz OpenRouter i uruchom:",
+              text: "Ustaw klucz OpenRouter i skonfiguruj ~/.codex/config.toml (model_provider = \"openrouter\", base_url = \"https://openrouter.ai/api/v1\", env_key = \"OPENROUTER_API_KEY\"):",
               command:
-                "export OPENAI_BASE_URL=https://openrouter.ai/api/v1\nexport OPENAI_API_KEY=twoj-klucz-openrouter\ncodex",
+                "export OPENROUTER_API_KEY=twoj-klucz-openrouter\nmkdir -p ~/.codex && cat > ~/.codex/config.toml << 'EOF'\nmodel_provider = \"openrouter\"\nmodel = \"anthropic/claude-sonnet-4\"\n\n[model_providers.openrouter]\nname = \"openrouter\"\nbase_url = \"https://openrouter.ai/api/v1\"\nenv_key = \"OPENROUTER_API_KEY\"\nEOF\ncodex",
               sub: ["claude", "openrouter"],
             },
           ],
@@ -719,9 +719,9 @@ export const guideSteps: GuideStep[] = [
               sub: "openai",
             },
             {
-              text: "Skonfiguruj klucz OpenRouter i uruchom:",
+              text: "Ustaw klucz OpenRouter i utwórz plik %USERPROFILE%\\.codex\\config.toml z konfiguracją (model_provider = \"openrouter\"):",
               command:
-                "set OPENAI_BASE_URL=https://openrouter.ai/api/v1\nset OPENAI_API_KEY=twoj-klucz-openrouter\ncodex",
+                "set OPENROUTER_API_KEY=twoj-klucz-openrouter\ncodex",
               sub: ["claude", "openrouter"],
             },
           ],
@@ -738,9 +738,9 @@ export const guideSteps: GuideStep[] = [
               sub: "openai",
             },
             {
-              text: "Skonfiguruj klucz OpenRouter i uruchom:",
+              text: "Ustaw klucz OpenRouter i skonfiguruj ~/.codex/config.toml:",
               command:
-                "export OPENAI_BASE_URL=https://openrouter.ai/api/v1\nexport OPENAI_API_KEY=twoj-klucz-openrouter\ncodex",
+                "export OPENROUTER_API_KEY=twoj-klucz-openrouter\nmkdir -p ~/.codex && cat > ~/.codex/config.toml << 'EOF'\nmodel_provider = \"openrouter\"\nmodel = \"anthropic/claude-sonnet-4\"\n\n[model_providers.openrouter]\nname = \"openrouter\"\nbase_url = \"https://openrouter.ai/api/v1\"\nenv_key = \"OPENROUTER_API_KEY\"\nEOF\ncodex",
               sub: ["claude", "openrouter"],
             },
           ],

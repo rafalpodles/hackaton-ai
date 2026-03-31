@@ -499,11 +499,22 @@ export ANTHROPIC_API_KEY=""`}
                   Codex (OpenAI)
                 </p>
                 <p className="mb-2 text-xs text-on-surface-muted">
-                  Ustaw zmienne środowiskowe w terminalu:
+                  1. Ustaw zmienną środowiskową:
                 </p>
                 <code className="block whitespace-pre-wrap rounded bg-surface-high/50 px-3 py-2 font-mono text-[11px] leading-relaxed text-primary-dim">
-{`export OPENAI_BASE_URL=https://openrouter.ai/api/v1
-export OPENAI_API_KEY=${user.openrouter_api_key}`}
+{`export OPENROUTER_API_KEY=${user.openrouter_api_key}`}
+                </code>
+                <p className="mt-3 mb-2 text-xs text-on-surface-muted">
+                  2. Utwórz plik <code className="text-primary-dim">~/.codex/config.toml</code>:
+                </p>
+                <code className="block whitespace-pre-wrap rounded bg-surface-high/50 px-3 py-2 font-mono text-[11px] leading-relaxed text-primary-dim">
+{`model_provider = "openrouter"
+model = "anthropic/claude-sonnet-4"
+
+[model_providers.openrouter]
+name = "openrouter"
+base_url = "https://openrouter.ai/api/v1"
+env_key = "OPENROUTER_API_KEY"`}
                 </code>
                 <p className="mt-2 text-xs text-on-surface-muted">
                   Następnie uruchom <code className="text-primary-dim">codex</code> w terminalu.
