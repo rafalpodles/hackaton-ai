@@ -1,6 +1,6 @@
 export type OS = "mac" | "windows" | "linux";
 export type Path = "beginner" | "advanced";
-export type Category = "fundamenty" | "ai-tools" | "bonus" | "weryfikacja";
+export type Category = "fundamenty" | "ai-tools" | "weryfikacja";
 export type Subscription = "claude" | "openai" | "openrouter";
 
 export interface CodeStep {
@@ -44,14 +44,12 @@ export interface GuideStep {
 export const CATEGORY_LABELS: Record<Category, string> = {
   fundamenty: "FUNDAMENTY",
   "ai-tools": "AI TOOLS",
-  bonus: "BONUS",
   weryfikacja: "WERYFIKACJA",
 };
 
 export const CATEGORY_DESCRIPTIONS: Partial<Record<Category, string>> = {
   fundamenty: "Zainstaluj podstawowe narzędzia — potem przejdź do AI Tools.",
   "ai-tools": "Wybierz i skonfiguruj narzędzia AI do kodowania.",
-  bonus: "Inspiracje i porady — przejrzyj przed hackathonowym dniem.",
   weryfikacja: "Ostatni krok — upewnij się, że wszystko działa.",
 };
 
@@ -845,74 +843,7 @@ export const guideSteps: GuideStep[] = [
     },
   },
 
-  // ─── BONUS ──────────────────────────────────────────────────────────
-  {
-    id: "project-ideas",
-    title: "Pomysły na projekty",
-    category: "bonus",
-    paths: ["beginner", "advanced"],
-    required: false,
-    estimatedMinutes: 5,
-    instructions: {
-      description:
-        "Nie wiesz co zbudować? Oto kilka pomysłów, które mogłyby realnie przydać się w biurze. To tylko inspiracje — możesz zbudować cokolwiek!",
-      platforms: {
-        mac: { steps: [] },
-      },
-      tips: [
-        "Wybierz coś, co Cię ekscytuje — z AI możesz zbudować MVP w kilka godzin!",
-        "Świetnie sprawdzają się projekty rozwiązujące prawdziwy problem, który znasz z codziennej pracy.",
-      ],
-    },
-  },
-  {
-    id: "useful-prompts",
-    title: "Przydatne prompty",
-    category: "bonus",
-    paths: ["beginner", "advanced"],
-    required: false,
-    estimatedMinutes: 5,
-    instructions: {
-      description:
-        "5 uniwersalnych promptów, które przeprowadzą Cię przez cały hackathon — od pomysłu do działającego kodu. Kopiuj i wklejaj do Claude Code / Cursor / ChatGPT.",
-      platforms: {
-        mac: {
-          steps: [
-            {
-              text: "1. Discovery — zrozum co budujesz, zanim zaczniesz kodować:",
-              command:
-                "Chcę zbudować aplikację: [krótki opis]\n\nZadaj mi pytania, które pomogą doprecyzować:\n- cel aplikacji\n- użytkowników\n- główne funkcjonalności\n- ograniczenia techniczne\n\nNie proponuj jeszcze rozwiązania — tylko pytania i doprecyzowanie.",
-            },
-            {
-              text: "2. Scope + MVP — żeby nie zrobić overengineeringu:",
-              command:
-                "Na podstawie tego opisu:\n[opis projektu]\n\nZdefiniuj:\n- MVP (co MUSI być)\n- rzeczy \"nice to have\"\n- czego NIE robić na początku\n\nUzasadnij krótko decyzje.",
-            },
-            {
-              text: "3. Plan techniczny — zapisz go do pliku, żeby AI miało kontekst:",
-              command:
-                "Na podstawie projektu:\n[opis]\n\nZaproponuj:\n- architekturę (frontend, backend, baza danych)\n- stack technologiczny (z uzasadnieniem)\n- strukturę projektu\n- kolejność implementacji krok po kroku\n\nTraktuj mnie jak juniora — wyjaśniaj decyzje.\n\nZapisz plan do pliku PLAN.md w katalogu projektu.",
-            },
-            {
-              text: "4. Implementacja krok po kroku — najważniejsze: NIE wszystko naraz. Po każdym ukończonym etapie zacznij nową rozmowę (nowy kontekst) — AI zużywa mniej tokenów, odpowiada szybciej i nie gubi się w starych błędach:",
-              command:
-                "Chcę zbudować:\n[feature]\n\nPodziel to na małe kroki i prowadź mnie:\n- jeden krok = jedno zadanie\n- po każdym kroku poczekaj na moją odpowiedź\n\nDodawaj kod + krótkie wyjaśnienie.",
-            },
-            {
-              text: "5. Debug / code review — znajdź błędy i naucz mnie:",
-              command:
-                "Mam taki kod:\n[kod]\n\nZrób:\n- code review\n- znajdź błędy\n- zaproponuj poprawki\n- wyjaśnij DLACZEGO coś jest problemem\n\nNie tylko popraw — naucz mnie.",
-            },
-          ],
-        },
-      },
-      tips: [
-        "Traktuj AI jak seniora, który prowadzi Cię przez proces: rozmowa (1-2) → plan (3) → implementacja (4-5).",
-        "Zawsze dawaj kontekst i dziel na kroki. \"Zrób mi aplikację X\" to najgorszy prompt.",
-        "Używaj Claude Code w katalogu projektu — wtedy AI widzi kontekst Twojego kodu.",
-      ],
-    },
-  },
+  // ─── WERYFIKACJA ─────────────────────────────────────────────────────
   {
     id: "test-drive",
     title: "Test drive — sprawdź że wszystko działa!",
@@ -969,6 +900,54 @@ export const guideSteps: GuideStep[] = [
         "Po udanym teście możesz usunąć folder hackathon-test.",
       ],
     },
+  },
+];
+
+// ─── Useful Prompts ───────────────────────────────────────────────────
+
+export interface UsefulPrompt {
+  number: number;
+  title: string;
+  description: string;
+  prompt: string;
+}
+
+export const usefulPrompts: UsefulPrompt[] = [
+  {
+    number: 1,
+    title: "Discovery",
+    description: "Zrozum co budujesz, zanim zaczniesz kodować",
+    prompt:
+      "Chcę zbudować aplikację: [krótki opis]\n\nZadaj mi pytania, które pomogą doprecyzować:\n- cel aplikacji\n- użytkowników\n- główne funkcjonalności\n- ograniczenia techniczne\n\nNie proponuj jeszcze rozwiązania — tylko pytania i doprecyzowanie.",
+  },
+  {
+    number: 2,
+    title: "Scope + MVP",
+    description: "Żeby nie zrobić overengineeringu",
+    prompt:
+      'Na podstawie tego opisu:\n[opis projektu]\n\nZdefiniuj:\n- MVP (co MUSI być)\n- rzeczy "nice to have"\n- czego NIE robić na początku\n\nUzasadnij krótko decyzje.',
+  },
+  {
+    number: 3,
+    title: "Plan techniczny",
+    description: "Zapisz go do pliku, żeby AI miało kontekst",
+    prompt:
+      "Na podstawie projektu:\n[opis]\n\nZaproponuj:\n- architekturę (frontend, backend, baza danych)\n- stack technologiczny (z uzasadnieniem)\n- strukturę projektu\n- kolejność implementacji krok po kroku\n\nTraktuj mnie jak juniora — wyjaśniaj decyzje.\n\nZapisz plan do pliku PLAN.md w katalogu projektu.",
+  },
+  {
+    number: 4,
+    title: "Implementacja",
+    description:
+      "NIE wszystko naraz. Po każdym etapie zacznij nową rozmowę — mniej tokenów, szybsze odpowiedzi",
+    prompt:
+      "Chcę zbudować:\n[feature]\n\nPodziel to na małe kroki i prowadź mnie:\n- jeden krok = jedno zadanie\n- po każdym kroku poczekaj na moją odpowiedź\n\nDodawaj kod + krótkie wyjaśnienie.",
+  },
+  {
+    number: 5,
+    title: "Debug / Code Review",
+    description: "Znajdź błędy i naucz mnie",
+    prompt:
+      "Mam taki kod:\n[kod]\n\nZrób:\n- code review\n- znajdź błędy\n- zaproponuj poprawki\n- wyjaśnij DLACZEGO coś jest problemem\n\nNie tylko popraw — naucz mnie.",
   },
 ];
 

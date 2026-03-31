@@ -5,6 +5,7 @@ import Link from "next/link";
 import {
   guideSteps,
   projectIdeas,
+  usefulPrompts,
   CATEGORY_LABELS,
   CATEGORY_DESCRIPTIONS,
   SUBSCRIPTION_LABELS,
@@ -138,7 +139,7 @@ export function GuideView() {
   const totalEstimatedMinutes = filteredSteps.reduce((sum, s) => sum + (s.estimatedMinutes ?? 0), 0);
 
   // Group steps by category
-  const categories: Category[] = ["fundamenty", "ai-tools", "bonus", "weryfikacja"];
+  const categories: Category[] = ["fundamenty", "ai-tools", "weryfikacja"];
   const stepsByCategory = categories
     .map((cat) => ({
       category: cat,
@@ -216,6 +217,14 @@ export function GuideView() {
 
           {/* Completion Banner */}
           {allDone && <CompletionBanner />}
+
+          {/* Reference sections — not part of the checklist */}
+          <SectionDivider label="MATERIAŁY" description="Inspiracje i porady na hackathonowy dzień." />
+
+          <div className="flex flex-col gap-6">
+            <ProjectIdeasSection />
+            <PromptsSection />
+          </div>
 
           {/* Help footer */}
           <div className="text-center text-xs text-on-surface-muted/60 mt-4 flex flex-col gap-1">
@@ -710,9 +719,6 @@ function StepCard({
               activeSubscription={activeSubscription}
             />
 
-            {/* Project ideas grid — special render for this step */}
-            {step.id === "project-ideas" && <ProjectIdeasGrid />}
-
             {/* Tips */}
             {step.instructions.tips && step.instructions.tips.length > 0 && (
               <div className="mt-4 flex flex-col gap-2">
@@ -963,35 +969,121 @@ function Callout({ type, text }: { type: "info" | "warning"; text: string }) {
   );
 }
 
-// ─── Project Ideas Grid ──────────────────────────────────────────────
+// ─── Reference Sections (not part of checklist) ─────────────────────
 
-function ProjectIdeasGrid() {
+function CollapsibleSection({
+  title,
+  subtitle,
+  children,
+  defaultOpen = false,
+}: {
+  title: string;
+  subtitle: string;
+  children: React.ReactNode;
+  defaultOpen?: boolean;
+}) {
+  const [open, setOpen] = useState(defaultOpen);
+
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 mt-1">
-      {projectIdeas.map((idea) => (
-        <div
-          key={idea.name}
-          className="rounded-lg border border-outline/60 bg-surface-high/30 p-3.5 transition-colors hover:border-primary/25 hover:bg-surface-high/50"
-        >
-          <h4 className="font-space-grotesk text-sm font-bold text-on-surface mb-1">
-            {idea.name}
-          </h4>
-          <p className="text-xs text-on-surface-muted leading-relaxed mb-2.5">
-            {idea.description}
-          </p>
-          <div className="flex flex-wrap gap-1.5">
-            {idea.tags.map((tag) => (
-              <span
-                key={tag}
-                className="text-[10px] font-space-grotesk font-medium px-2 py-0.5 rounded-full bg-primary/8 text-primary-dim border border-primary/15"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
+    <div className="rounded-xl border border-outline bg-surface-low/60 overflow-hidden">
+      <button
+        onClick={() => setOpen(!open)}
+        className="w-full flex items-center gap-3 px-5 py-4 text-left cursor-pointer hover:bg-surface-high/30 transition-colors"
+      >
+        <div className="flex-1 min-w-0">
+          <h3 className="font-space-grotesk text-sm font-bold text-on-surface">
+            {title}
+          </h3>
+          <p className="text-xs text-on-surface-muted mt-0.5">{subtitle}</p>
         </div>
-      ))}
+        <svg
+          className={`w-5 h-5 text-on-surface-muted transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={2}
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+        </svg>
+      </button>
+
+      {open && <div className="px-5 pb-5 pt-1">{children}</div>}
     </div>
+  );
+}
+
+function ProjectIdeasSection() {
+  return (
+    <CollapsibleSection
+      title="Pomysły na projekty"
+      subtitle="Nie wiesz co zbudować? Oto kilka inspiracji z biura."
+    >
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+        {projectIdeas.map((idea) => (
+          <div
+            key={idea.name}
+            className="rounded-lg border border-outline/60 bg-surface-high/30 p-3.5 transition-colors hover:border-primary/25 hover:bg-surface-high/50"
+          >
+            <h4 className="font-space-grotesk text-sm font-bold text-on-surface mb-1">
+              {idea.name}
+            </h4>
+            <p className="text-xs text-on-surface-muted leading-relaxed mb-2.5">
+              {idea.description}
+            </p>
+            <div className="flex flex-wrap gap-1.5">
+              {idea.tags.map((tag) => (
+                <span
+                  key={tag}
+                  className="text-[10px] font-space-grotesk font-medium px-2 py-0.5 rounded-full bg-primary/8 text-primary-dim border border-primary/15"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+      <p className="text-xs text-on-surface-muted mt-3">
+        To tylko inspiracje — możesz zbudować cokolwiek! Liczy się realizacja i wykorzystanie AI.
+      </p>
+    </CollapsibleSection>
+  );
+}
+
+function PromptsSection() {
+  return (
+    <CollapsibleSection
+      title="Przydatne prompty"
+      subtitle="5 promptów, które przeprowadzą Cię od pomysłu do kodu."
+    >
+      <p className="text-xs text-on-surface-muted mb-4">
+        Traktuj AI jak seniora, który prowadzi Cię przez proces: rozmowa (1-2) → plan (3) → implementacja (4-5).
+      </p>
+      <div className="flex flex-col gap-3">
+        {usefulPrompts.map((p) => (
+          <div key={p.number} className="rounded-lg border border-outline/60 bg-surface-high/30 overflow-hidden">
+            <div className="px-4 py-3">
+              <div className="flex items-center gap-2 mb-1">
+                <span className="flex-shrink-0 w-6 h-6 rounded-md bg-primary/15 text-primary-dim flex items-center justify-center font-space-grotesk text-xs font-bold">
+                  {p.number}
+                </span>
+                <h4 className="font-space-grotesk text-sm font-bold text-on-surface">
+                  {p.title}
+                </h4>
+              </div>
+              <p className="text-xs text-on-surface-muted leading-relaxed mb-2 pl-8">
+                {p.description}
+              </p>
+            </div>
+            <CodeBlock code={p.prompt} />
+          </div>
+        ))}
+      </div>
+      <Callout
+        type="info"
+        text='Zawsze dawaj kontekst i dziel na kroki. "Zrób mi aplikację X" to najgorszy prompt.'
+      />
+    </CollapsibleSection>
   );
 }
 
