@@ -53,18 +53,15 @@ export async function updateSession(request: NextRequest) {
     }
 
     if (!mustChangePassword && request.nextUrl.pathname === "/change-password") {
-      return NextResponse.redirect(getRedirectUrl(request, "/"));
+      return NextResponse.redirect(getRedirectUrl(request, "/rules"));
     }
 
     if (!isPublicPath) {
-      const skipOnboardingCheck = [
-        "/onboarding", "/admin",
-        "/guide", "/prompts", "/ideas", "/feed", "/profile",
-      ].some((p) =>
-        request.nextUrl.pathname === "/" || request.nextUrl.pathname.startsWith(p)
+      const needsOnboardingCheck = ["/team", "/my-project"].some((p) =>
+        request.nextUrl.pathname.startsWith(p)
       );
 
-      if (!skipOnboardingCheck) {
+      if (needsOnboardingCheck) {
         const { data: profile } = await supabase
           .from("profiles")
           .select("team_id, is_solo, role")
@@ -78,7 +75,7 @@ export async function updateSession(request: NextRequest) {
     }
 
     if (request.nextUrl.pathname === "/login") {
-      return NextResponse.redirect(getRedirectUrl(request, "/"));
+      return NextResponse.redirect(getRedirectUrl(request, "/rules"));
     }
   }
 
