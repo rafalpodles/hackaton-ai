@@ -95,14 +95,28 @@ export default async function TeamPage() {
   if (isLeader) {
     const { data: requests } = await supabase
       .from("team_requests")
-      .select("id, user_id, team_id, created_at, user:profiles!user_id(id, display_name, email)")
+      .select("id, user_id, team_id, created_at")
       .eq("team_id", user.team_id)
       .order("created_at", { ascending: true });
 
-    pendingRequests = (requests ?? []).map((r) => ({
-      ...r,
-      user: r.user as unknown as { id: string; display_name: string; email: string },
-    })) as TeamRequestWithUser[];
+    if (requests && requests.length > 0) {
+      const userIds = requests.map((r) => r.user_id);
+      const { data: profiles } = await supabase
+        .from("profiles")
+        .select("id, display_name, email")
+        .in("id", userIds);
+
+      const profileMap = new Map(
+        (profiles ?? []).map((p) => [p.id, p])
+      );
+
+      pendingRequests = requests
+        .filter((r) => profileMap.has(r.user_id))
+        .map((r) => ({
+          ...r,
+          user: profileMap.get(r.user_id)!,
+        })) as TeamRequestWithUser[];
+    }
   }
 
   return (
