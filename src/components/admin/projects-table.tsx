@@ -1,12 +1,27 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState, useMemo, useTransition } from "react";
 import type { Project } from "@/lib/types";
 import { deleteProject } from "@/lib/actions/admin";
 import ConfirmDialog from "@/components/ui/confirm-dialog";
 
+type SortKey = "name" | "is_submitted" | "created_at";
+type SortDir = "asc" | "desc";
+
 interface ProjectsTableProps {
   projects: Project[];
+}
+
+function SortIcon({ active, dir }: { active: boolean; dir: SortDir }) {
+  return (
+    <svg className={`ml-1 inline h-3 w-3 ${active ? "text-primary" : "text-on-surface-muted/30"}`} fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+      {dir === "asc" ? (
+        <path strokeLinecap="round" strokeLinejoin="round" d="M8 7l4-4 4 4M12 3v18" />
+      ) : (
+        <path strokeLinecap="round" strokeLinejoin="round" d="M16 17l-4 4-4-4M12 21V3" />
+      )}
+    </svg>
+  );
 }
 
 export default function ProjectsTable({ projects }: ProjectsTableProps) {
@@ -16,17 +31,44 @@ export default function ProjectsTable({ projects }: ProjectsTableProps) {
   } | null>(null);
   const [isPending, startTransition] = useTransition();
   const [search, setSearch] = useState("");
+  const [sortKey, setSortKey] = useState<SortKey>("name");
+  const [sortDir, setSortDir] = useState<SortDir>("asc");
 
-  const filteredProjects = search.trim()
-    ? projects.filter((p) => {
-        const q = search.toLowerCase();
-        return (
-          p.name?.toLowerCase().includes(q) ||
-          p.description?.toLowerCase().includes(q) ||
-          (p.tech_stack ?? []).some((t) => t.toLowerCase().includes(q))
-        );
-      })
-    : projects;
+  const toggleSort = (key: SortKey) => {
+    if (sortKey === key) {
+      setSortDir((d) => (d === "asc" ? "desc" : "asc"));
+    } else {
+      setSortKey(key);
+      setSortDir("asc");
+    }
+  };
+
+  const filteredProjects = useMemo(() => {
+    let list = search.trim()
+      ? projects.filter((p) => {
+          const q = search.toLowerCase();
+          return (
+            p.name?.toLowerCase().includes(q) ||
+            p.description?.toLowerCase().includes(q) ||
+            (p.tech_stack ?? []).some((t) => t.toLowerCase().includes(q))
+          );
+        })
+      : [...projects];
+
+    list.sort((a, b) => {
+      let cmp = 0;
+      if (sortKey === "name") {
+        cmp = (a.name ?? "").localeCompare(b.name ?? "", "pl");
+      } else if (sortKey === "is_submitted") {
+        cmp = (a.is_submitted ? 1 : 0) - (b.is_submitted ? 1 : 0);
+      } else if (sortKey === "created_at") {
+        cmp = (a.created_at ?? "").localeCompare(b.created_at ?? "");
+      }
+      return sortDir === "asc" ? cmp : -cmp;
+    });
+
+    return list;
+  }, [projects, search, sortKey, sortDir]);
 
   const handleDelete = () => {
     if (!deleteTarget) return;
@@ -76,14 +118,32 @@ export default function ProjectsTable({ projects }: ProjectsTableProps) {
         <table className="w-full">
           <thead>
             <tr className="border-b border-outline">
-              <th className="px-5 py-3 text-left font-space-grotesk text-xs uppercase tracking-wider text-on-surface-muted">
-                Nazwa projektu
+              <th className="w-10 px-3 py-3 text-center font-space-grotesk text-xs uppercase tracking-wider text-on-surface-muted">
+                #
               </th>
-              <th className="px-5 py-3 text-left font-space-grotesk text-xs uppercase tracking-wider text-on-surface-muted">
+              <th
+                className="cursor-pointer select-none px-5 py-3 text-left font-space-grotesk text-xs uppercase tracking-wider text-on-surface-muted hover:text-on-surface"
+                onClick={() => toggleSort("name")}
+              >
+                Nazwa projektu
+                <SortIcon active={sortKey === "name"} dir={sortKey === "name" ? sortDir : "asc"} />
+              </th>
+              <th
+                className="cursor-pointer select-none px-5 py-3 text-left font-space-grotesk text-xs uppercase tracking-wider text-on-surface-muted hover:text-on-surface"
+                onClick={() => toggleSort("is_submitted")}
+              >
                 Status
+                <SortIcon active={sortKey === "is_submitted"} dir={sortKey === "is_submitted" ? sortDir : "asc"} />
               </th>
               <th className="px-5 py-3 text-left font-space-grotesk text-xs uppercase tracking-wider text-on-surface-muted">
                 Zespół
+              </th>
+              <th
+                className="cursor-pointer select-none px-5 py-3 text-left font-space-grotesk text-xs uppercase tracking-wider text-on-surface-muted hover:text-on-surface"
+                onClick={() => toggleSort("created_at")}
+              >
+                Utworzony
+                <SortIcon active={sortKey === "created_at"} dir={sortKey === "created_at" ? sortDir : "asc"} />
               </th>
               <th className="px-5 py-3 text-right font-space-grotesk text-xs uppercase tracking-wider text-on-surface-muted">
                 Akcje
@@ -91,11 +151,14 @@ export default function ProjectsTable({ projects }: ProjectsTableProps) {
             </tr>
           </thead>
           <tbody>
-            {filteredProjects.map((project) => (
+            {filteredProjects.map((project, idx) => (
               <tr
                 key={project.id}
                 className="border-b border-outline/50 last:border-b-0"
               >
+                <td className="w-10 px-3 py-4 text-center font-mono text-xs text-on-surface-muted">
+                  {idx + 1}
+                </td>
                 <td className="px-5 py-4 font-space-grotesk text-sm font-semibold text-on-surface">
                   {project.name}
                 </td>
@@ -113,6 +176,16 @@ export default function ProjectsTable({ projects }: ProjectsTableProps) {
                 <td className="px-5 py-4 text-sm text-on-surface-muted">
                   —
                 </td>
+                <td className="px-5 py-4 text-sm text-on-surface-muted">
+                  {project.created_at
+                    ? new Date(project.created_at).toLocaleDateString("pl-PL", {
+                        day: "numeric",
+                        month: "short",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })
+                    : "—"}
+                </td>
                 <td className="px-5 py-4 text-right">
                   <button
                     disabled={isPending}
@@ -129,7 +202,7 @@ export default function ProjectsTable({ projects }: ProjectsTableProps) {
             {filteredProjects.length === 0 && (
               <tr>
                 <td
-                  colSpan={4}
+                  colSpan={6}
                   className="px-5 py-8 text-center text-sm text-on-surface-muted"
                 >
                   Brak projektów

@@ -1,10 +1,13 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState, useMemo, useTransition } from "react";
 import Image from "next/image";
 import type { Profile } from "@/lib/types";
 import { generateOpenRouterKey, deleteOpenRouterKey, toggleUserRole } from "@/lib/actions/admin";
 import ConfirmDialog from "@/components/ui/confirm-dialog";
+
+type UserSortKey = "display_name" | "email" | "role" | "last_sign_in_at" | "confirmed_at";
+type SortDir = "asc" | "desc";
 
 interface UsersTableProps {
   currentUserId: string;
@@ -18,26 +21,73 @@ interface UsersTableProps {
   })[];
 }
 
+function SortIcon({ active, dir }: { active: boolean; dir: SortDir }) {
+  return (
+    <svg className={`ml-1 inline h-3 w-3 ${active ? "text-primary" : "text-on-surface-muted/30"}`} fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+      {dir === "asc" ? (
+        <path strokeLinecap="round" strokeLinejoin="round" d="M8 7l4-4 4 4M12 3v18" />
+      ) : (
+        <path strokeLinecap="round" strokeLinejoin="round" d="M16 17l-4 4-4-4M12 21V3" />
+      )}
+    </svg>
+  );
+}
+
 export default function UsersTable({ currentUserId, users }: UsersTableProps) {
   const [isPending, startTransition] = useTransition();
   const [deleteTarget, setDeleteTarget] = useState<{ id: string; name: string } | null>(null);
   const [limits, setLimits] = useState<Record<string, number>>({});
   const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState("");
+  const [sortKey, setSortKey] = useState<UserSortKey>("display_name");
+  const [sortDir, setSortDir] = useState<SortDir>("asc");
+
+  const toggleSort = (key: UserSortKey) => {
+    if (sortKey === key) {
+      setSortDir((d) => (d === "asc" ? "desc" : "asc"));
+    } else {
+      setSortKey(key);
+      setSortDir("asc");
+    }
+  };
 
   const getLimit = (userId: string) => limits[userId] ?? 5;
 
-  const filteredUsers = search.trim()
-    ? users.filter((u) => {
-        const q = search.toLowerCase();
-        return (
-          u.display_name?.toLowerCase().includes(q) ||
-          u.email?.toLowerCase().includes(q) ||
-          u.team_name?.toLowerCase().includes(q) ||
-          u.project_name?.toLowerCase().includes(q)
-        );
-      })
-    : users;
+  const filteredUsers = useMemo(() => {
+    let list = search.trim()
+      ? users.filter((u) => {
+          const q = search.toLowerCase();
+          return (
+            u.display_name?.toLowerCase().includes(q) ||
+            u.email?.toLowerCase().includes(q) ||
+            u.team_name?.toLowerCase().includes(q) ||
+            u.project_name?.toLowerCase().includes(q)
+          );
+        })
+      : [...users];
+
+    list.sort((a, b) => {
+      let cmp = 0;
+      if (sortKey === "display_name") {
+        cmp = (a.display_name ?? "").localeCompare(b.display_name ?? "", "pl");
+      } else if (sortKey === "email") {
+        cmp = (a.email ?? "").localeCompare(b.email ?? "", "pl");
+      } else if (sortKey === "role") {
+        cmp = (a.role ?? "").localeCompare(b.role ?? "");
+      } else if (sortKey === "last_sign_in_at") {
+        const aTime = a.last_sign_in_at ?? "";
+        const bTime = b.last_sign_in_at ?? "";
+        cmp = aTime.localeCompare(bTime);
+      } else if (sortKey === "confirmed_at") {
+        const aTime = a.confirmed_at ?? "";
+        const bTime = b.confirmed_at ?? "";
+        cmp = aTime.localeCompare(bTime);
+      }
+      return sortDir === "asc" ? cmp : -cmp;
+    });
+
+    return list;
+  }, [users, search, sortKey, sortDir]);
 
   const handleToggleRole = (userId: string, currentRole: string) => {
     setError(null);
@@ -121,20 +171,39 @@ export default function UsersTable({ currentUserId, users }: UsersTableProps) {
         <table className="w-full">
           <thead>
             <tr className="border-b border-outline">
-              <th className="px-5 py-3 text-left font-space-grotesk text-xs uppercase tracking-wider text-on-surface-muted">
-                Użytkownik
+              <th className="w-10 px-3 py-3 text-center font-space-grotesk text-xs uppercase tracking-wider text-on-surface-muted">
+                #
               </th>
-              <th className="px-5 py-3 text-left font-space-grotesk text-xs uppercase tracking-wider text-on-surface-muted">
+              <th
+                className="cursor-pointer select-none px-5 py-3 text-left font-space-grotesk text-xs uppercase tracking-wider text-on-surface-muted hover:text-on-surface"
+                onClick={() => toggleSort("display_name")}
+              >
+                Użytkownik
+                <SortIcon active={sortKey === "display_name"} dir={sortKey === "display_name" ? sortDir : "asc"} />
+              </th>
+              <th
+                className="cursor-pointer select-none px-5 py-3 text-left font-space-grotesk text-xs uppercase tracking-wider text-on-surface-muted hover:text-on-surface"
+                onClick={() => toggleSort("email")}
+              >
                 Email
+                <SortIcon active={sortKey === "email"} dir={sortKey === "email" ? sortDir : "asc"} />
               </th>
               <th className="px-5 py-3 text-left font-space-grotesk text-xs uppercase tracking-wider text-on-surface-muted">
                 Projekt
               </th>
-              <th className="px-5 py-3 text-left font-space-grotesk text-xs uppercase tracking-wider text-on-surface-muted">
-                Status
+              <th
+                className="cursor-pointer select-none px-5 py-3 text-left font-space-grotesk text-xs uppercase tracking-wider text-on-surface-muted hover:text-on-surface"
+                onClick={() => toggleSort("last_sign_in_at")}
+              >
+                Status / Logowanie
+                <SortIcon active={sortKey === "last_sign_in_at"} dir={sortKey === "last_sign_in_at" ? sortDir : "asc"} />
               </th>
-              <th className="px-5 py-3 text-left font-space-grotesk text-xs uppercase tracking-wider text-on-surface-muted">
+              <th
+                className="cursor-pointer select-none px-5 py-3 text-left font-space-grotesk text-xs uppercase tracking-wider text-on-surface-muted hover:text-on-surface"
+                onClick={() => toggleSort("role")}
+              >
                 Rola
+                <SortIcon active={sortKey === "role"} dir={sortKey === "role" ? sortDir : "asc"} />
               </th>
               <th className="px-5 py-3 text-left font-space-grotesk text-xs uppercase tracking-wider text-on-surface-muted">
                 Klucz API
@@ -142,7 +211,7 @@ export default function UsersTable({ currentUserId, users }: UsersTableProps) {
             </tr>
           </thead>
           <tbody>
-            {filteredUsers.map((user) => {
+            {filteredUsers.map((user, idx) => {
               const hasKeyRequest = user.api_key_requested && !user.openrouter_api_key;
               return (
               <tr
@@ -151,6 +220,9 @@ export default function UsersTable({ currentUserId, users }: UsersTableProps) {
                   hasKeyRequest ? "bg-yellow-500/5" : ""
                 }`}
               >
+                <td className="w-10 px-3 py-4 text-center font-mono text-xs text-on-surface-muted">
+                  {idx + 1}
+                </td>
                 <td className="px-5 py-4">
                   <div className="flex items-center gap-3">
                     {user.avatar_url ? (
@@ -312,7 +384,7 @@ export default function UsersTable({ currentUserId, users }: UsersTableProps) {
             {filteredUsers.length === 0 && (
               <tr>
                 <td
-                  colSpan={6}
+                  colSpan={7}
                   className="px-5 py-8 text-center text-sm text-on-surface-muted"
                 >
                   Brak użytkowników
