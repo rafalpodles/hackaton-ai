@@ -15,6 +15,7 @@ interface SidebarProps {
 const startItems = [
   { label: "Garage Rules", href: "/rules" },
   { label: "Poradnik", href: "/guide" },
+  { label: "Q&A", href: "/faq" },
   { label: "Pomysły na projekty", href: "/ideas" },
   { label: "Przydatne prompty", href: "/prompts" },
 ];
