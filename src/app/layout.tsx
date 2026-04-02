@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Space_Grotesk, Manrope } from "next/font/google";
 import "./globals.css";
+import { GeocitiesProvider } from "@/components/geocities/geocities-provider";
+import GeocitiesExtras from "@/components/geocities/geocities-extras";
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
@@ -27,7 +29,10 @@ export default function RootLayout({
       <body
         className={`${spaceGrotesk.variable} ${manrope.variable} font-manrope bg-[#0e0e13] text-[#f8f5fd] antialiased`}
       >
-        {children}
+        <GeocitiesProvider>
+          {children}
+          <GeocitiesExtras />
+        </GeocitiesProvider>
       </body>
     </html>
   );

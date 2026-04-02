@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/client";
 import { GlassCard } from "@/components/ui/glass-card";
 import { GradientButton } from "@/components/ui/gradient-button";
 import { Suspense } from "react";
+import GeocitiesToggle from "@/components/geocities/geocities-toggle";
 
 function LoginForm() {
   const [email, setEmail] = useState("");
@@ -116,6 +117,11 @@ function LoginForm() {
             </GradientButton>
           </form>
         </GlassCard>
+
+        {/* Geocities Easter Egg */}
+        <div className="mt-6 flex justify-center">
+          <GeocitiesToggle />
+        </div>
       </div>
     </div>
   );

@@ -103,3 +103,414 @@ h1, h2, h3, h4, h5, h6, .font-display {
     animation-duration: 0.01ms !important;
   }
 }
+
+/* ==========================================================
+   GEOCITIES MODE - The Internet circa 1997
+   ========================================================== */
+
+/* Keyframes */
+@keyframes geocities-rainbow {
+  0% { color: #ff0000; }
+  14% { color: #ff7f00; }
+  28% { color: #ffff00; }
+  42% { color: #00ff00; }
+  57% { color: #0000ff; }
+  71% { color: #4b0082; }
+  85% { color: #9400d3; }
+  100% { color: #ff0000; }
+}
+
+@keyframes geocities-blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+@keyframes geocities-marquee {
+  from { transform: translateX(100%); }
+  to { transform: translateX(-100%); }
+}
+
+@keyframes geocities-stars {
+  0% { background-position: 0 0, 50px 50px, 100px 25px; }
+  100% { background-position: 200px 200px, 250px 250px, 300px 225px; }
+}
+
+@keyframes geocities-fire {
+  0% { text-shadow: 0 0 4px #ff0, 0 -5px 4px #ff8000, 0 -10px 8px #ff0000; }
+  50% { text-shadow: 0 0 4px #ff0, 0 -8px 6px #ff4000, 0 -14px 10px #ff0000; }
+  100% { text-shadow: 0 0 4px #ff0, 0 -5px 4px #ff8000, 0 -10px 8px #ff0000; }
+}
+
+@keyframes geocities-spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes geocities-wobble {
+  0%, 100% { transform: rotate(-2deg); }
+  50% { transform: rotate(2deg); }
+}
+
+.geocities-blink {
+  animation: geocities-blink 1s step-end infinite;
+}
+
+.geocities-marquee {
+  display: inline-block;
+  animation: geocities-marquee 20s linear infinite;
+}
+
+/* ---- ROOT OVERRIDES ---- */
+html.geocities {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3E%3Ctext y='14' font-size='14'%3E%E2%9C%A8%3C/text%3E%3C/svg%3E") 0 14, auto;
+}
+
+html.geocities body {
+  font-family: "Comic Sans MS", "Comic Sans", "Chalkboard SE", cursive !important;
+  background:
+    #000080
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='3' height='3'%3E%3Crect width='1' height='1' fill='%23ffffff08'/%3E%3C/svg%3E")
+    repeat !important;
+  color: #00ff00 !important;
+  image-rendering: pixelated;
+  padding-bottom: 32px;
+}
+
+/* ---- HEADINGS → FIRE TEXT ---- */
+html.geocities h1,
+html.geocities h2,
+html.geocities h3,
+html.geocities h4,
+html.geocities h5,
+html.geocities h6,
+html.geocities .font-display,
+html.geocities .font-space-grotesk {
+  font-family: "Comic Sans MS", "Comic Sans", cursive !important;
+  animation: geocities-fire 1.5s ease-in-out infinite;
+  color: #ffff00 !important;
+}
+
+html.geocities h1 {
+  font-size: 28px !important;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+}
+
+/* ---- LINKS → CLASSIC BLUE UNDERLINE + VISITED PURPLE ---- */
+html.geocities a {
+  color: #00ffff !important;
+  text-decoration: underline !important;
+  font-weight: bold;
+}
+
+html.geocities a:hover {
+  color: #ff00ff !important;
+  text-decoration: underline wavy !important;
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3E%3Ctext y='14' font-size='14'%3E%F0%9F%91%86%3C/text%3E%3C/svg%3E") 0 0, pointer;
+}
+
+html.geocities a:active {
+  color: #ff0000 !important;
+}
+
+/* ---- SIDEBAR → 90s FRAME STYLE ---- */
+html.geocities aside {
+  background: linear-gradient(180deg, #000080 0%, #0000a0 30%, #000060 100%) !important;
+  border-right: 4px ridge #c0c0c0 !important;
+  backdrop-filter: none !important;
+  box-shadow: inset -2px 0 8px rgba(0, 0, 0, 0.5);
+}
+
+html.geocities aside nav a {
+  border: 1px outset #808080 !important;
+  background: linear-gradient(to bottom, #c0c0c0, #a0a0a0) !important;
+  color: #000080 !important;
+  margin-bottom: 2px !important;
+  text-decoration: none !important;
+  font-size: 11px !important;
+  border-radius: 0 !important;
+  text-shadow: 1px 1px 0 #fff;
+  font-weight: bold;
+  padding: 4px 8px !important;
+}
+
+html.geocities aside nav a:hover {
+  background: linear-gradient(to bottom, #e0e0e0, #c0c0c0) !important;
+  border-style: inset !important;
+  color: #ff0000 !important;
+  text-decoration: none !important;
+}
+
+/* Active nav item - bright yellow highlight */
+html.geocities aside nav a[class*="border-primary"] {
+  background: #ffff00 !important;
+  color: #ff0000 !important;
+  border: 2px inset #808080 !important;
+  font-weight: bold;
+}
+
+/* Sidebar section titles */
+html.geocities aside p[class*="uppercase"] {
+  color: #00ff00 !important;
+  font-size: 10px !important;
+  text-shadow: 0 0 6px #00ff00;
+  letter-spacing: 3px;
+}
+
+/* Sidebar user card */
+html.geocities aside a[href="/profile"] {
+  background: #000 !important;
+  border: 2px groove #c0c0c0 !important;
+  border-radius: 0 !important;
+}
+
+html.geocities aside a[href="/profile"] p {
+  color: #00ff00 !important;
+}
+
+html.geocities aside a[href="/profile"] div[class*="bg-primary"] {
+  background: #ff0000 !important;
+  border-radius: 0 !important;
+  animation: geocities-wobble 0.5s ease-in-out infinite;
+}
+
+/* Vote button → pulsing neon */
+html.geocities aside a[href="/vote"] {
+  background: #ff0000 !important;
+  border: 3px outset #ff6600 !important;
+  border-radius: 0 !important;
+  animation: geocities-blink 1.5s step-end infinite;
+  text-transform: uppercase;
+  font-size: 14px !important;
+  letter-spacing: 3px;
+}
+
+/* Logout button */
+html.geocities aside button[class*="Wyloguj"],
+html.geocities aside div[class*="border-t"] button {
+  background: linear-gradient(to bottom, #c0c0c0, #808080) !important;
+  border: 2px outset #c0c0c0 !important;
+  color: #000 !important;
+  border-radius: 0 !important;
+  font-weight: bold;
+}
+
+/* ---- CARDS / GLASS → BEVELED WINDOWS ---- */
+html.geocities div[class*="backdrop-blur"],
+html.geocities div[class*="glass"],
+html.geocities div[class*="bg-surface-high"],
+html.geocities div[class*="bg-surface-low"] {
+  background: linear-gradient(135deg, #000040, #000080) !important;
+  border: 3px ridge #c0c0c0 !important;
+  border-radius: 0 !important;
+  backdrop-filter: none !important;
+  box-shadow: 4px 4px 0 #000;
+}
+
+/* ---- TABLES → CLASSIC HTML TABLES ---- */
+html.geocities table {
+  border-collapse: separate !important;
+  border-spacing: 2px !important;
+}
+
+html.geocities th {
+  background: linear-gradient(to bottom, #c0c0c0, #808080) !important;
+  border: 2px outset #c0c0c0 !important;
+  color: #000080 !important;
+  font-weight: bold;
+  text-shadow: 1px 1px 0 #fff;
+  font-size: 11px !important;
+}
+
+html.geocities td {
+  background: #000020 !important;
+  border: 1px inset #404080 !important;
+  color: #00ff00 !important;
+}
+
+html.geocities tr:hover td {
+  background: #000040 !important;
+}
+
+/* ---- BUTTONS → WIN95 STYLE ---- */
+html.geocities button:not(.geocities-toggle-btn) {
+  background: linear-gradient(to bottom, #dfdfdf, #c0c0c0) !important;
+  border: 2px outset #c0c0c0 !important;
+  color: #000 !important;
+  border-radius: 0 !important;
+  font-family: "Comic Sans MS", "Comic Sans", cursive !important;
+  font-weight: bold;
+  text-shadow: none;
+  font-size: 11px !important;
+  box-shadow: 1px 1px 0 #000;
+}
+
+html.geocities button:not(.geocities-toggle-btn):hover {
+  background: linear-gradient(to bottom, #f0f0f0, #d0d0d0) !important;
+}
+
+html.geocities button:not(.geocities-toggle-btn):active {
+  border-style: inset !important;
+  box-shadow: none;
+}
+
+/* Red/danger buttons */
+html.geocities button[class*="text-red"] {
+  background: linear-gradient(to bottom, #ff6666, #cc0000) !important;
+  color: #fff !important;
+  border-color: #ff0000 !important;
+}
+
+/* Primary/generate buttons */
+html.geocities button[class*="bg-primary"],
+html.geocities button[class*="from-primary"] {
+  background: linear-gradient(to bottom, #6666ff, #0000cc) !important;
+  color: #fff !important;
+  border-color: #0000ff !important;
+}
+
+/* ---- INPUTS → RETRO FIELDS ---- */
+html.geocities input,
+html.geocities textarea,
+html.geocities select {
+  background: #fff !important;
+  color: #000 !important;
+  border: 2px inset #808080 !important;
+  border-radius: 0 !important;
+  font-family: "Courier New", monospace !important;
+  font-size: 12px !important;
+}
+
+html.geocities input::placeholder,
+html.geocities textarea::placeholder {
+  color: #808080 !important;
+}
+
+/* ---- BADGES / PILLS → BLOCKY ---- */
+html.geocities span[class*="rounded-full"] {
+  border-radius: 0 !important;
+  border: 1px solid #808080 !important;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 10px !important;
+}
+
+/* ---- SCROLLBAR → RETRO ---- */
+html.geocities ::-webkit-scrollbar {
+  width: 16px;
+  background: #c0c0c0;
+}
+
+html.geocities ::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #dfdfdf, #808080);
+  border: 2px outset #c0c0c0;
+}
+
+html.geocities ::-webkit-scrollbar-track {
+  background: repeating-linear-gradient(
+    135deg,
+    #c0c0c0,
+    #c0c0c0 2px,
+    #a0a0a0 2px,
+    #a0a0a0 4px
+  );
+}
+
+/* ---- IMAGES → PIXELATED BORDERS ---- */
+html.geocities img {
+  border: 3px ridge #c0c0c0 !important;
+  border-radius: 0 !important;
+  image-rendering: pixelated;
+}
+
+/* ---- TEXT COLORS ---- */
+html.geocities p {
+  color: #00ff00;
+}
+
+html.geocities span[class*="text-on-surface-muted"] {
+  color: #808080 !important;
+}
+
+html.geocities code {
+  background: #000 !important;
+  color: #00ff00 !important;
+  border: 1px solid #00ff00 !important;
+  border-radius: 0 !important;
+  font-family: "Courier New", monospace !important;
+}
+
+/* ---- GRADIENT BUTTON → EXTREME ---- */
+html.geocities a[class*="from-primary"][class*="to-secondary"],
+html.geocities button[class*="from-primary"][class*="to-secondary"] {
+  background: linear-gradient(to right, #ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff) !important;
+  background-size: 300% !important;
+  animation: geocities-rainbow-bg 3s linear infinite !important;
+  color: #000 !important;
+  font-weight: 900;
+  border: 3px outset #c0c0c0 !important;
+  text-shadow: 1px 1px 0 #fff;
+  border-radius: 0 !important;
+}
+
+@keyframes geocities-rainbow-bg {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 300% 50%; }
+}
+
+/* ---- MOBILE HAMBURGER → RETRO ---- */
+html.geocities button[aria-label="Open menu"] {
+  background: linear-gradient(to bottom, #c0c0c0, #808080) !important;
+  border: 2px outset #c0c0c0 !important;
+  border-radius: 0 !important;
+  backdrop-filter: none !important;
+}
+
+/* ---- STATS CARDS → NEON ---- */
+html.geocities div[class*="grid"] > div[class*="rounded"] {
+  background: #000040 !important;
+  border: 2px ridge #00ff00 !important;
+  border-radius: 0 !important;
+  box-shadow: 0 0 10px #00ff00, inset 0 0 10px rgba(0, 255, 0, 0.1);
+}
+
+/* ---- COUNTDOWN BANNER ---- */
+html.geocities div[class*="bannerIn"] {
+  background: #000 !important;
+  border: 3px double #ffff00 !important;
+  color: #ffff00 !important;
+  animation: geocities-blink 2s step-end infinite;
+}
+
+/* ---- MODAL / DIALOG ---- */
+html.geocities div[class*="modal-glow"] {
+  background: #000040 !important;
+  border: 4px ridge #c0c0c0 !important;
+  border-radius: 0 !important;
+  box-shadow: 8px 8px 0 #000 !important;
+}
+
+/* ---- HR / DIVIDERS → RAINBOW ---- */
+html.geocities hr,
+html.geocities div[class*="border-t"][class*="border-outline"] {
+  border-image: linear-gradient(to right, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #9400d3) 1 !important;
+  border-width: 2px !important;
+}
+
+/* ---- SELECTION ---- */
+html.geocities ::selection {
+  background: #ff00ff;
+  color: #ffff00;
+}
+
+/* ---- PROGRESS BARS ---- */
+html.geocities div[class*="rounded-full"][class*="bg-surface-high"] {
+  background: #000 !important;
+  border: 1px inset #808080 !important;
+  border-radius: 0 !important;
+}
+
+html.geocities div[class*="rounded-full"][class*="bg-gradient"] {
+  background: linear-gradient(to right, #00ff00, #ffff00, #ff0000) !important;
+  border-radius: 0 !important;
+}

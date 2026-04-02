@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import type { Profile } from "@/lib/types";
+import GeocitiesToggle from "@/components/geocities/geocities-toggle";
 
 interface SidebarProps {
   user: Profile;
@@ -201,6 +202,11 @@ export default function Sidebar({ user, votingOpen }: SidebarProps) {
             </Link>
           </div>
         )}
+
+        {/* Geocities Easter Egg */}
+        <div className="flex justify-center pb-1">
+          <GeocitiesToggle />
+        </div>
 
         {/* Logout */}
         <div className="border-t border-outline px-3 py-4">
