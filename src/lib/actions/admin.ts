@@ -128,7 +128,8 @@ export async function deleteProject(projectId: string) {
 
 export async function generateOpenRouterKey(
   userId: string,
-  limit: number = 5
+  limit: number = 5,
+  expirationDays: number = 10
 ) {
   await requireAdmin();
   const supabase = await createClient();
@@ -166,7 +167,7 @@ export async function generateOpenRouterKey(
     body: JSON.stringify({
       name: `Hackathon - ${profile.display_name}`,
       limit,
-      expires_at: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(),
+      expires_at: new Date(Date.now() + expirationDays * 24 * 60 * 60 * 1000).toISOString(),
     }),
   });
 

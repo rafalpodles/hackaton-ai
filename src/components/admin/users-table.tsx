@@ -37,6 +37,7 @@ export default function UsersTable({ currentUserId, users }: UsersTableProps) {
   const [isPending, startTransition] = useTransition();
   const [deleteTarget, setDeleteTarget] = useState<{ id: string; name: string } | null>(null);
   const [limits, setLimits] = useState<Record<string, number>>({});
+  const [expDays, setExpDays] = useState<Record<string, number>>({});
   const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [sortKey, setSortKey] = useState<UserSortKey>("display_name");
@@ -52,6 +53,7 @@ export default function UsersTable({ currentUserId, users }: UsersTableProps) {
   };
 
   const getLimit = (userId: string) => limits[userId] ?? 5;
+  const getExpDays = (userId: string) => expDays[userId] ?? 10;
 
   const filteredUsers = useMemo(() => {
     let list = search.trim()
@@ -105,7 +107,7 @@ export default function UsersTable({ currentUserId, users }: UsersTableProps) {
     setError(null);
     startTransition(async () => {
       try {
-        await generateOpenRouterKey(userId, getLimit(userId));
+        await generateOpenRouterKey(userId, getLimit(userId), getExpDays(userId));
       } catch (err) {
         setError(err instanceof Error ? err.message : "Błąd generowania klucza");
       }
@@ -351,7 +353,7 @@ export default function UsersTable({ currentUserId, users }: UsersTableProps) {
                         </span>
                       )}
                     <div className="flex items-center gap-2">
-                      <div className="flex items-center gap-1 rounded bg-surface-high px-2 py-1">
+                      <div className="flex items-center gap-1 rounded bg-surface-high px-2 py-1" title="Limit wydatków ($)">
                         <span className="text-xs text-on-surface-muted">$</span>
                         <input
                           type="number"
@@ -366,6 +368,22 @@ export default function UsersTable({ currentUserId, users }: UsersTableProps) {
                           }
                           className="w-12 border-none bg-transparent text-center font-mono text-xs text-on-surface focus:outline-none focus:ring-0"
                         />
+                      </div>
+                      <div className="flex items-center gap-1 rounded bg-surface-high px-2 py-1" title="Ważność klucza (dni)">
+                        <input
+                          type="number"
+                          min={1}
+                          max={90}
+                          value={getExpDays(user.id)}
+                          onChange={(e) =>
+                            setExpDays((prev) => ({
+                              ...prev,
+                              [user.id]: Number(e.target.value),
+                            }))
+                          }
+                          className="w-10 border-none bg-transparent text-center font-mono text-xs text-on-surface focus:outline-none focus:ring-0"
+                        />
+                        <span className="text-xs text-on-surface-muted">dni</span>
                       </div>
                       <button
                         disabled={isPending}
