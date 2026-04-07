@@ -91,6 +91,10 @@ export function GarageRulesView({ hackathonDate }: GarageRulesViewProps) {
           <CheckItem checked>
             Konto GitHub &mdash; załóż wcześniej jeśli nie masz
           </CheckItem>
+          <CheckItem checked>
+            Przyjdź z <Strong>pełnym limitem tokenów</Strong> &mdash; nie
+            zużywaj ich wcześniej tego dnia
+          </CheckItem>
         </div>
 
         <div className="mt-6 rounded-xl border border-secondary/20 bg-secondary/5 p-5">
@@ -162,17 +166,36 @@ export function GarageRulesView({ hackathonDate }: GarageRulesViewProps) {
       {/* ── Schedule ── */}
       <Section title="Harmonogram">
         <div className="relative space-y-0">
-          <TimelineItem time="15 min" title="Intro + setup" last={false} />
           <TimelineItem
-            time="2:30 — 3h"
-            title="Hackowanie"
+            time="15:00 – 15:15"
+            title="Wprowadzenie"
+            location="Sky Garden"
             last={false}
           />
           <TimelineItem
-            time="30 min"
-            title="Zatwierdzanie projektów + zakończenie"
+            time="15:15 – 18:15"
+            title="3h hackowania!"
+            location="Wszystkie przestrzenie wspólne — Sky Garden i Ahoy"
+            last={false}
+          />
+          <TimelineItem
+            time="18:15 – 18:30"
+            title="Zakończenie i rozpoczęcie głosowania"
+            location="Sky Garden"
             last
           />
+        </div>
+
+        <div className="mt-8 rounded-xl border border-primary/20 bg-primary/5 p-5">
+          <p className="font-space-grotesk text-sm font-bold uppercase tracking-wider text-primary-dim">
+            Pizza &amp; luźna atmosfera
+          </p>
+          <p className="mt-2 text-on-surface/80">
+            Będzie <Strong>pizza</Strong> 🍕 &mdash; zadbamy o to, żebyście
+            nie hackowali na głodniaka. Zależy nam na{" "}
+            <Strong>luźnej atmosferze</Strong> &mdash; to ma być frajda, nie
+            korpo-event. Przyjdź, baw się, buduj.
+          </p>
         </div>
       </Section>
     </div>
@@ -287,10 +310,12 @@ function PrizeCard({
 function TimelineItem({
   time,
   title,
+  location,
   last,
 }: {
   time: string;
   title: string;
+  location?: string;
   last: boolean;
 }) {
   return (
@@ -306,6 +331,9 @@ function TimelineItem({
           {time}
         </p>
         <p className="mt-1 text-on-surface">{title}</p>
+        {location && (
+          <p className="mt-0.5 text-sm text-on-surface-muted">📍 {location}</p>
+        )}
       </div>
     </div>
   );
