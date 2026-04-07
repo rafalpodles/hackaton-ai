@@ -58,16 +58,6 @@ Zapraszam Cię na Spyrosoft AI Hackathon — 3h warsztat, gdzie budujesz realne 
 
 Przy pierwszym logowaniu zostaniesz poproszony o zmianę hasła.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-Co zrobić po zalogowaniu:
-1. Przeczytaj Garage Rules — zasady hackathonu
-2. Przejdź Poradnik — skonfiguruj narzędzia AI
-3. Stwórz zespół (2-3 osoby) lub pracuj solo
-4. Stwórz projekt i hackuj!
-
-Nie masz subskrypcji AI? W profilu możesz poprosić o klucz API ($5 na tokeny OpenRouter).
-
 Do zobaczenia! 🚀
 `;
 }

@@ -191,6 +191,12 @@ export function GarageRulesView({ hackathonDate }: GarageRulesViewProps) {
             Pizza &amp; luźna atmosfera
           </p>
           <p className="mt-2 text-on-surface/80">
+            Nie możesz być od początku? Spoko &mdash; prezentacja z
+            wprowadzenia będzie <Strong>dostępna online</Strong>, więc
+            możesz dołączyć i zacząć hackować, kiedy tylko będziesz
+            dostępny.
+          </p>
+          <p className="mt-2 text-on-surface/80">
             Będzie <Strong>pizza</Strong> 🍕 &mdash; zadbamy o to, żebyście
             nie hackowali na głodniaka. Zależy nam na{" "}
             <Strong>luźnej atmosferze</Strong> &mdash; to ma być frajda, nie
