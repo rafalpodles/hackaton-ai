@@ -40,7 +40,7 @@ export function GarageRulesView({ hackathonDate }: GarageRulesViewProps) {
           Tylko praktyka.
         </p>
         <ul className="mt-4 space-y-2">
-          <BulletItem>Solo lub grupy 2&ndash;3 osoby</BulletItem>
+          <BulletItem>Solo lub grupy 2&ndash;5 osób</BulletItem>
           <BulletItem>
             Otwarte dla wszystkich &mdash; nie tylko developerzy. QA, PM,
             Backoffice &mdash; każdy mile widziany

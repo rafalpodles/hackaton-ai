@@ -302,8 +302,8 @@ export function SubmissionForm({ project, submissionOpen = true, deadline, canSu
                 path="demo"
                 accept="video/*"
                 label="Wideo demo"
-                hint="MP4, MOV — maks. 60 sekund, do 50MB"
-                maxSizeMb={50}
+                hint="MP4, MOV — maks. 60 sekund, do 150MB"
+                maxSizeMb={150}
                 maxDurationSec={60}
                 currentUrl={videoUrl}
                 onUploadComplete={(url, duration) => {
