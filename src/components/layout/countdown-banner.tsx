@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 
 interface CountdownBannerProps {
   hackathonDate: string;
+  submissionDeadline?: string;
+  votingOpen?: boolean;
 }
 
 function formatTimeLeft(diff: number) {
@@ -18,31 +20,65 @@ function formatTimeLeft(diff: number) {
   return `${m}m ${s}s`;
 }
 
-export function CountdownBanner({ hackathonDate }: CountdownBannerProps) {
+type BannerState = "countdown" | "live" | "voting" | "ended";
+
+export function CountdownBanner({ hackathonDate, submissionDeadline, votingOpen }: CountdownBannerProps) {
   const [timeLeft, setTimeLeft] = useState<string | null>("");
-  const [isLive, setIsLive] = useState(false);
+  const [state, setState] = useState<BannerState>("countdown");
 
   useEffect(() => {
     function update() {
-      const diff = new Date(hackathonDate).getTime() - Date.now();
-      if (diff <= 0) {
-        setTimeLeft(null);
-        setIsLive(true);
-      } else {
-        setTimeLeft(formatTimeLeft(diff));
-        setIsLive(false);
+      const now = Date.now();
+      const hackathonDiff = new Date(hackathonDate).getTime() - now;
+
+      if (hackathonDiff > 0) {
+        setTimeLeft(formatTimeLeft(hackathonDiff));
+        setState("countdown");
+        return;
       }
+
+      // Hackathon started — check submission deadline and voting
+      if (submissionDeadline) {
+        const deadlineDiff = new Date(submissionDeadline).getTime() - now;
+        if (deadlineDiff <= 0) {
+          setState(votingOpen ? "voting" : "ended");
+          setTimeLeft(null);
+          return;
+        }
+      }
+
+      setState("live");
+      setTimeLeft(null);
     }
     update();
     const interval = setInterval(update, 1000);
     return () => clearInterval(interval);
-  }, [hackathonDate]);
+  }, [hackathonDate, submissionDeadline, votingOpen]);
 
   if (timeLeft === "") return null; // initial render
 
   return (
     <div className="flex items-center justify-center gap-3 bg-gradient-to-r from-primary/10 to-secondary/10 border-b border-outline px-4 py-2">
-      {isLive ? (
+      {state === "voting" ? (
+        <>
+          <span className="relative flex h-2.5 w-2.5">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-amber-400 opacity-75" />
+            <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-amber-400" />
+          </span>
+          <span className="font-space-grotesk text-xs font-bold uppercase tracking-[0.15em] text-amber-400">
+            Hackathon zakończony — czas na głosowanie!
+          </span>
+        </>
+      ) : state === "ended" ? (
+        <>
+          <span className="relative flex h-2.5 w-2.5">
+            <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-gray-400" />
+          </span>
+          <span className="font-space-grotesk text-xs font-bold uppercase tracking-[0.15em] text-gray-400">
+            Hackathon zakończony
+          </span>
+        </>
+      ) : state === "live" ? (
         <>
           <span className="relative flex h-2.5 w-2.5">
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75" />
