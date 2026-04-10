@@ -6,6 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import type { Profile } from "@/lib/types";
 import GeocitiesToggle from "@/components/geocities/geocities-toggle";
+import { useGeocities } from "@/components/geocities/geocities-provider";
 
 interface SidebarProps {
   user: Profile;
@@ -40,6 +41,7 @@ export default function Sidebar({ user, votingOpen }: SidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
   const supabase = createClient();
+  const { enabled: geocitiesEnabled } = useGeocities();
 
   // Close sidebar on route change (mobile)
   useEffect(() => {
@@ -191,6 +193,23 @@ export default function Sidebar({ user, votingOpen }: SidebarProps) {
             </>
           )}
         </nav>
+
+        {/* Geocities Guestbook link */}
+        {geocitiesEnabled && (
+          <div className="px-3 pb-1">
+            <Link
+              href="/guestbook"
+              className={`flex items-center rounded-lg px-3 py-2 font-space-grotesk text-xs uppercase tracking-wider transition-colors ${
+                isActive("/guestbook")
+                  ? "border-l-2 border-primary-dim bg-primary/15 text-primary-dim"
+                  : "text-on-surface-muted hover:bg-surface-high hover:text-on-surface"
+              }`}
+              style={{ animation: "geocities-rainbow 2s linear infinite" }}
+            >
+              &#9733; Guestbook &#9733;
+            </Link>
+          </div>
+        )}
 
         {/* Vote CTA — only when voting is open */}
         {votingOpen && (

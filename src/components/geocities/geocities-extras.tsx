@@ -2,6 +2,7 @@
 
 import { useGeocities } from "./geocities-provider";
 import { useState, useEffect } from "react";
+import { GeocitiesAudio } from "./geocities-audio";
 
 export default function GeocitiesExtras() {
   const { enabled } = useGeocities();
@@ -154,6 +155,9 @@ export default function GeocitiesExtras() {
       >
         UNDER CONSTRUCTION!!!
       </div>
+
+      {/* Audio system */}
+      <GeocitiesAudio />
 
       {/* Animated "NEW!" badge */}
       <div
