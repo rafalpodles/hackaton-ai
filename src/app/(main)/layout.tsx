@@ -18,7 +18,7 @@ export default async function MainLayout({
   const supabase = await createClient();
   const { data: settings } = await supabase
     .from("app_settings")
-    .select("voting_open, hackathon_date")
+    .select("voting_open, hackathon_date, submission_deadline")
     .eq("id", 1)
     .single();
 
@@ -27,7 +27,11 @@ export default async function MainLayout({
       <Sidebar user={user} votingOpen={settings?.voting_open ?? false} />
       <div className="lg:ml-60">
         {settings?.hackathon_date && (
-          <CountdownBanner hackathonDate={settings.hackathon_date} />
+          <CountdownBanner
+            hackathonDate={settings.hackathon_date}
+            submissionDeadline={settings.submission_deadline ?? undefined}
+            votingOpen={settings.voting_open ?? false}
+          />
         )}
         <main className="p-4 pt-16 lg:p-8">{children}</main>
       </div>
