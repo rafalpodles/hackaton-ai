@@ -1,74 +1,79 @@
 "use client";
 
 import { useGeocities } from "./geocities-provider";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { GeocitiesAudio } from "./geocities-audio";
 
 export default function GeocitiesExtras() {
   const { enabled } = useGeocities();
   const [visitors, setVisitors] = useState(0);
-  const [cursorTrail, setCursorTrail] = useState<{ x: number; y: number; id: number }[]>([]);
+  const trailContainerRef = useRef<HTMLDivElement>(null);
+  const visitorsRef = useRef(0);
+  const marqueeVisitorRef = useRef<HTMLSpanElement>(null);
 
+  // Visitor counter — update ref + marquee span directly to avoid re-rendering marquee
   useEffect(() => {
     if (!enabled) return;
-    // "Visitor counter" - random big number + increments
     const base = 48_213 + Math.floor(Math.random() * 1000);
     setVisitors(base);
+    visitorsRef.current = base;
     const interval = setInterval(() => {
-      setVisitors((v) => v + Math.floor(Math.random() * 3));
+      visitorsRef.current += Math.floor(Math.random() * 3);
+      setVisitors(visitorsRef.current);
+      if (marqueeVisitorRef.current) {
+        marqueeVisitorRef.current.textContent = visitorsRef.current.toLocaleString();
+      }
     }, 5000);
     return () => clearInterval(interval);
   }, [enabled]);
 
-  // Star cursor trail
+  // Cursor trail — pure DOM, no React state
   useEffect(() => {
-    if (!enabled) {
-      setCursorTrail([]);
-      return;
-    }
-    let idCounter = 0;
-    const handleMove = (e: MouseEvent) => {
-      const id = idCounter++;
-      setCursorTrail((prev) => [...prev.slice(-12), { x: e.clientX, y: e.clientY, id }]);
-    };
-    window.addEventListener("mousemove", handleMove);
-    return () => window.removeEventListener("mousemove", handleMove);
-  }, [enabled]);
+    if (!enabled) return;
 
-  // Clean up old trail particles
-  useEffect(() => {
-    if (!enabled || cursorTrail.length === 0) return;
-    const timeout = setTimeout(() => {
-      setCursorTrail((prev) => prev.slice(1));
-    }, 150);
-    return () => clearTimeout(timeout);
-  }, [enabled, cursorTrail]);
+    const container = trailContainerRef.current;
+    if (!container) return;
+
+    const particles: HTMLDivElement[] = [];
+    const MAX = 12;
+    const stars = ["✦", "✧", "⊹", "·", "✦"];
+    let lastTime = 0;
+
+    const handleMove = (e: MouseEvent) => {
+      const now = performance.now();
+      if (now - lastTime < 50) return; // throttle to ~20fps
+      lastTime = now;
+
+      const el = document.createElement("div");
+      el.className = "pointer-events-none fixed z-[9999]";
+      el.style.cssText = `left:${e.clientX - 6}px;top:${e.clientY - 6}px;font-size:12px;color:hsl(${Math.random() * 360},100%,50%);font-family:serif;text-shadow:0 0 4px currentColor;transition:opacity 0.3s;opacity:1;`;
+      el.textContent = stars[particles.length % stars.length];
+      container.appendChild(el);
+      particles.push(el);
+
+      if (particles.length > MAX) {
+        const old = particles.shift()!;
+        old.style.opacity = "0";
+        setTimeout(() => old.remove(), 300);
+      }
+    };
+
+    window.addEventListener("mousemove", handleMove, { passive: true });
+    return () => {
+      window.removeEventListener("mousemove", handleMove);
+      particles.forEach((el) => el.remove());
+    };
+  }, [enabled]);
 
   if (!enabled) return null;
 
-  const stars = ["*", "+", "~", ".", "*"];
-
   return (
     <>
-      {/* Cursor trail */}
-      {cursorTrail.map((point, i) => (
-        <div
-          key={point.id}
-          className="pointer-events-none fixed z-[9999]"
-          style={{
-            left: point.x - 6,
-            top: point.y - 6,
-            opacity: (i + 1) / cursorTrail.length,
-            fontSize: `${8 + i}px`,
-            color: `hsl(${(i * 30 + Date.now() / 20) % 360}, 100%, 50%)`,
-            transition: "opacity 0.15s",
-            fontFamily: "serif",
-            textShadow: "0 0 4px currentColor",
-          }}
-        >
-          {stars[i % stars.length]}
-        </div>
-      ))}
+      {/* Trail container — direct DOM manipulation, no React renders */}
+      <div ref={trailContainerRef} />
+
+      {/* Audio system */}
+      <GeocitiesAudio />
 
       {/* Bottom bar with visitor counter + marquee */}
       <div
@@ -115,7 +120,7 @@ export default function GeocitiesExtras() {
               &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
               Sign my Guestbook!!!
               &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
-              You are visitor #{visitors.toLocaleString()}!!!
+              You are visitor #<span ref={marqueeVisitorRef}>{visitors.toLocaleString()}</span>!!!
               &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
               Made with Notepad.exe
               &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
@@ -155,9 +160,6 @@ export default function GeocitiesExtras() {
       >
         UNDER CONSTRUCTION!!!
       </div>
-
-      {/* Audio system */}
-      <GeocitiesAudio />
 
       {/* Animated "NEW!" badge */}
       <div

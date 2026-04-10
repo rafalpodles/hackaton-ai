@@ -1,49 +1,32 @@
 "use client";
 
 import { useGeocities } from "./geocities-provider";
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback, memo } from "react";
 
 // Simple 90s-style MIDI melody using Web Audio API
 function createMelody(ctx: AudioContext): { play: () => void; stop: () => void } {
   let playing = false;
   let timeoutIds: ReturnType<typeof setTimeout>[] = [];
 
-  // Classic 90s chiptune melody (think Geocities MIDI vibes)
+  // Classic 90s chiptune melody
   const notes = [
-    // freq, duration, delay
-    [523.25, 0.2, 0],    // C5
-    [587.33, 0.2, 0.25], // D5
-    [659.25, 0.4, 0.5],  // E5
-    [523.25, 0.2, 1.0],  // C5
-    [587.33, 0.2, 1.25], // D5
-    [783.99, 0.4, 1.5],  // G5
-    [659.25, 0.4, 2.0],  // E5
-    [523.25, 0.2, 2.5],  // C5
-    [493.88, 0.2, 2.75], // B4
-    [440.00, 0.4, 3.0],  // A4
-    [493.88, 0.2, 3.5],  // B4
-    [523.25, 0.4, 3.75], // C5
-    [440.00, 0.2, 4.25], // A4
-    [392.00, 0.6, 4.5],  // G4
-    // second phrase
-    [523.25, 0.2, 5.5],  // C5
-    [659.25, 0.2, 5.75], // E5
-    [783.99, 0.4, 6.0],  // G5
-    [880.00, 0.2, 6.5],  // A5
-    [783.99, 0.2, 6.75], // G5
-    [659.25, 0.4, 7.0],  // E5
-    [523.25, 0.2, 7.5],  // C5
-    [587.33, 0.2, 7.75], // D5
-    [523.25, 0.6, 8.0],  // C5
+    [523.25, 0.2, 0],    [587.33, 0.2, 0.25], [659.25, 0.4, 0.5],
+    [523.25, 0.2, 1.0],  [587.33, 0.2, 1.25], [783.99, 0.4, 1.5],
+    [659.25, 0.4, 2.0],  [523.25, 0.2, 2.5],  [493.88, 0.2, 2.75],
+    [440.00, 0.4, 3.0],  [493.88, 0.2, 3.5],  [523.25, 0.4, 3.75],
+    [440.00, 0.2, 4.25], [392.00, 0.6, 4.5],
+    [523.25, 0.2, 5.5],  [659.25, 0.2, 5.75], [783.99, 0.4, 6.0],
+    [880.00, 0.2, 6.5],  [783.99, 0.2, 6.75], [659.25, 0.4, 7.0],
+    [523.25, 0.2, 7.5],  [587.33, 0.2, 7.75], [523.25, 0.6, 8.0],
   ] as const;
 
-  const loopDuration = 9.0; // seconds per loop
+  const loopDuration = 9.0;
 
   function playNote(freq: number, duration: number, startTime: number) {
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
 
-    osc.type = "square"; // Classic chiptune sound
+    osc.type = "square";
     osc.frequency.value = freq;
 
     gain.gain.setValueAtTime(0, startTime);
@@ -56,6 +39,12 @@ function createMelody(ctx: AudioContext): { play: () => void; stop: () => void }
 
     osc.start(startTime);
     osc.stop(startTime + duration + 0.05);
+
+    // Cleanup: disconnect nodes after they finish
+    osc.onended = () => {
+      osc.disconnect();
+      gain.disconnect();
+    };
   }
 
   function scheduleLoop() {
@@ -86,7 +75,6 @@ function playClickSound(ctx: AudioContext) {
   const osc = ctx.createOscillator();
   const gain = ctx.createGain();
 
-  // Short blip sound
   osc.type = "square";
   osc.frequency.setValueAtTime(800, ctx.currentTime);
   osc.frequency.exponentialRampToValueAtTime(400, ctx.currentTime + 0.08);
@@ -99,23 +87,36 @@ function playClickSound(ctx: AudioContext) {
 
   osc.start(ctx.currentTime);
   osc.stop(ctx.currentTime + 0.12);
+
+  osc.onended = () => {
+    osc.disconnect();
+    gain.disconnect();
+  };
 }
 
-export function GeocitiesAudio() {
+export const GeocitiesAudio = memo(function GeocitiesAudio() {
   const { enabled } = useGeocities();
   const ctxRef = useRef<AudioContext | null>(null);
   const melodyRef = useRef<{ play: () => void; stop: () => void } | null>(null);
-  const [musicOn, setMusicOn] = useState(false);
+  const [musicOn, setMusicOn] = useState(true); // ON by default
 
-  // Initialize AudioContext lazily (needs user gesture)
   const ensureCtx = useCallback(() => {
-    if (!ctxRef.current) {
+    if (!ctxRef.current || ctxRef.current.state === "closed") {
       ctxRef.current = new AudioContext();
     }
     if (ctxRef.current.state === "suspended") {
       ctxRef.current.resume();
     }
     return ctxRef.current;
+  }, []);
+
+  const closeCtx = useCallback(() => {
+    melodyRef.current?.stop();
+    melodyRef.current = null;
+    if (ctxRef.current && ctxRef.current.state !== "closed") {
+      ctxRef.current.close();
+    }
+    ctxRef.current = null;
   }, []);
 
   // Click sounds
@@ -154,14 +155,18 @@ export function GeocitiesAudio() {
     }
   }, [enabled, musicOn, ensureCtx]);
 
-  // Cleanup on disable
+  // Full cleanup on disable or unmount
   useEffect(() => {
     if (!enabled) {
-      setMusicOn(false);
-      melodyRef.current?.stop();
-      melodyRef.current = null;
+      setMusicOn(true); // reset to default ON for next enable
+      closeCtx();
     }
-  }, [enabled]);
+  }, [enabled, closeCtx]);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => closeCtx();
+  }, [closeCtx]);
 
   if (!enabled) return null;
 
@@ -194,4 +199,4 @@ export function GeocitiesAudio() {
       </button>
     </div>
   );
-}
+});
