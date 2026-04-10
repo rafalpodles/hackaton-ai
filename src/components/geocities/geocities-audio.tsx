@@ -172,7 +172,7 @@ export const GeocitiesAudio = memo(function GeocitiesAudio() {
 
   return (
     <div
-      className="fixed left-4 bottom-12 z-[9999]"
+      className="fixed bottom-12 z-40 left-4 lg:left-64"
       style={{ fontFamily: '"Comic Sans MS", cursive' }}
     >
       <button

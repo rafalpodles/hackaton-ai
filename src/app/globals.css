@@ -263,18 +263,7 @@ html.geocities aside {
     repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(255,255,255,0.02) 4px) !important;
   border-right: 4px ridge #c0c0c0 !important;
   backdrop-filter: none !important;
-  position: relative;
-}
-
-/* Glow on separate pseudo-element — opacity is GPU-composited */
-html.geocities aside::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  box-shadow: inset -2px 0 8px rgba(0, 0, 0, 0.5), inset 0 0 60px rgba(100, 0, 200, 0.2);
-  animation: geocities-sidebar-glow 4s ease-in-out infinite;
-  pointer-events: none;
-  z-index: 0;
+  box-shadow: inset -2px 0 8px rgba(0, 0, 0, 0.5), inset 0 0 40px rgba(100, 0, 200, 0.15);
 }
 
 html.geocities aside nav a {

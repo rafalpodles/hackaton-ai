@@ -77,7 +77,7 @@ export default function GeocitiesExtras() {
 
       {/* Bottom bar with visitor counter + marquee */}
       <div
-        className="geocities-bottom-bar fixed bottom-0 left-0 right-0 z-[9998]"
+        className="geocities-bottom-bar fixed bottom-0 left-0 right-0 z-40 lg:left-60"
         style={{
           background: "linear-gradient(to right, #000080, #0000a0, #000080)",
           borderTop: "3px ridge #c0c0c0",
