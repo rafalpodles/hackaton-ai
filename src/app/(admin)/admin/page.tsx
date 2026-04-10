@@ -18,6 +18,7 @@ export default async function AdminDashboardPage() {
     { count: projectCount, error: e1 },
     { count: participantCount, error: e2 },
     { count: voteCount, error: e3 },
+    { data: voterRows, error: e3b },
     { data: projectsRaw, error: e4 },
     { data: settings, error: e5 },
     { data: usersRaw, error: e6 },
@@ -33,6 +34,9 @@ export default async function AdminDashboardPage() {
       .from("votes")
       .select("*", { count: "exact", head: true }),
     supabase
+      .from("votes")
+      .select("user_id"),
+    supabase
       .from("projects")
       .select("*"),
     supabase
@@ -46,7 +50,8 @@ export default async function AdminDashboardPage() {
       .order("created_at", { ascending: true }),
   ]);
 
-  const queryError = e1 || e2 || e3 || e4 || e5 || e6;
+  const queryError = e1 || e2 || e3 || e3b || e4 || e5 || e6;
+  const uniqueVoters = new Set((voterRows ?? []).map((v: { user_id: string }) => v.user_id)).size;
   if (queryError) {
     return (
       <div className="rounded-xl border border-secondary/30 bg-secondary/5 p-6">
@@ -108,6 +113,7 @@ export default async function AdminDashboardPage() {
     { label: "Wszystkie projekty", value: totalProjects },
     { label: "Uczestnicy", value: participantCount ?? 0 },
     { label: "Oddane głosy", value: voteCount ?? 0 },
+    { label: "Zagłosowało osób", value: uniqueVoters },
     { label: "Ukończenie", value: `${completionPct}%` },
   ];
 
