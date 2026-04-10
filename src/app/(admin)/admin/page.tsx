@@ -35,7 +35,7 @@ export default async function AdminDashboardPage() {
       .select("*", { count: "exact", head: true }),
     supabase
       .from("votes")
-      .select("user_id"),
+      .select("voter_id"),
     supabase
       .from("projects")
       .select("*"),
@@ -51,7 +51,7 @@ export default async function AdminDashboardPage() {
   ]);
 
   const queryError = e1 || e2 || e3 || e3b || e4 || e5 || e6;
-  const uniqueVoters = new Set((voterRows ?? []).map((v: { user_id: string }) => v.user_id)).size;
+  const uniqueVoters = new Set((voterRows ?? []).map((v: { voter_id: string }) => v.voter_id)).size;
   if (queryError) {
     return (
       <div className="rounded-xl border border-secondary/30 bg-secondary/5 p-6">
