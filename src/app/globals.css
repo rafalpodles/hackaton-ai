@@ -166,15 +166,27 @@ html.geocities {
 }
 
 @keyframes geocities-bg-scroll {
-  0% { background-position: 0 0, 40px 40px, 0 0; }
-  100% { background-position: 400px 400px, 440px 440px, 800px 0; }
+  0% { transform: translate(0, 0); }
+  100% { transform: translate(-250px, -250px); }
 }
 
 html.geocities body {
   font-family: "Comic Sans MS", "Comic Sans", "Chalkboard SE", cursive !important;
   background-color: #0a0020 !important;
+  color: #00ff00 !important;
+  image-rendering: pixelated;
+  padding-bottom: 32px;
+  position: relative;
+}
+
+/* Starfield on a separate compositing layer — GPU-accelerated transform instead of background-position */
+html.geocities body::before {
+  content: "";
+  position: fixed;
+  inset: -250px; /* overflow to allow seamless scroll */
+  z-index: -1;
+  background-color: #0a0020;
   background-image:
-    /* Animated twinkling stars - small */
     radial-gradient(1px 1px at 10px 20px, #fff, transparent),
     radial-gradient(1px 1px at 60px 80px, #fff, transparent),
     radial-gradient(1.5px 1.5px at 130px 40px, #ff0, transparent),
@@ -187,23 +199,18 @@ html.geocities body {
     radial-gradient(1.5px 1.5px at 180px 180px, #ff0, transparent),
     radial-gradient(1px 1px at 220px 50px, #fff, transparent),
     radial-gradient(1px 1px at 120px 220px, #0ff, transparent),
-    /* Purple nebula glow */
     radial-gradient(ellipse 600px 400px at 20% 30%, rgba(100, 0, 200, 0.15), transparent),
     radial-gradient(ellipse 500px 300px at 80% 70%, rgba(200, 0, 100, 0.1), transparent),
-    /* Bottom horizon glow */
     linear-gradient(to top, rgba(255, 0, 100, 0.08) 0%, transparent 30%),
-    /* Faint grid overlay */
     repeating-linear-gradient(0deg, transparent, transparent 49px, rgba(0, 255, 255, 0.03) 50px),
-    repeating-linear-gradient(90deg, transparent, transparent 49px, rgba(0, 255, 255, 0.03) 50px) !important;
+    repeating-linear-gradient(90deg, transparent, transparent 49px, rgba(0, 255, 255, 0.03) 50px);
   background-size:
     250px 250px, 250px 250px, 250px 250px, 250px 250px,
     250px 250px, 250px 250px, 250px 250px, 250px 250px,
     250px 250px, 250px 250px, 250px 250px, 250px 250px,
-    100% 100%, 100% 100%, 100% 100%, 50px 50px, 50px 50px !important;
-  animation: geocities-bg-scroll 60s linear infinite !important;
-  color: #00ff00 !important;
-  image-rendering: pixelated;
-  padding-bottom: 32px;
+    100% 100%, 100% 100%, 100% 100%, 50px 50px, 50px 50px;
+  will-change: transform;
+  animation: geocities-bg-scroll 60s linear infinite;
 }
 
 /* ---- HEADINGS → FIRE TEXT ---- */
@@ -216,7 +223,8 @@ html.geocities h6,
 html.geocities .font-display,
 html.geocities .font-space-grotesk {
   font-family: "Comic Sans MS", "Comic Sans", cursive !important;
-  animation: geocities-fire 1.5s ease-in-out infinite;
+  /* Static fire text-shadow — no animation to avoid per-frame repaints */
+  text-shadow: 0 0 4px #ff0, 0 -5px 4px #ff8000, 0 -10px 8px #ff0000;
   color: #ffff00 !important;
 }
 
@@ -244,8 +252,8 @@ html.geocities a:active {
 }
 
 @keyframes geocities-sidebar-glow {
-  0%, 100% { box-shadow: inset -2px 0 8px rgba(0, 0, 0, 0.5), inset 0 0 30px rgba(0, 0, 255, 0.1); }
-  50% { box-shadow: inset -2px 0 8px rgba(0, 0, 0, 0.5), inset 0 0 60px rgba(100, 0, 200, 0.2); }
+  0%, 100% { opacity: 0; }
+  50% { opacity: 1; }
 }
 
 /* ---- SIDEBAR → 90s FRAME STYLE ---- */
@@ -255,7 +263,7 @@ html.geocities aside {
     repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(255,255,255,0.02) 4px) !important;
   border-right: 4px ridge #c0c0c0 !important;
   backdrop-filter: none !important;
-  animation: geocities-sidebar-glow 4s ease-in-out infinite;
+  box-shadow: inset -2px 0 8px rgba(0, 0, 0, 0.5), inset 0 0 40px rgba(100, 0, 200, 0.15);
 }
 
 html.geocities aside nav a {
@@ -308,7 +316,7 @@ html.geocities aside a[href="/profile"] p {
 html.geocities aside a[href="/profile"] div[class*="bg-primary"] {
   background: #ff0000 !important;
   border-radius: 0 !important;
-  animation: geocities-wobble 0.5s ease-in-out infinite;
+  animation: geocities-wobble 2s ease-in-out infinite;
 }
 
 /* Vote button → pulsing neon */
