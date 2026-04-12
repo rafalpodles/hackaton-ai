@@ -11,37 +11,40 @@ import { useGeocities } from "@/components/geocities/geocities-provider";
 interface SidebarProps {
   user: Profile;
   votingOpen: boolean;
+  hackathonSlug?: string;
 }
 
-const startItems = [
-  { label: "Garage Rules", href: "/rules" },
-  { label: "Poradnik", href: "/guide" },
-  { label: "Q&A", href: "/faq" },
-  { label: "Pomysły na projekty", href: "/ideas" },
-  { label: "Przydatne prompty", href: "/prompts" },
-];
-
-const hackathonItems = [
-  { label: "Zespół", href: "/team" },
-  { label: "Mój projekt", href: "/my-project" },
-];
-
-const galleryItems = [
-  { label: "Projekty", href: "/" },
-  { label: "Live", href: "/feed" },
-];
-
-const adminItems = [
-  { label: "Panel", href: "/admin" },
-  { label: "Wyniki", href: "/results" },
-];
-
-export default function Sidebar({ user, votingOpen }: SidebarProps) {
+export default function Sidebar({ user, votingOpen, hackathonSlug }: SidebarProps) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
   const supabase = createClient();
   const { enabled: geocitiesEnabled } = useGeocities();
+
+  const h = hackathonSlug ? `/h/${hackathonSlug}` : "";
+
+  const startItems = [
+    { label: "Garage Rules", href: "/rules" },
+    { label: "Poradnik", href: "/guide" },
+    { label: "Q&A", href: "/faq" },
+    ...(hackathonSlug ? [{ label: "Pomysły na projekty", href: `${h}/ideas` }] : []),
+    { label: "Przydatne prompty", href: "/prompts" },
+  ];
+
+  const hackathonItems = [
+    { label: "Zespół", href: `${h}/team` },
+    { label: "Mój projekt", href: `${h}/my-project` },
+  ];
+
+  const galleryItems = [
+    { label: "Projekty", href: hackathonSlug ? `${h}` : "/" },
+    { label: "Live", href: `${h}/feed` },
+  ];
+
+  const adminItems = [
+    { label: "Panel", href: "/admin" },
+    { label: "Wyniki", href: `${h}/results` },
+  ];
 
   // Close sidebar on route change (mobile)
   useEffect(() => {
@@ -58,8 +61,10 @@ export default function Sidebar({ user, votingOpen }: SidebarProps) {
     }
   }, [open]);
 
-  const isActive = (href: string) =>
-    href === "/" ? pathname === "/" : pathname.startsWith(href);
+  const isActive = (href: string) => {
+    if (hackathonSlug && href === `/h/${hackathonSlug}`) return pathname === href;
+    return href === "/" ? pathname === "/" : pathname.startsWith(href);
+  };
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -137,7 +142,11 @@ export default function Sidebar({ user, votingOpen }: SidebarProps) {
 
         {/* Navigation */}
         <nav className="flex-1 space-y-1 px-3">
-          <p className="mb-2 px-2 font-space-grotesk text-xs uppercase tracking-wider text-on-surface-muted">
+          {hackathonSlug && (
+            <NavLink href="/" label="← Hackathony" active={false} />
+          )}
+
+          <p className="mb-2 mt-2 px-2 font-space-grotesk text-xs uppercase tracking-wider text-on-surface-muted">
             Na start
           </p>
           {startItems.map((item) => (
@@ -215,7 +224,7 @@ export default function Sidebar({ user, votingOpen }: SidebarProps) {
         {votingOpen && (
           <div className="px-3 pb-3">
             <Link
-              href="/vote"
+              href={`${h}/vote`}
               className="block w-full rounded-lg bg-gradient-to-r from-primary to-secondary py-2.5 text-center font-space-grotesk text-sm font-bold uppercase tracking-wider text-white transition-opacity hover:opacity-90"
             >
               Głosuj
