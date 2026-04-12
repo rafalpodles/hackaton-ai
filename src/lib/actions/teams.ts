@@ -15,25 +15,28 @@ async function getAuthUser() {
   return { supabase, user };
 }
 
-export async function createTeam(name: string) {
+export async function createTeam(name: string, hackathonId: string) {
   if (!name?.trim()) throw new Error("Nazwa zespołu jest wymagana");
 
   const { supabase, user } = await getAuthUser();
 
-  // Check user doesn't already have a team
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("team_id, is_solo")
-    .eq("id", user.id)
+  // Check participant exists and doesn't already have a team
+  const { data: participant } = await supabase
+    .from("hackathon_participants")
+    .select("team_id, is_solo, project_id")
+    .eq("hackathon_id", hackathonId)
+    .eq("user_id", user.id)
     .single();
 
-  if (profile?.team_id) throw new Error("Już należysz do zespołu");
+  if (!participant) throw new Error("Nie jesteś uczestnikiem tego hackathonu");
+  if (participant.team_id) throw new Error("Już należysz do zespołu");
 
-  // Check name uniqueness
+  // Check name uniqueness within the hackathon
   const { data: existing } = await supabase
     .from("teams")
     .select("id")
     .eq("name", name.trim())
+    .eq("hackathon_id", hackathonId)
     .single();
 
   if (existing) throw new Error("Zespół o tej nazwie już istnieje");
@@ -42,57 +45,53 @@ export async function createTeam(name: string) {
 
   const { error } = await supabase
     .from("teams")
-    .insert({ id: teamId, name: name.trim(), leader_id: user.id });
+    .insert({ id: teamId, name: name.trim(), leader_id: user.id, hackathon_id: hackathonId });
 
   if (error) throw new Error(`Nie udało się utworzyć zespołu: ${error.message}`);
 
   // Clean up solo project if user was solo
-  if (profile?.is_solo) {
-    const { data: soloProfile } = await supabase
-      .from("profiles")
-      .select("project_id")
-      .eq("id", user.id)
+  if (participant.is_solo && participant.project_id) {
+    const { data: soloProject } = await supabase
+      .from("projects")
+      .select("is_submitted")
+      .eq("id", participant.project_id)
       .single();
 
-    if (soloProfile?.project_id) {
-      const { data: soloProject } = await supabase
-        .from("projects")
-        .select("is_submitted")
-        .eq("id", soloProfile.project_id)
-        .single();
-
-      if (soloProject?.is_submitted) {
-        throw new Error("Nie możesz założyć zespołu — Twój projekt solo jest już zatwierdzony.");
-      }
-
-      await supabase.from("projects").delete().eq("id", soloProfile.project_id);
+    if (soloProject?.is_submitted) {
+      throw new Error("Nie możesz założyć zespołu — Twój projekt solo jest już zatwierdzony.");
     }
+
+    await supabase.from("projects").delete().eq("id", participant.project_id);
   }
 
   await supabase
-    .from("profiles")
+    .from("hackathon_participants")
     .update({ team_id: teamId, is_solo: false, project_id: null })
-    .eq("id", user.id);
+    .eq("hackathon_id", hackathonId)
+    .eq("user_id", user.id);
 
   revalidatePath("/");
   redirect("/team");
 }
 
-export async function goSolo() {
+export async function goSolo(hackathonId: string) {
   const { supabase, user } = await getAuthUser();
 
-  const { data: profile } = await supabase
-    .from("profiles")
+  const { data: participant } = await supabase
+    .from("hackathon_participants")
     .select("team_id, is_solo")
-    .eq("id", user.id)
+    .eq("hackathon_id", hackathonId)
+    .eq("user_id", user.id)
     .single();
 
-  if (profile?.team_id) throw new Error("Najpierw opuść zespół");
+  if (!participant) throw new Error("Nie jesteś uczestnikiem tego hackathonu");
+  if (participant.team_id) throw new Error("Najpierw opuść zespół");
 
   await supabase
-    .from("profiles")
+    .from("hackathon_participants")
     .update({ is_solo: true })
-    .eq("id", user.id);
+    .eq("hackathon_id", hackathonId)
+    .eq("user_id", user.id);
 
   // Delete any pending requests
   await supabase
@@ -107,20 +106,31 @@ export async function goSolo() {
 export async function requestJoinTeam(teamId: string) {
   const { supabase, user } = await getAuthUser();
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("team_id, is_solo, project_id")
-    .eq("id", user.id)
+  // Get team to find hackathon_id
+  const { data: team } = await supabase
+    .from("teams")
+    .select("id, hackathon_id")
+    .eq("id", teamId)
     .single();
 
-  if (profile?.team_id) throw new Error("Już należysz do zespołu");
+  if (!team) throw new Error("Nie znaleziono zespołu");
+
+  const { data: participant } = await supabase
+    .from("hackathon_participants")
+    .select("team_id, is_solo, project_id")
+    .eq("hackathon_id", team.hackathon_id)
+    .eq("user_id", user.id)
+    .single();
+
+  if (!participant) throw new Error("Nie jesteś uczestnikiem tego hackathonu");
+  if (participant.team_id) throw new Error("Już należysz do zespołu");
 
   // Block if solo user has a submitted project
-  if (profile?.is_solo && profile.project_id) {
+  if (participant.is_solo && participant.project_id) {
     const { data: project } = await supabase
       .from("projects")
       .select("is_submitted")
-      .eq("id", profile.project_id)
+      .eq("id", participant.project_id)
       .single();
 
     if (project?.is_submitted) {
@@ -128,10 +138,10 @@ export async function requestJoinTeam(teamId: string) {
     }
   }
 
-  // Check team exists and has room
+  // Check team has room
   const { data: members } = await supabase
-    .from("profiles")
-    .select("id")
+    .from("hackathon_participants")
+    .select("user_id")
     .eq("team_id", teamId);
 
   if ((members?.length ?? 0) >= MAX_TEAM_SIZE) {
@@ -187,7 +197,7 @@ export async function approveRequest(requestId: string) {
   // Verify current user is team leader
   const { data: team } = await supabase
     .from("teams")
-    .select("id, leader_id")
+    .select("id, leader_id, hackathon_id")
     .eq("id", request.team_id)
     .single();
 
@@ -197,8 +207,8 @@ export async function approveRequest(requestId: string) {
 
   // Check team size
   const { data: members } = await supabase
-    .from("profiles")
-    .select("id")
+    .from("hackathon_participants")
+    .select("user_id")
     .eq("team_id", team.id);
 
   if ((members?.length ?? 0) >= MAX_TEAM_SIZE) {
@@ -208,18 +218,19 @@ export async function approveRequest(requestId: string) {
   }
 
   // Check if joining user has a solo project to clean up
-  const { data: joiningProfile } = await supabase
-    .from("profiles")
+  const { data: joiningParticipant } = await supabase
+    .from("hackathon_participants")
     .select("project_id, is_solo")
-    .eq("id", request.user_id)
+    .eq("hackathon_id", team.hackathon_id)
+    .eq("user_id", request.user_id)
     .single();
 
-  if (joiningProfile?.is_solo && joiningProfile.project_id) {
+  if (joiningParticipant?.is_solo && joiningParticipant.project_id) {
     // Check if project is submitted — block if so
     const { data: soloProject } = await supabase
       .from("projects")
       .select("is_submitted")
-      .eq("id", joiningProfile.project_id)
+      .eq("id", joiningParticipant.project_id)
       .single();
 
     if (soloProject?.is_submitted) {
@@ -230,14 +241,15 @@ export async function approveRequest(requestId: string) {
     await supabase
       .from("projects")
       .delete()
-      .eq("id", joiningProfile.project_id);
+      .eq("id", joiningParticipant.project_id);
   }
 
   // Add user to team, clear solo status and project
   await supabase
-    .from("profiles")
+    .from("hackathon_participants")
     .update({ team_id: team.id, is_solo: false, project_id: null })
-    .eq("id", request.user_id);
+    .eq("hackathon_id", team.hackathon_id)
+    .eq("user_id", request.user_id);
 
   // Delete the request
   await supabase
@@ -283,22 +295,23 @@ export async function rejectRequest(requestId: string) {
   revalidatePath("/team");
 }
 
-export async function leaveTeam() {
+export async function leaveTeam(hackathonId: string) {
   const { supabase, user } = await getAuthUser();
 
-  const { data: profile } = await supabase
-    .from("profiles")
+  const { data: participant } = await supabase
+    .from("hackathon_participants")
     .select("team_id")
-    .eq("id", user.id)
+    .eq("hackathon_id", hackathonId)
+    .eq("user_id", user.id)
     .single();
 
-  if (!profile?.team_id) throw new Error("Nie należysz do żadnego zespołu");
+  if (!participant?.team_id) throw new Error("Nie należysz do żadnego zespołu");
 
   // Check user is not the leader
   const { data: team } = await supabase
     .from("teams")
     .select("leader_id")
-    .eq("id", profile.team_id)
+    .eq("id", participant.team_id)
     .single();
 
   if (team?.leader_id === user.id) {
@@ -306,31 +319,33 @@ export async function leaveTeam() {
   }
 
   await supabase
-    .from("profiles")
-    .update({ team_id: null })
-    .eq("id", user.id);
+    .from("hackathon_participants")
+    .update({ team_id: null, is_solo: false })
+    .eq("hackathon_id", hackathonId)
+    .eq("user_id", user.id);
 
   revalidatePath("/");
   revalidatePath("/team");
   redirect("/onboarding");
 }
 
-export async function removeMember(memberId: string) {
+export async function removeMember(memberId: string, hackathonId: string) {
   const { supabase, user } = await getAuthUser();
 
   // Get current user's team and verify leadership
-  const { data: profile } = await supabase
-    .from("profiles")
+  const { data: participant } = await supabase
+    .from("hackathon_participants")
     .select("team_id")
-    .eq("id", user.id)
+    .eq("hackathon_id", hackathonId)
+    .eq("user_id", user.id)
     .single();
 
-  if (!profile?.team_id) throw new Error("Nie należysz do żadnego zespołu");
+  if (!participant?.team_id) throw new Error("Nie należysz do żadnego zespołu");
 
   const { data: team } = await supabase
     .from("teams")
     .select("leader_id")
-    .eq("id", profile.team_id)
+    .eq("id", participant.team_id)
     .single();
 
   if (!team || team.leader_id !== user.id) {
@@ -343,29 +358,31 @@ export async function removeMember(memberId: string) {
 
   // Remove member
   await supabase
-    .from("profiles")
+    .from("hackathon_participants")
     .update({ team_id: null })
-    .eq("id", memberId)
-    .eq("team_id", profile.team_id);
+    .eq("hackathon_id", hackathonId)
+    .eq("user_id", memberId)
+    .eq("team_id", participant.team_id);
 
   revalidatePath("/team");
 }
 
-export async function deleteTeam() {
+export async function deleteTeam(hackathonId: string) {
   const { supabase, user } = await getAuthUser();
 
-  const { data: profile } = await supabase
-    .from("profiles")
+  const { data: participant } = await supabase
+    .from("hackathon_participants")
     .select("team_id")
-    .eq("id", user.id)
+    .eq("hackathon_id", hackathonId)
+    .eq("user_id", user.id)
     .single();
 
-  if (!profile?.team_id) throw new Error("Nie należysz do żadnego zespołu");
+  if (!participant?.team_id) throw new Error("Nie należysz do żadnego zespołu");
 
   const { data: team } = await supabase
     .from("teams")
     .select("id, leader_id, project_id")
-    .eq("id", profile.team_id)
+    .eq("id", participant.team_id)
     .single();
 
   if (!team || team.leader_id !== user.id) {
@@ -385,11 +402,11 @@ export async function deleteTeam() {
     }
   }
 
-  // Remove all members from team
+  // Remove all members from team (clear team_id on participants)
   await supabase
-    .from("profiles")
+    .from("hackathon_participants")
     .update({ team_id: null })
-    .not("id", "eq", user.id)
+    .eq("hackathon_id", hackathonId)
     .eq("team_id", team.id);
 
   // Delete pending requests
@@ -397,12 +414,6 @@ export async function deleteTeam() {
     .from("team_requests")
     .delete()
     .eq("team_id", team.id);
-
-  // Remove self from team
-  await supabase
-    .from("profiles")
-    .update({ team_id: null })
-    .eq("id", user.id);
 
   // Delete team
   await supabase
