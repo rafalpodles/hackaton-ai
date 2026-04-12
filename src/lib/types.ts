@@ -1,5 +1,37 @@
 export type Role = "participant" | "admin";
-export type VoteCategory = "concept_to_reality" | "creativity" | "usefulness";
+
+export interface Hackathon {
+  id: string;
+  name: string;
+  slug: string;
+  description: string;
+  hackathon_date: string | null;
+  submission_deadline: string | null;
+  submission_open: boolean;
+  voting_open: boolean;
+  status: "upcoming" | "active" | "voting" | "finished";
+  created_at: string;
+  updated_at: string;
+}
+
+export interface HackathonCategory {
+  id: string;
+  hackathon_id: string;
+  slug: string;
+  label: string;
+  display_order: number;
+}
+
+export interface HackathonParticipant {
+  id: string;
+  hackathon_id: string;
+  user_id: string;
+  role: Role;
+  team_id: string | null;
+  project_id: string | null;
+  is_solo: boolean;
+  joined_at: string;
+}
 
 export interface Profile {
   id: string;
@@ -8,9 +40,6 @@ export interface Profile {
   first_name: string | null;
   last_name: string | null;
   avatar_url: string | null;
-  project_id: string | null;
-  team_id: string | null;
-  is_solo: boolean;
   role: Role;
   openrouter_api_key: string | null;
   openrouter_key_hash: string | null;
@@ -24,6 +53,7 @@ export interface Team {
   id: string;
   name: string;
   leader_id: string;
+  hackathon_id: string;
   project_id: string | null;
   created_at: string;
   updated_at: string;
@@ -51,6 +81,7 @@ export interface TeamRequestWithTeam extends TeamRequest {
 export interface Project {
   id: string;
   name: string;
+  hackathon_id: string;
   description: string;
   idea_origin: string;
   journey: string;
@@ -73,7 +104,8 @@ export interface Vote {
   id: string;
   voter_id: string;
   project_id: string;
-  category: VoteCategory;
+  hackathon_id: string;
+  category: string;
   created_at: string;
 }
 
@@ -81,6 +113,11 @@ export interface VoteResult {
   project_id: string;
   project_name: string;
   team_members: string[];
-  category: VoteCategory;
+  category: string;
   vote_count: number;
+}
+
+export interface HackathonWithStats extends Hackathon {
+  project_count: number;
+  participant_count: number;
 }

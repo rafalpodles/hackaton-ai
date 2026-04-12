@@ -1,10 +1,9 @@
 import { cache } from "react";
 import { createClient } from "@/lib/supabase/server";
-import type { Profile, ProjectWithTeam } from "@/lib/types";
+import type { Profile, ProjectWithTeam, Hackathon, HackathonParticipant } from "@/lib/types";
 
 /**
  * Get current user profile. Cached per request via React.cache()
- * so layout + page don't duplicate the query.
  */
 export const getCurrentUser = cache(async (): Promise<Profile | null> => {
   const supabase = await createClient();
@@ -21,15 +20,42 @@ export const getCurrentUser = cache(async (): Promise<Profile | null> => {
 });
 
 /**
- * Shared data fetching: submitted projects with team members.
- * Projects can belong to a team (via teams.project_id) or a solo user (via profiles.project_id).
+ * Get a hackathon by its slug.
  */
-export const getSubmittedProjects = cache(async (): Promise<ProjectWithTeam[]> => {
+export const getHackathonBySlug = cache(async (slug: string): Promise<Hackathon | null> => {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("hackathons")
+    .select("*")
+    .eq("slug", slug)
+    .single();
+  return data;
+});
+
+/**
+ * Get a user's participation record for a specific hackathon.
+ */
+export const getParticipant = cache(async (hackathonId: string, userId: string): Promise<HackathonParticipant | null> => {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("hackathon_participants")
+    .select("*")
+    .eq("hackathon_id", hackathonId)
+    .eq("user_id", userId)
+    .single();
+  return data;
+});
+
+/**
+ * Get submitted projects for a hackathon with team member info.
+ */
+export const getSubmittedProjects = cache(async (hackathonId: string): Promise<ProjectWithTeam[]> => {
   const supabase = await createClient();
 
   const { data: projects, error } = await supabase
     .from("projects")
     .select("*")
+    .eq("hackathon_id", hackathonId)
     .eq("is_submitted", true)
     .order("created_at", { ascending: false });
 
@@ -38,30 +64,62 @@ export const getSubmittedProjects = cache(async (): Promise<ProjectWithTeam[]> =
 
   const projectIds = projects.map((p) => p.id);
 
-  // Get team members (projects owned by teams)
+  // Get team members for team-based projects
   const { data: teams } = await supabase
     .from("teams")
-    .select("project_id, members:profiles!team_id(id, display_name, avatar_url)")
+    .select("project_id")
+    .eq("hackathon_id", hackathonId)
     .in("project_id", projectIds);
 
-  // Get solo users (projects owned directly by profiles)
-  const { data: soloProfiles } = await supabase
-    .from("profiles")
-    .select("project_id, id, display_name, avatar_url")
-    .in("project_id", projectIds)
-    .eq("is_solo", true);
+  const teamProjectIds = (teams ?? []).map((t) => t.project_id).filter(Boolean) as string[];
 
-  const teamMap = new Map<string, Pick<Profile, "id" | "display_name" | "avatar_url">[]>();
+  // Get members of those teams via hackathon_participants
+  const { data: teamMembers } = teamProjectIds.length > 0
+    ? await supabase
+        .from("hackathon_participants")
+        .select("team_id, user:profiles!user_id(id, display_name, avatar_url)")
+        .eq("hackathon_id", hackathonId)
+        .not("team_id", "is", null)
+    : { data: [] };
 
+  // Build team_id → project_id map
+  const teamToProject = new Map<string, string>();
   for (const t of teams ?? []) {
     if (t.project_id) {
-      teamMap.set(t.project_id, (t.members ?? []) as Pick<Profile, "id" | "display_name" | "avatar_url">[]);
+      // We need team_id too — get it from the teams table
+      const { data: teamRow } = await supabase
+        .from("teams")
+        .select("id")
+        .eq("project_id", t.project_id)
+        .eq("hackathon_id", hackathonId)
+        .single();
+      if (teamRow) teamToProject.set(teamRow.id, t.project_id);
     }
   }
 
-  for (const p of soloProfiles ?? []) {
-    if (p.project_id) {
-      teamMap.set(p.project_id, [{ id: p.id, display_name: p.display_name, avatar_url: p.avatar_url }]);
+  const teamMap = new Map<string, Pick<Profile, "id" | "display_name" | "avatar_url">[]>();
+  for (const m of teamMembers ?? []) {
+    const projectId = m.team_id ? teamToProject.get(m.team_id) : null;
+    if (projectId && m.user) {
+      const u = m.user as unknown as Pick<Profile, "id" | "display_name" | "avatar_url">;
+      const existing = teamMap.get(projectId) ?? [];
+      existing.push(u);
+      teamMap.set(projectId, existing);
+    }
+  }
+
+  // Get solo users
+  const { data: soloParticipants } = await supabase
+    .from("hackathon_participants")
+    .select("project_id, user:profiles!user_id(id, display_name, avatar_url)")
+    .eq("hackathon_id", hackathonId)
+    .eq("is_solo", true)
+    .in("project_id", projectIds);
+
+  for (const p of soloParticipants ?? []) {
+    if (p.project_id && p.user) {
+      const u = p.user as unknown as Pick<Profile, "id" | "display_name" | "avatar_url">;
+      teamMap.set(p.project_id, [u]);
     }
   }
 
