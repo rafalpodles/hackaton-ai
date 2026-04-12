@@ -94,7 +94,7 @@ export async function delegateHackathonAdmin(hackathonId: string, userId: string
     .eq("user_id", userId);
 
   if (error) throw new Error("Nie udało się przypisać admina");
-  revalidatePath("/admin");
+  revalidatePath("/admin", "layout");
 }
 
 export async function revokeHackathonAdmin(hackathonId: string, userId: string) {
@@ -108,5 +108,5 @@ export async function revokeHackathonAdmin(hackathonId: string, userId: string) 
     .eq("user_id", userId);
 
   if (error) throw new Error("Nie udało się odebrać uprawnień admina");
-  revalidatePath("/admin");
+  revalidatePath("/admin", "layout");
 }
