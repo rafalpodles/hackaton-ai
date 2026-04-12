@@ -1,37 +1,54 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
+import { registerUser } from "@/lib/actions/register";
 import { GlassCard } from "@/components/ui/glass-card";
 import { GradientButton } from "@/components/ui/gradient-button";
-import { Suspense } from "react";
-import GeocitiesToggle from "@/components/geocities/geocities-toggle";
 
-function LoginForm() {
+const EMAIL_HINT_REGEX = /^[a-zA-Z]{1,4}@(spyro-soft\.com|vm\.spyro-soft\.com)$/;
+
+export default function RegisterPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const searchParams = useSearchParams();
-  const passwordChanged = searchParams.get("password_changed") === "true";
   const router = useRouter();
+
+  const emailValid = email === "" || EMAIL_HINT_REGEX.test(email);
+  const passwordsMatch = confirmPassword === "" || password === confirmPassword;
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
+
+    if (password !== confirmPassword) {
+      setError("Hasła nie są identyczne.");
+      return;
+    }
+
     setLoading(true);
 
     try {
+      const result = await registerUser(email, password);
+
+      if (result.error) {
+        setError(result.error);
+        return;
+      }
+
+      // Auto-login after successful registration
       const supabase = createClient();
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
+      const { error: loginError } = await supabase.auth.signInWithPassword({
+        email: email.toLowerCase(),
         password,
       });
 
-      if (error) {
-        setError("Nieprawidłowy email lub hasło.");
+      if (loginError) {
+        setError("Konto zostało utworzone, ale logowanie nie powiodło się. Przejdź do strony logowania.");
         return;
       }
 
@@ -58,14 +75,8 @@ function LoginForm() {
 
           {/* Heading */}
           <h2 className="font-space-grotesk text-2xl font-bold text-on-surface text-center mb-8">
-            Witaj, hackerze!
+            Utwórz konto
           </h2>
-
-          {passwordChanged && (
-            <p className="text-green-400 text-sm text-center mb-4">
-              Hasło zostało zmienione. Zaloguj się nowym hasłem.
-            </p>
-          )}
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -82,9 +93,14 @@ function LoginForm() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="ty@example.com"
+                placeholder="akronim@spyro-soft.com"
                 className="w-full bg-surface-low text-on-surface placeholder:text-on-surface-muted/40 border-b-2 border-secondary focus:border-primary-dim outline-none px-4 py-3 rounded-t-md transition-colors duration-200"
               />
+              {email && !emailValid && (
+                <p className="text-secondary text-xs mt-1">
+                  Format: maks. 4 litery@spyro-soft.com lub akronim@vm.spyro-soft.com
+                </p>
+              )}
             </div>
 
             <div>
@@ -105,6 +121,27 @@ function LoginForm() {
               />
             </div>
 
+            <div>
+              <label
+                htmlFor="confirmPassword"
+                className="block font-space-grotesk text-xs tracking-wide uppercase text-on-surface-muted mb-2"
+              >
+                Potwierdź hasło
+              </label>
+              <input
+                id="confirmPassword"
+                type="password"
+                required
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                placeholder="••••••••"
+                className="w-full bg-surface-low text-on-surface placeholder:text-on-surface-muted/40 border-b-2 border-secondary focus:border-primary-dim outline-none px-4 py-3 rounded-t-md transition-colors duration-200"
+              />
+              {!passwordsMatch && (
+                <p className="text-secondary text-xs mt-1">Hasła nie są identyczne.</p>
+              )}
+            </div>
+
             {error && (
               <p className="text-secondary text-sm text-center">{error}</p>
             )}
@@ -112,41 +149,24 @@ function LoginForm() {
             <GradientButton
               type="submit"
               fullWidth
-              disabled={loading || !email || !password}
+              disabled={loading || !email || !password || !confirmPassword || !passwordsMatch}
             >
-              {loading ? "Logowanie..." : "Zaloguj się"}
+              {loading ? "Tworzenie konta..." : "Zarejestruj się"}
             </GradientButton>
           </form>
 
-          {/* Link to register */}
+          {/* Link to login */}
           <p className="mt-6 text-center text-sm text-on-surface-muted">
-            Nie masz konta?{" "}
+            Masz już konto?{" "}
             <Link
-              href="/register"
+              href="/login"
               className="text-primary-dim hover:text-primary transition-colors"
             >
-              Zarejestruj się
+              Zaloguj się
             </Link>
           </p>
         </GlassCard>
-
-        {/* Geocities Easter Egg */}
-        <div className="mt-6 flex justify-center">
-          <GeocitiesToggle />
-        </div>
       </div>
     </div>
-  );
-}
-
-export default function LoginPage() {
-  return (
-    <Suspense fallback={
-      <div className="min-h-screen bg-surface flex items-center justify-center">
-        <div className="inline-block w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-      </div>
-    }>
-      <LoginForm />
-    </Suspense>
   );
 }
