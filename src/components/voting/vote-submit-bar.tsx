@@ -1,10 +1,9 @@
 "use client";
 
-import type { VoteCategory } from "@/lib/types";
 import { GradientButton } from "@/components/ui/gradient-button";
 
 interface VoteSubmitBarProps {
-  selections: Record<VoteCategory, string | null>;
+  selections: Record<string, string | null>;
   onSubmit: () => void;
   submitting: boolean;
 }

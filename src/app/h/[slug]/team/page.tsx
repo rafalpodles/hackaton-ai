@@ -57,7 +57,7 @@ export default async function HackathonTeamPage({ params }: Props) {
       members: (t.members ?? []).map((m: { user: { id: string; display_name: string; avatar_url: string | null; email: string } }) => m.user),
     }));
 
-    return <NoTeamView teams={teamList} />;
+    return <NoTeamView teams={teamList} hackathonId={hackathon.id} />;
   }
 
   // Solo user without team
@@ -98,7 +98,7 @@ export default async function HackathonTeamPage({ params }: Props) {
       hasUnsubmittedProject = !!proj && !proj.is_submitted;
     }
 
-    return <NoTeamView teams={teamList} isSolo hasUnsubmittedProject={hasUnsubmittedProject} />;
+    return <NoTeamView teams={teamList} hackathonId={hackathon.id} isSolo hasUnsubmittedProject={hasUnsubmittedProject} />;
   }
 
   // User is in a team
@@ -164,12 +164,12 @@ export default async function HackathonTeamPage({ params }: Props) {
         <h2 className="font-space-grotesk text-lg font-semibold text-on-surface mb-4">
           Członkowie ({teamData.members.length}/5)
         </h2>
-        {/* TODO: TeamMemberList calls removeMember without hackathonId — update after Task 13-16 */}
         <TeamMemberList
           members={teamData.members}
           leaderId={teamData.leader_id}
           isLeader={isLeader}
           currentUserId={user.id}
+          hackathonId={hackathon.id}
         />
       </GlassCard>
 

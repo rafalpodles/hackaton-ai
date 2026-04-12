@@ -12,6 +12,7 @@ interface TeamMemberListProps {
   leaderId: string;
   isLeader: boolean;
   currentUserId: string;
+  hackathonId: string;
 }
 
 export function TeamMemberList({
@@ -19,13 +20,14 @@ export function TeamMemberList({
   leaderId,
   isLeader,
   currentUserId,
+  hackathonId,
 }: TeamMemberListProps) {
   const [removingId, setRemovingId] = useState<string | null>(null);
 
   async function handleRemove(memberId: string) {
     setRemovingId(memberId);
     try {
-      await removeMember(memberId);
+      await removeMember(memberId, hackathonId);
     } catch {
       setRemovingId(null);
     }

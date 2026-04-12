@@ -88,6 +88,7 @@ export default async function HackathonVotePage({ params }: Props) {
         ownProjectId={ownProjectId}
         hasVoted={hasVoted}
         votedFor={votedFor}
+        hackathonId={hackathon.id}
       />
     </div>
   );

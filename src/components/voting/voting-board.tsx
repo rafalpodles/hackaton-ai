@@ -2,12 +2,12 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import type { VoteCategory, ProjectWithTeam } from "@/lib/types";
+import type { ProjectWithTeam } from "@/lib/types";
 import { castVotes } from "@/lib/actions/voting";
 import VotingCategory from "./voting-category";
 import VoteSubmitBar from "./vote-submit-bar";
 
-const CATEGORIES: { key: VoteCategory; label: string; icon: string }[] = [
+const CATEGORIES: { key: string; label: string; icon: string }[] = [
   { key: "concept_to_reality", label: "Droga od koncepcji do realizacji", icon: "\u26A1" },
   { key: "creativity", label: "Kreatywno\u015b\u0107 pomys\u0142u", icon: "\u2728" },
   { key: "usefulness", label: "Przydatno\u015b\u0107 / warto\u015b\u0107 u\u017cytkowa", icon: "\u2699" },
@@ -18,6 +18,7 @@ interface VotingBoardProps {
   ownProjectId: string | null;
   hasVoted: boolean;
   votedFor?: Record<string, string>;
+  hackathonId: string;
 }
 
 export default function VotingBoard({
@@ -25,6 +26,7 @@ export default function VotingBoard({
   ownProjectId,
   hasVoted,
   votedFor = {},
+  hackathonId,
 }: VotingBoardProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
@@ -32,7 +34,7 @@ export default function VotingBoard({
   const [error, setError] = useState<string | null>(null);
 
   const [selections, setSelections] = useState<
-    Record<VoteCategory, string | null>
+    Record<string, string | null>
   >({
     concept_to_reality: null,
     creativity: null,
@@ -122,7 +124,7 @@ export default function VotingBoard({
     );
   }
 
-  function handleSelect(category: VoteCategory, projectId: string) {
+  function handleSelect(category: string, projectId: string) {
     setSelections((prev) => ({
       ...prev,
       [category]: prev[category] === projectId ? null : projectId,
@@ -134,7 +136,7 @@ export default function VotingBoard({
     const votes = Object.entries(selections)
       .filter(([, pid]) => pid !== null)
       .map(([category, project_id]) => ({
-        category: category as VoteCategory,
+        category: category as string,
         project_id: project_id!,
       }));
 
@@ -144,7 +146,7 @@ export default function VotingBoard({
     setError(null);
 
     try {
-      const result = await castVotes(votes);
+      const result = await castVotes(votes, hackathonId);
 
       if (result.error) {
         setError(result.error);

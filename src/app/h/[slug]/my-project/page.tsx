@@ -229,6 +229,7 @@ export default async function HackathonMyProjectPage({ params }: Props) {
   return (
     <SubmissionForm
       project={typedProject}
+      hackathonId={hackathon.id}
       submissionOpen={hackathon.submission_open}
       deadline={hackathon.submission_deadline}
       canSubmit={isLeader}

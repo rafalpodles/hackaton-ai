@@ -6,21 +6,22 @@ import type { TeamWithMembers } from "@/lib/types";
 
 interface NoTeamViewProps {
   teams: TeamWithMembers[];
+  hackathonId: string;
   isSolo?: boolean;
   hasUnsubmittedProject?: boolean;
 }
 
-export function NoTeamView({ teams, isSolo, hasUnsubmittedProject }: NoTeamViewProps) {
+export function NoTeamView({ teams, hackathonId, isSolo, hasUnsubmittedProject }: NoTeamViewProps) {
   async function handleCreateTeam(formData: FormData) {
     "use server";
     const name = formData.get("name") as string;
     if (!name?.trim()) return;
-    await createTeam(name.trim());
+    await createTeam(name.trim(), hackathonId);
   }
 
   async function handleGoSolo() {
     "use server";
-    await goSolo();
+    await goSolo(hackathonId);
   }
 
   return (
