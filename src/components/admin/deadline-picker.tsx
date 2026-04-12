@@ -4,6 +4,7 @@ import { useState, useTransition, useMemo, useCallback } from "react";
 import { setSubmissionDeadline } from "@/lib/actions/admin";
 
 interface DeadlinePickerProps {
+  hackathonId: string;
   currentDeadline: string | null;
 }
 
@@ -46,7 +47,7 @@ function ChevronRight({ className }: { className?: string }) {
   );
 }
 
-export default function DeadlinePicker({ currentDeadline }: DeadlinePickerProps) {
+export default function DeadlinePicker({ hackathonId, currentDeadline }: DeadlinePickerProps) {
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
 
@@ -142,7 +143,7 @@ export default function DeadlinePicker({ currentDeadline }: DeadlinePickerProps)
     const d = new Date(selectedYear, selectedMonth, Math.min(selectedDay, daysInSelectedMonth), hour, minute);
     startTransition(async () => {
       try {
-        await setSubmissionDeadline(d.toISOString());
+        await setSubmissionDeadline(hackathonId, d.toISOString());
       } catch (err) {
         setError(err instanceof Error ? err.message : "Błąd");
       }
@@ -153,7 +154,7 @@ export default function DeadlinePicker({ currentDeadline }: DeadlinePickerProps)
     setError(null);
     startTransition(async () => {
       try {
-        await setSubmissionDeadline(null);
+        await setSubmissionDeadline(hackathonId, null);
       } catch (err) {
         setError(err instanceof Error ? err.message : "Błąd");
       }

@@ -1,53 +1,70 @@
 import { createClient } from "@/lib/supabase/server";
-import StatsCards from "@/components/admin/stats-cards";
-import ProjectsTable from "@/components/admin/projects-table";
+import Link from "next/link";
 import UsersTable from "@/components/admin/users-table";
-import VotingToggle from "@/components/admin/voting-toggle";
-import DeadlinePicker from "@/components/admin/deadline-picker";
-import HackathonDatePicker from "@/components/admin/hackathon-date-picker";
-import SubmissionToggle from "@/components/admin/submission-toggle";
 import { getOpenRouterKeyUsage } from "@/lib/actions/admin";
 import { getCurrentUser } from "@/lib/utils";
-import type { Project, Profile } from "@/lib/types";
+import type { Profile, Hackathon } from "@/lib/types";
+
+const STATUS_LABELS: Record<string, string> = {
+  upcoming: "Nadchodzący",
+  active: "Aktywny",
+  voting: "Głosowanie",
+  finished: "Zakończony",
+};
+
+const STATUS_COLORS: Record<string, string> = {
+  upcoming: "bg-blue-500/15 text-blue-400",
+  active: "bg-green-500/15 text-green-400",
+  voting: "bg-yellow-500/15 text-yellow-400",
+  finished: "bg-surface-high text-on-surface-muted",
+};
+
+interface HackathonWithStats extends Hackathon {
+  project_count: number;
+  participant_count: number;
+}
 
 export default async function AdminDashboardPage() {
   const currentUser = await getCurrentUser();
   const supabase = await createClient();
 
   const [
-    { count: projectCount, error: e1 },
-    { count: participantCount, error: e2 },
-    { data: voterRows, error: e3 },
-    { data: projectsRaw, error: e4 },
-    { data: settings, error: e5 },
-    { data: usersRaw, error: e6 },
+    { data: hackathonsRaw, error: e1 },
+    { data: usersRaw, error: e2 },
   ] = await Promise.all([
     supabase
-      .from("projects")
-      .select("*", { count: "exact", head: true }),
+      .from("hackathons")
+      .select("*")
+      .order("created_at", { ascending: false }),
     supabase
       .from("profiles")
-      .select("*", { count: "exact", head: true })
-      .not("project_id", "is", null),
-    supabase
-      .from("votes")
-      .select("voter_id"),
-    supabase
-      .from("projects")
-      .select("*"),
-    supabase
-      .from("app_settings")
-      .select("voting_open, submission_open, submission_deadline, hackathon_date")
-      .eq("id", 1)
-      .single(),
-    supabase
-      .from("profiles")
-      .select("*, project:projects!project_id(name), team:teams!team_id(name)")
+      .select("*")
       .order("created_at", { ascending: true }),
   ]);
 
-  const queryError = e1 || e2 || e3 || e4 || e5 || e6;
-  const uniqueVoters = new Set((voterRows ?? []).map((v: { voter_id: string }) => v.voter_id)).size;
+  // Fetch stats per hackathon
+  const hackathons: HackathonWithStats[] = await Promise.all(
+    (hackathonsRaw ?? []).map(async (h) => {
+      const [{ count: projectCount }, { count: participantCount }] = await Promise.all([
+        supabase
+          .from("projects")
+          .select("*", { count: "exact", head: true })
+          .eq("hackathon_id", h.id),
+        supabase
+          .from("hackathon_participants")
+          .select("*", { count: "exact", head: true })
+          .eq("hackathon_id", h.id),
+      ]);
+      return {
+        ...h,
+        project_count: projectCount ?? 0,
+        participant_count: participantCount ?? 0,
+      };
+    })
+  );
+
+  const queryError = e1 || e2;
+
   if (queryError) {
     return (
       <div className="rounded-xl border border-secondary/30 bg-secondary/5 p-6">
@@ -58,8 +75,6 @@ export default async function AdminDashboardPage() {
       </div>
     );
   }
-
-  const projects = (projectsRaw ?? []) as Project[];
 
   // Fetch auth users to get login status
   const { data: authData } = await supabase.auth.admin.listUsers({ perPage: 1000 });
@@ -77,9 +92,7 @@ export default async function AdminDashboardPage() {
   const usersBase = (usersRaw ?? []).map((u: any) => {
     const auth = authMap.get(u.id);
     return {
-      ...u as Profile,
-      project_name: (u.project as { name: string } | null)?.name ?? null,
-      team_name: (u.team as { name: string } | null)?.name ?? null,
+      ...(u as Profile),
       confirmed_at: auth?.confirmed_at ?? null,
       last_sign_in_at: auth?.last_sign_in_at ?? null,
     };
@@ -98,19 +111,6 @@ export default async function AdminDashboardPage() {
     })
   );
   const users = usageResults;
-  const totalProjects = projectCount ?? 0;
-  const submittedCount = projects.filter((p) => p.is_submitted).length;
-  const completionPct =
-    totalProjects > 0
-      ? Math.round((submittedCount / totalProjects) * 100)
-      : 0;
-
-  const stats = [
-    { label: "Wszystkie projekty", value: totalProjects },
-    { label: "Uczestnicy", value: participantCount ?? 0 },
-    { label: "Zagłosowało osób", value: uniqueVoters },
-    { label: "Ukończenie", value: `${completionPct}%` },
-  ];
 
   return (
     <div className="space-y-8">
@@ -118,26 +118,83 @@ export default async function AdminDashboardPage() {
         <h1 className="font-space-grotesk text-3xl font-bold text-on-surface">
           Panel admina
         </h1>
-        <div className="flex gap-3">
-          <SubmissionToggle isOpen={settings?.submission_open ?? false} />
-          <VotingToggle isOpen={settings?.voting_open ?? false} />
-        </div>
+        <Link
+          href="/admin/hackathons/new"
+          className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-primary to-secondary px-5 py-2.5 font-space-grotesk text-sm font-bold text-white transition-all hover:shadow-[0_0_20px_rgba(70,70,204,0.3)]"
+        >
+          <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+          </svg>
+          Nowy hackathon
+        </Link>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-        <HackathonDatePicker currentDate={settings?.hackathon_date ?? null} />
-        <DeadlinePicker currentDeadline={settings?.submission_deadline ?? null} />
-      </div>
-
-      <StatsCards stats={stats} />
-
+      {/* Hackathons list */}
       <div className="space-y-4">
         <h2 className="font-space-grotesk text-xl font-semibold text-on-surface">
-          Projekty
+          Hackathony
         </h2>
-        <ProjectsTable projects={projects} />
+
+        {hackathons.length === 0 ? (
+          <div className="rounded-xl border border-outline bg-surface-low/60 p-8 text-center">
+            <p className="text-sm text-on-surface-muted">Brak hackathonów. Utwórz pierwszy!</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+            {hackathons.map((h) => (
+              <Link
+                key={h.id}
+                href={`/admin/hackathons/${h.slug}`}
+                className="group rounded-xl border border-outline bg-surface-low/60 p-6 backdrop-blur-md transition-all hover:border-primary/30 hover:bg-surface-low/80"
+              >
+                <div className="mb-3 flex items-start justify-between gap-2">
+                  <h3 className="font-space-grotesk text-base font-bold text-on-surface group-hover:text-primary-dim transition-colors">
+                    {h.name}
+                  </h3>
+                  <span className={`shrink-0 rounded-full px-2.5 py-0.5 text-xs font-semibold ${STATUS_COLORS[h.status] ?? STATUS_COLORS.upcoming}`}>
+                    {STATUS_LABELS[h.status] ?? h.status}
+                  </span>
+                </div>
+
+                <p className="mb-1 font-mono text-xs text-on-surface-muted">/{h.slug}</p>
+
+                {h.hackathon_date && (
+                  <p className="mb-3 text-xs text-on-surface-muted">
+                    {new Date(h.hackathon_date).toLocaleDateString("pl-PL", {
+                      day: "numeric",
+                      month: "long",
+                      year: "numeric",
+                    })}
+                  </p>
+                )}
+
+                <div className="mt-3 flex gap-4 border-t border-outline/50 pt-3">
+                  <div className="text-center">
+                    <p className="font-space-grotesk text-lg font-bold text-on-surface">{h.project_count}</p>
+                    <p className="text-[10px] uppercase tracking-wider text-on-surface-muted">projekty</p>
+                  </div>
+                  <div className="text-center">
+                    <p className="font-space-grotesk text-lg font-bold text-on-surface">{h.participant_count}</p>
+                    <p className="text-[10px] uppercase tracking-wider text-on-surface-muted">uczestnicy</p>
+                  </div>
+                  <div className="ml-auto flex items-center">
+                    <div className="flex gap-1.5">
+                      {h.submission_open && (
+                        <span className="rounded-full bg-green-500/15 px-2 py-0.5 text-[10px] font-semibold text-green-400">Zgłoszenia</span>
+                      )}
+                      {h.voting_open && (
+                        <span className="rounded-full bg-primary/15 px-2 py-0.5 text-[10px] font-semibold text-primary-dim">Głosowanie</span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
       </div>
 
+      {/* Users */}
       <div className="space-y-4">
         <h2 className="font-space-grotesk text-xl font-semibold text-on-surface">
           Użytkownicy

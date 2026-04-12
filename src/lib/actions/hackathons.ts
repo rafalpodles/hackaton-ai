@@ -56,7 +56,7 @@ export async function updateHackathon(hackathonId: string, data: Partial<{
     .eq("id", hackathonId);
 
   if (error) throw new Error("Nie udało się zaktualizować hackathonu");
-  revalidatePath("/admin");
+  revalidatePath("/admin", "layout");
 }
 
 export async function addHackathonCategory(hackathonId: string, slug: string, label: string, displayOrder: number) {
@@ -71,7 +71,7 @@ export async function addHackathonCategory(hackathonId: string, slug: string, la
   });
 
   if (error) throw new Error("Nie udało się dodać kategorii");
-  revalidatePath("/admin");
+  revalidatePath("/admin", "layout");
 }
 
 export async function removeHackathonCategory(categoryId: string) {
@@ -80,7 +80,7 @@ export async function removeHackathonCategory(categoryId: string) {
 
   const { error } = await supabase.from("hackathon_categories").delete().eq("id", categoryId);
   if (error) throw new Error("Nie udało się usunąć kategorii");
-  revalidatePath("/admin");
+  revalidatePath("/admin", "layout");
 }
 
 export async function delegateHackathonAdmin(hackathonId: string, userId: string) {

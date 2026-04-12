@@ -3,11 +3,14 @@ import { GarageRulesView } from "@/components/rules/garage-rules-view";
 
 export default async function RulesPage() {
   const supabase = await createClient();
-  const { data: settings } = await supabase
-    .from("app_settings")
+
+  // Get the latest hackathon date for display
+  const { data: hackathon } = await supabase
+    .from("hackathons")
     .select("hackathon_date")
-    .eq("id", 1)
+    .order("created_at", { ascending: false })
+    .limit(1)
     .single();
 
-  return <GarageRulesView hackathonDate={settings?.hackathon_date ?? null} />;
+  return <GarageRulesView hackathonDate={hackathon?.hackathon_date ?? null} />;
 }

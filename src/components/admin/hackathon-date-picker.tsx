@@ -4,6 +4,7 @@ import { useState, useTransition, useMemo, useCallback } from "react";
 import { setHackathonDate } from "@/lib/actions/admin";
 
 interface HackathonDatePickerProps {
+  hackathonId: string;
   currentDate: string | null;
 }
 
@@ -46,7 +47,7 @@ function ChevronRight({ className }: { className?: string }) {
   );
 }
 
-export default function HackathonDatePicker({ currentDate }: HackathonDatePickerProps) {
+export default function HackathonDatePicker({ hackathonId, currentDate }: HackathonDatePickerProps) {
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
 
@@ -138,7 +139,7 @@ export default function HackathonDatePicker({ currentDate }: HackathonDatePicker
     const d = new Date(selectedYear, selectedMonth, Math.min(selectedDay, daysInSelectedMonth), hour, minute);
     startTransition(async () => {
       try {
-        await setHackathonDate(d.toISOString());
+        await setHackathonDate(hackathonId, d.toISOString());
       } catch (err) {
         setError(err instanceof Error ? err.message : "Błąd");
       }
@@ -149,7 +150,7 @@ export default function HackathonDatePicker({ currentDate }: HackathonDatePicker
     setError(null);
     startTransition(async () => {
       try {
-        await setHackathonDate(null);
+        await setHackathonDate(hackathonId, null);
       } catch (err) {
         setError(err instanceof Error ? err.message : "Błąd");
       }

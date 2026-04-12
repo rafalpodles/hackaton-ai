@@ -4,26 +4,38 @@ import { createClient } from "@/lib/supabase/server";
 import { CountdownBanner } from "@/components/layout/countdown-banner";
 
 export const metadata = {
-  title: "Live — Spyrosoft AI Hackathon",
+  title: "Live — Spyrosoft Hackathons",
 };
 
 export default async function LivePage() {
   const supabase = await createClient();
-  const { data: settings } = await supabase
-    .from("app_settings")
-    .select("hackathon_date, submission_deadline, voting_open")
-    .eq("id", 1)
+
+  // Get the most recent non-upcoming hackathon
+  const { data: hackathon } = await supabase
+    .from("hackathons")
+    .select("*")
+    .neq("status", "upcoming")
+    .order("created_at", { ascending: false })
+    .limit(1)
     .single();
 
-  const projects = await getSubmittedProjects();
+  if (!hackathon) {
+    return (
+      <div className="flex h-96 items-center justify-center">
+        <p className="text-on-surface-muted">Brak aktywnych hackatonów.</p>
+      </div>
+    );
+  }
+
+  const projects = await getSubmittedProjects(hackathon.id);
 
   return (
     <div className="min-h-screen">
-      {settings?.hackathon_date && (
+      {hackathon.hackathon_date && (
         <CountdownBanner
-          hackathonDate={settings.hackathon_date}
-          submissionDeadline={settings.submission_deadline ?? undefined}
-          votingOpen={settings.voting_open ?? false}
+          hackathonDate={hackathon.hackathon_date}
+          submissionDeadline={hackathon.submission_deadline ?? undefined}
+          votingOpen={hackathon.voting_open ?? false}
         />
       )}
       {projects.length === 0 ? (

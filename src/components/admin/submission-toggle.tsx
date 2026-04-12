@@ -4,11 +4,17 @@ import { useTransition } from "react";
 import { toggleSubmissions } from "@/lib/actions/admin";
 import { GradientButton } from "@/components/ui/gradient-button";
 
-export default function SubmissionToggle({ isOpen }: { isOpen: boolean }) {
+export default function SubmissionToggle({
+  hackathonId,
+  isOpen,
+}: {
+  hackathonId: string;
+  isOpen: boolean;
+}) {
   const [isPending, startTransition] = useTransition();
 
   function handleToggle() {
-    startTransition(() => toggleSubmissions(!isOpen));
+    startTransition(() => toggleSubmissions(hackathonId, !isOpen));
   }
 
   return (
