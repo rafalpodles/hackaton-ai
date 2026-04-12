@@ -73,9 +73,9 @@ CREATE INDEX idx_registration_attempts_ip_created ON public.registration_attempt
 -- 5. ADD hackathon_id TO projects, teams, votes
 -- ===========================================
 
-ALTER TABLE public.projects ADD COLUMN IF NOT EXISTS hackathon_id uuid REFERENCES public.hackathons(id) ON DELETE SET NULL;
-ALTER TABLE public.teams ADD COLUMN IF NOT EXISTS hackathon_id uuid REFERENCES public.hackathons(id) ON DELETE SET NULL;
-ALTER TABLE public.votes ADD COLUMN IF NOT EXISTS hackathon_id uuid REFERENCES public.hackathons(id) ON DELETE SET NULL;
+ALTER TABLE public.projects ADD COLUMN IF NOT EXISTS hackathon_id uuid REFERENCES public.hackathons(id) ON DELETE CASCADE;
+ALTER TABLE public.teams ADD COLUMN IF NOT EXISTS hackathon_id uuid REFERENCES public.hackathons(id) ON DELETE CASCADE;
+ALTER TABLE public.votes ADD COLUMN IF NOT EXISTS hackathon_id uuid REFERENCES public.hackathons(id) ON DELETE CASCADE;
 
 -- ===========================================
 -- 6. MIGRATE EXISTING DATA
@@ -93,7 +93,7 @@ INSERT INTO public.hackathons (
   status
 )
 SELECT
-  'AI Hackathon #1',
+  'Spyrosoft AI Hackathon #1',
   'ai-hackathon-1',
   '',
   hackathon_date,
@@ -106,7 +106,7 @@ WHERE id = 1;
 
 -- Fallback: if app_settings is empty, insert with defaults
 INSERT INTO public.hackathons (name, slug, description, status)
-SELECT 'AI Hackathon #1', 'ai-hackathon-1', '', 'finished'
+SELECT 'Spyrosoft AI Hackathon #1', 'ai-hackathon-1', '', 'finished'
 WHERE NOT EXISTS (SELECT 1 FROM public.hackathons WHERE slug = 'ai-hackathon-1');
 
 -- 6b. Create 3 hackathon_categories for hackathon #1
@@ -118,9 +118,9 @@ SELECT
   cat.display_order
 FROM public.hackathons h,
   (VALUES
-    ('concept_to_reality', 'Concept to Reality', 1),
-    ('creativity',         'Creativity',         2),
-    ('usefulness',         'Usefulness',         3)
+    ('concept_to_reality', 'Droga od koncepcji do realizacji ⚡', 1),
+    ('creativity',         'Kreatywność pomysłu ✨',              2),
+    ('usefulness',         'Przydatność / wartość użytkowa ⚙️',   3)
   ) AS cat(slug, label, display_order)
 WHERE h.slug = 'ai-hackathon-1';
 
