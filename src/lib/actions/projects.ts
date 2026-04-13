@@ -108,14 +108,18 @@ export async function updateProject(
     throw new Error("Nie jesteś członkiem tego projektu");
   }
 
-  const { data: project } = await supabase
-    .from("projects")
-    .select("is_submitted")
-    .eq("id", projectId)
+  // Check hackathon allows edits (not finished, deadline not passed)
+  const { data: hackathon } = await supabase
+    .from("hackathons")
+    .select("status, submission_deadline")
+    .eq("id", hackathonId)
     .single();
 
-  if (project?.is_submitted) {
-    throw new Error("Nie można edytować zgłoszonego projektu");
+  if (hackathon?.status === "finished") {
+    throw new Error("Hackathon jest zakończony — edycja zablokowana");
+  }
+  if (hackathon?.submission_deadline && new Date(hackathon.submission_deadline) < new Date()) {
+    throw new Error("Termin zgłoszeń minął — edycja zablokowana");
   }
 
   const allowed = {

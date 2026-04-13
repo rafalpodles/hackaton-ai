@@ -428,11 +428,19 @@ export function SubmissionForm({ project, hackathonId, submissionOpen = true, de
           </button>
 
           {/* Submit section */}
-          <div className="rounded-lg bg-secondary/5 p-4">
-            <p className="text-xs text-secondary-dim">
-              <strong>Uwaga:</strong> Po zatwierdzeniu nie będzie można edytować projektu. Upewnij się, że wszystko jest poprawne.
-            </p>
-          </div>
+          {project.is_submitted ? (
+            <div className="rounded-lg bg-green-500/10 p-4">
+              <p className="text-xs text-green-400">
+                <strong>Zatwierdzony</strong> — możesz edytować projekt do końca terminu zgłoszeń. Zmiany zapisują się automatycznie.
+              </p>
+            </div>
+          ) : (
+            <div className="rounded-lg bg-secondary/5 p-4">
+              <p className="text-xs text-secondary-dim">
+                <strong>Uwaga:</strong> Po zatwierdzeniu możesz jeszcze edytować projekt do końca terminu zgłoszeń.
+              </p>
+            </div>
+          )}
 
           {submitError && (
             <p className="mb-4 font-space-grotesk text-sm font-semibold text-secondary">
@@ -440,7 +448,16 @@ export function SubmissionForm({ project, hackathonId, submissionOpen = true, de
             </p>
           )}
 
-          {canSubmit ? (
+          {project.is_submitted ? (
+            <div className="flex h-20 w-full items-center justify-center gap-4 bg-green-500/10 rounded-lg">
+              <svg className="h-6 w-6 text-green-400" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+              </svg>
+              <span className="font-space-grotesk text-xl font-extrabold tracking-[0.2em] text-green-400">
+                PROJEKT ZATWIERDZONY
+              </span>
+            </div>
+          ) : canSubmit ? (
             <>
               <button
                 type="button"

@@ -116,8 +116,15 @@ export default async function HackathonMyProjectPage({ params }: Props) {
 
   const typedProject = project as Project;
 
-  // Already submitted — read-only view
-  if (typedProject.is_submitted) {
+  // Check if editing is still allowed
+  const isDeadlinePassed = hackathon.submission_deadline
+    ? new Date(hackathon.submission_deadline) < new Date()
+    : false;
+  const isHackathonFinished = hackathon.status === "finished";
+  const canStillEdit = !isDeadlinePassed && !isHackathonFinished;
+
+  // Already submitted and no more edits allowed — read-only view
+  if (typedProject.is_submitted && !canStillEdit) {
     // Get team members from hackathon_participants
     let team: Pick<Profile, "id" | "display_name" | "avatar_url">[] = [];
     if (teamId) {
