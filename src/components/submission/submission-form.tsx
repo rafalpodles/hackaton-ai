@@ -95,6 +95,10 @@ export function SubmissionForm({ project, hackathonId, submissionOpen = true, de
       setSubmitError("Opis projektu jest wymagany.");
       return;
     }
+    if (description.length > 5000) {
+      setSubmitError("Opis jest za długi (maks. 5000 znaków).");
+      return;
+    }
     if (!videoUrl) {
       setSubmitError("Wideo demo jest wymagane.");
       return;
@@ -193,9 +197,13 @@ export function SubmissionForm({ project, hackathonId, submissionOpen = true, de
                   onChange={(e) => setDescription(e.target.value)}
                   onBlur={() => save({ description })}
                   placeholder="Opisz główną funkcjonalność i rozwiązany problem..."
+                  maxLength={5000}
                 />
                 <div className="absolute bottom-0 left-0 h-[2px] w-full origin-left scale-x-0 bg-gradient-to-r from-primary to-secondary transition-transform duration-500 group-focus-within:scale-x-100" />
               </div>
+              <p className={`text-right text-xs ${description.length > 4500 ? "text-secondary" : "text-on-surface-muted/50"}`}>
+                {description.length} / 5000
+              </p>
             </div>
 
             {/* Idea Origin */}

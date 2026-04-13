@@ -152,6 +152,19 @@ export async function submitProject(projectId: string, hackathonId: string) {
     throw new Error("Tylko lider zespołu może zgłosić projekt");
   }
 
+  // Check hackathon allows submissions
+  const { data: hackathon } = await supabase
+    .from("hackathons")
+    .select("submission_open, submission_deadline")
+    .eq("id", hackathonId)
+    .single();
+
+  if (!hackathon) throw new Error("Nie znaleziono hackathonu");
+  if (!hackathon.submission_open) throw new Error("Zgłoszenia są zamknięte");
+  if (hackathon.submission_deadline && new Date(hackathon.submission_deadline) < new Date()) {
+    throw new Error("Termin zgłoszeń minął");
+  }
+
   const { data: project } = await supabase
     .from("projects")
     .select("name, description, video_url, is_submitted")
@@ -161,9 +174,10 @@ export async function submitProject(projectId: string, hackathonId: string) {
   if (!project) throw new Error("Nie znaleziono projektu");
   if (project.is_submitted) throw new Error("Projekt został już zgłoszony");
 
-  if (!project.name || !project.description || !project.video_url) {
-    throw new Error("Brakuje wymaganych pól: nazwa, opis i wideo są wymagane");
-  }
+  if (!project.name?.trim()) throw new Error("Nazwa projektu jest wymagana");
+  if (!project.description?.trim()) throw new Error("Opis projektu jest wymagany");
+  if (project.description.length > 5000) throw new Error("Opis jest za długi (maks. 5000 znaków)");
+  if (!project.video_url) throw new Error("Wideo demo jest wymagane");
 
   const { error } = await supabase
     .from("projects")
