@@ -7,7 +7,7 @@ import { TeamMemberList } from "@/components/teams/team-member-list";
 import { TeamRequestsList } from "@/components/teams/team-requests-list";
 import { NoTeamView } from "@/components/teams/no-team-view";
 import { PendingRequestView } from "@/components/teams/pending-request-view";
-import { leaveTeam, deleteTeam } from "@/lib/actions/teams";
+import { TeamActions } from "@/components/teams/team-actions";
 import type { TeamWithMembers, TeamRequestWithUser, TeamRequestWithTeam } from "@/lib/types";
 
 interface Props {
@@ -194,51 +194,5 @@ export default async function HackathonTeamPage({ params }: Props) {
       {/* Actions */}
       <TeamActions isLeader={isLeader} hackathonId={hackathonId} />
     </div>
-  );
-}
-
-function TeamActions({
-  isLeader,
-  hackathonId,
-}: {
-  isLeader: boolean;
-  hackathonId: string;
-}) {
-  async function handleLeave() {
-    "use server";
-
-    await leaveTeam(hackathonId);
-  }
-
-  async function handleDelete() {
-    "use server";
-
-    await deleteTeam(hackathonId);
-  }
-
-  if (isLeader) {
-    return (
-      <GlassCard>
-        <h2 className="font-space-grotesk text-lg font-semibold text-on-surface mb-4">
-          Zarządzanie
-        </h2>
-        <form action={handleDelete}>
-          <GradientButton type="submit" variant="ghost">
-            Usuń zespół
-          </GradientButton>
-        </form>
-        <p className="mt-2 text-xs text-on-surface-muted">
-          Usunięcie zespołu wyrzuci wszystkich członków.
-        </p>
-      </GlassCard>
-    );
-  }
-
-  return (
-    <form action={handleLeave}>
-      <GradientButton type="submit" variant="ghost">
-        Opuść zespół
-      </GradientButton>
-    </form>
   );
 }

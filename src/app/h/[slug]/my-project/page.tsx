@@ -53,17 +53,57 @@ export default async function HackathonMyProjectPage({ params }: Props) {
 
   // No project yet
   if (!projectId) {
-    // Non-leader team member — show waiting message
+    // Non-leader team member — show status with team info
     if (!isLeader) {
+      // Get team name and leader info
+      let teamName = "";
+      let leaderName = "";
+      if (teamId) {
+        const { data: teamInfo } = await supabase
+          .from("teams")
+          .select("name, leader:profiles!leader_id(display_name)")
+          .eq("id", teamId)
+          .single();
+        teamName = teamInfo?.name ?? "";
+        leaderName = (teamInfo?.leader as unknown as { display_name: string })?.display_name ?? "";
+      }
+
       return (
         <div className="mx-auto max-w-2xl space-y-8 py-8">
           <h1 className="font-space-grotesk text-3xl font-bold text-on-surface">
             Mój projekt
           </h1>
           <GlassCard>
-            <div className="text-center py-4">
-              <p className="text-on-surface-muted">
-                Lider zespołu jeszcze nie utworzył projektu. Czekaj na lidera.
+            <div className="space-y-4 py-2">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/15">
+                  <svg className="h-5 w-5 text-primary-dim" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                  </svg>
+                </div>
+                <div>
+                  <p className="font-space-grotesk font-semibold text-on-surface">
+                    Oczekiwanie na lidera
+                  </p>
+                  <p className="text-sm text-on-surface-muted">
+                    Lider zespołu jeszcze nie utworzył projektu.
+                  </p>
+                </div>
+              </div>
+              {teamName && (
+                <div className="rounded-lg bg-surface-high/50 px-4 py-3 text-sm">
+                  <p className="text-on-surface-muted">
+                    Zespół: <span className="font-semibold text-on-surface">{teamName}</span>
+                  </p>
+                  {leaderName && (
+                    <p className="mt-1 text-on-surface-muted">
+                      Lider: <span className="font-semibold text-on-surface">{leaderName}</span>
+                    </p>
+                  )}
+                </div>
+              )}
+              <p className="text-xs text-on-surface-muted">
+                Gdy lider utworzy projekt, zobaczysz tu formularz i będziesz mógł pomagać w uzupełnianiu.
               </p>
             </div>
           </GlassCard>

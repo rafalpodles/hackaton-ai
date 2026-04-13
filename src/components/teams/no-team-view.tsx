@@ -31,9 +31,16 @@ export function NoTeamView({ teams, hackathonId, isSolo, hasUnsubmittedProject }
       </h1>
 
       {isSolo && (
-        <p className="text-sm text-on-surface-muted">
-          Pracujesz solo, ale możesz dołączyć do zespołu lub założyć nowy.
-        </p>
+        <div className="rounded-lg bg-primary/5 border border-primary/20 px-4 py-3">
+          <p className="text-sm text-on-surface">
+            Pracujesz solo. Możesz dołączyć do zespołu lub założyć nowy.
+          </p>
+          {hasUnsubmittedProject && (
+            <p className="mt-1 text-xs text-secondary">
+              Uwaga: Twój niezatwierdzony projekt solo zostanie usunięty po dołączeniu do zespołu.
+            </p>
+          )}
+        </div>
       )}
 
       {/* Create team */}
