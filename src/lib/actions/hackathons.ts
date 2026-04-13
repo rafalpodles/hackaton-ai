@@ -34,8 +34,9 @@ export async function createHackathon(data: {
     throw new Error("Nie udało się utworzyć hackathonu");
   }
 
+  revalidatePath("/");
   revalidatePath("/admin");
-  redirect("/admin");
+  redirect("/");
 }
 
 export async function updateHackathon(hackathonId: string, data: Partial<{
@@ -56,7 +57,7 @@ export async function updateHackathon(hackathonId: string, data: Partial<{
     .eq("id", hackathonId);
 
   if (error) throw new Error("Nie udało się zaktualizować hackathonu");
-  revalidatePath("/admin", "layout");
+  revalidatePath("/", "layout");
 }
 
 export async function addHackathonCategory(hackathonId: string, slug: string, label: string, displayOrder: number) {
@@ -71,7 +72,7 @@ export async function addHackathonCategory(hackathonId: string, slug: string, la
   });
 
   if (error) throw new Error("Nie udało się dodać kategorii");
-  revalidatePath("/admin", "layout");
+  revalidatePath("/", "layout");
 }
 
 export async function removeHackathonCategory(categoryId: string) {
@@ -80,7 +81,7 @@ export async function removeHackathonCategory(categoryId: string) {
 
   const { error } = await supabase.from("hackathon_categories").delete().eq("id", categoryId);
   if (error) throw new Error("Nie udało się usunąć kategorii");
-  revalidatePath("/admin", "layout");
+  revalidatePath("/", "layout");
 }
 
 export async function delegateHackathonAdmin(hackathonId: string, userId: string) {
@@ -94,7 +95,7 @@ export async function delegateHackathonAdmin(hackathonId: string, userId: string
     .eq("user_id", userId);
 
   if (error) throw new Error("Nie udało się przypisać admina");
-  revalidatePath("/admin", "layout");
+  revalidatePath("/", "layout");
 }
 
 export async function revokeHackathonAdmin(hackathonId: string, userId: string) {
@@ -108,5 +109,5 @@ export async function revokeHackathonAdmin(hackathonId: string, userId: string) 
     .eq("user_id", userId);
 
   if (error) throw new Error("Nie udało się odebrać uprawnień admina");
-  revalidatePath("/admin", "layout");
+  revalidatePath("/", "layout");
 }

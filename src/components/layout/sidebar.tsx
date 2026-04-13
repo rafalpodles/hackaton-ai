@@ -45,10 +45,14 @@ export default function Sidebar({ user, votingOpen, hackathonSlug }: SidebarProp
       ]
     : [];
 
-  const adminItems = [
-    { label: "Panel", href: "/admin" },
-    ...(hackathonSlug ? [{ label: "Wyniki", href: `${h}/results` }] : [{ label: "Wyniki", href: "/admin/results" }]),
-  ];
+  const adminItems = hackathonSlug
+    ? [
+        { label: "Admin", href: `${h}/admin` },
+        { label: "Wyniki", href: `${h}/admin/results` },
+      ]
+    : [
+        { label: "Panel", href: "/admin" },
+      ];
 
   // Close sidebar on route change (mobile)
   useEffect(() => {

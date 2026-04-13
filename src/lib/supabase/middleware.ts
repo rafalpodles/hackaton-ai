@@ -85,6 +85,19 @@ export async function updateSession(request: NextRequest) {
         return NextResponse.redirect(getRedirectUrl(request, "/"));
       }
 
+      // Admin routes within hackathon
+      if (subpath.startsWith("/admin")) {
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("role")
+          .eq("id", user.id)
+          .single();
+
+        if (!profile || profile.role !== "admin") {
+          return NextResponse.redirect(getRedirectUrl(request, `/h/${slug}`));
+        }
+      }
+
       // Check participation for protected routes
       const protectedSubpaths = ["/onboarding", "/team", "/my-project", "/vote"];
       const needsParticipation = protectedSubpaths.some((p) => subpath.startsWith(p));

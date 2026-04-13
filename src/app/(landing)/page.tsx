@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentUser } from "@/lib/utils";
 import { HackathonTile } from "@/components/landing/hackathon-tile";
@@ -85,6 +86,25 @@ export default async function LandingPage() {
         <p className="text-on-surface-muted text-lg max-w-2xl mx-auto">
           Dołącz do hackathonu, zbuduj coś niesamowitego i rywalizuj z najlepszymi.
         </p>
+        {user?.role === "admin" && (
+          <div className="mt-6 flex justify-center gap-3">
+            <Link
+              href="/admin/hackathons/new"
+              className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-primary to-secondary px-5 py-2.5 font-space-grotesk text-sm font-bold text-white transition-all hover:shadow-[0_0_20px_rgba(70,70,204,0.3)]"
+            >
+              <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+              </svg>
+              Nowy hackathon
+            </Link>
+            <Link
+              href="/admin"
+              className="inline-flex items-center gap-2 rounded-lg border border-outline px-5 py-2.5 font-space-grotesk text-sm font-bold text-on-surface-muted transition-colors hover:bg-surface-high hover:text-on-surface"
+            >
+              Panel admina
+            </Link>
+          </div>
+        )}
       </div>
 
       {activeHackathons.length > 0 && (
