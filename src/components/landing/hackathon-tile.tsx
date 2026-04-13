@@ -54,20 +54,17 @@ export function HackathonTile({
 
   const renderAction = () => {
     if (!isLoggedIn) {
-      if (isFinished) {
-        return (
-          <Link
-            href={`/h/${hackathon.slug}`}
-            className="inline-block font-space-grotesk font-bold text-sm tracking-wide uppercase rounded-md px-6 py-3 border border-outline text-on-surface-muted hover:border-primary-dim hover:text-primary transition-all duration-200"
-          >
-            Przeglądaj projekty
-          </Link>
-        );
-      }
       return (
-        <Link href="/register">
-          <GradientButton variant="primary">Zarejestruj się</GradientButton>
-        </Link>
+        <div className="flex gap-3">
+          <Link href="/live">
+            <GradientButton variant="ghost">Zobacz projekty</GradientButton>
+          </Link>
+          {!isFinished && (
+            <Link href="/register">
+              <GradientButton variant="primary">Zarejestruj się</GradientButton>
+            </Link>
+          )}
+        </div>
       );
     }
 

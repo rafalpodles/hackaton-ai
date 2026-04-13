@@ -17,7 +17,6 @@ export default async function HackathonVotePage({ params }: Props) {
   const hackathon = await getHackathonBySlug(slug);
   if (!hackathon) notFound();
 
-  // Read voting_open from hackathon (not app_settings)
   if (!hackathon.voting_open) {
     return (
       <div className="flex flex-col items-center justify-center py-20">
@@ -44,7 +43,6 @@ export default async function HackathonVotePage({ params }: Props) {
 
   const categories = (categoriesData ?? []) as HackathonCategory[];
 
-  // Determine user's own project from hackathon_participants (not profiles)
   const participant = await getParticipant(hackathon.id, user.id);
   let ownProjectId: string | null = participant?.project_id ?? null;
 

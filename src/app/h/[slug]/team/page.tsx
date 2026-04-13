@@ -32,11 +32,15 @@ export default async function HackathonTeamPage({ params }: Props) {
 
   // User has no team and is not solo → show join/create options
   if (!teamId && !isSolo) {
-    const { data: pendingRequest } = await supabase
+    const { data: allRequests } = await supabase
       .from("team_requests")
-      .select("id, user_id, team_id, created_at, team:teams!team_id(id, name)")
-      .eq("user_id", user.id)
-      .single();
+      .select("id, user_id, team_id, created_at, team:teams!team_id(id, name, hackathon_id)")
+      .eq("user_id", user.id);
+
+    const pendingRequest = (allRequests ?? []).find((r) => {
+      const team = r.team as unknown as { hackathon_id: string };
+      return team?.hackathon_id === hackathon.id;
+    });
 
     if (pendingRequest) {
       const reqWithTeam = {
@@ -62,16 +66,20 @@ export default async function HackathonTeamPage({ params }: Props) {
 
   // Solo user without team
   if (isSolo && !teamId) {
-    const { data: pendingRequest } = await supabase
+    const { data: soloRequests } = await supabase
       .from("team_requests")
-      .select("id, user_id, team_id, created_at, team:teams!team_id(id, name)")
-      .eq("user_id", user.id)
-      .single();
+      .select("id, user_id, team_id, created_at, team:teams!team_id(id, name, hackathon_id)")
+      .eq("user_id", user.id);
 
-    if (pendingRequest) {
+    const soloPendingRequest = (soloRequests ?? []).find((r) => {
+      const team = r.team as unknown as { hackathon_id: string };
+      return team?.hackathon_id === hackathon.id;
+    });
+
+    if (soloPendingRequest) {
       const reqWithTeam = {
-        ...pendingRequest,
-        team: pendingRequest.team as unknown as { id: string; name: string },
+        ...soloPendingRequest,
+        team: soloPendingRequest.team as unknown as { id: string; name: string },
       } as TeamRequestWithTeam;
       return <PendingRequestView request={reqWithTeam} isSolo />;
     }
@@ -198,13 +206,13 @@ function TeamActions({
 }) {
   async function handleLeave() {
     "use server";
-    // TODO: pass hackathonId after Task 13-16
+
     await leaveTeam(hackathonId);
   }
 
   async function handleDelete() {
     "use server";
-    // TODO: pass hackathonId after Task 13-16
+
     await deleteTeam(hackathonId);
   }
 

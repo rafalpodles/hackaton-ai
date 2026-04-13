@@ -20,7 +20,6 @@ export default async function HackathonOnboardingPage({ params }: Props) {
   const hackathon = await getHackathonBySlug(slug);
   if (!hackathon) notFound();
 
-  // Check participant exists via hackathon_participants (not profile.team_id/is_solo)
   const participant = await getParticipant(hackathon.id, user.id);
   if (participant?.team_id || participant?.is_solo) {
     redirect(`/h/${slug}`);
@@ -41,12 +40,16 @@ export default async function HackathonOnboardingPage({ params }: Props) {
     members: (t.members ?? []).map((m: { user: { id: string; display_name: string; avatar_url: string | null; email: string } }) => m.user),
   }));
 
-  // Check if user has a pending request
-  const { data: pendingRequest } = await supabase
+  // Check if user has a pending request in this hackathon
+  const { data: pendingRequests } = await supabase
     .from("team_requests")
-    .select("id, team_id, team:teams!team_id(id, name)")
-    .eq("user_id", user.id)
-    .single();
+    .select("id, team_id, team:teams!team_id(id, name, hackathon_id)")
+    .eq("user_id", user.id);
+
+  const pendingRequest = (pendingRequests ?? []).find((r) => {
+    const team = r.team as unknown as { hackathon_id: string };
+    return team?.hackathon_id === hackathon.id;
+  });
 
   const hackathonId = hackathon.id;
 
@@ -54,13 +57,13 @@ export default async function HackathonOnboardingPage({ params }: Props) {
     "use server";
     const name = formData.get("name") as string;
     if (!name?.trim()) return;
-    // TODO: pass hackathonId after Task 13-16
+
     await createTeam(name.trim(), hackathonId);
   }
 
   async function handleGoSolo() {
     "use server";
-    // TODO: pass hackathonId after Task 13-16
+
     await goSolo(hackathonId);
   }
 

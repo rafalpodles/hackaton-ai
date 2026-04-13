@@ -45,10 +45,6 @@ export async function updateSession(request: NextRequest) {
   // Landing page is public
   if (pathname === "/") return supabaseResponse;
 
-  // Global pages accessible to any logged-in user
-  const globalAuthPaths = ["/rules", "/guide", "/faq", "/prompts", "/profile", "/guestbook"];
-  const isGlobalAuthPath = globalAuthPaths.some((p) => pathname.startsWith(p));
-
   if (!user && !isPublicPath) {
     return NextResponse.redirect(getRedirectUrl(request, "/login"));
   }

@@ -20,7 +20,6 @@ export default async function HackathonMyProjectPage({ params }: Props) {
   const hackathon = await getHackathonBySlug(slug);
   if (!hackathon) notFound();
 
-  // Get participant to check team/solo status (not profiles.team_id/is_solo)
   const participant = await getParticipant(hackathon.id, user.id);
   const teamId = participant?.team_id ?? null;
   const isSolo = participant?.is_solo ?? false;
@@ -77,7 +76,7 @@ export default async function HackathonMyProjectPage({ params }: Props) {
       "use server";
       const name = formData.get("name") as string;
       if (!name?.trim()) return;
-      // TODO: pass hackathonId after Task 13-16
+
       await createProject(name.trim(), hackathonId);
     }
 
@@ -225,7 +224,6 @@ export default async function HackathonMyProjectPage({ params }: Props) {
     );
   }
 
-  // Read submission settings from hackathon (not app_settings)
   return (
     <SubmissionForm
       project={typedProject}

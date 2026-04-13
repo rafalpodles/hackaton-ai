@@ -67,7 +67,7 @@ export const getSubmittedProjects = cache(async (hackathonId: string): Promise<P
   // Get team members for team-based projects
   const { data: teams } = await supabase
     .from("teams")
-    .select("project_id")
+    .select("id, project_id")
     .eq("hackathon_id", hackathonId)
     .in("project_id", projectIds);
 
@@ -82,18 +82,11 @@ export const getSubmittedProjects = cache(async (hackathonId: string): Promise<P
         .not("team_id", "is", null)
     : { data: [] };
 
-  // Build team_id → project_id map
+  // Build team_id → project_id map (no extra queries needed)
   const teamToProject = new Map<string, string>();
   for (const t of teams ?? []) {
     if (t.project_id) {
-      // We need team_id too — get it from the teams table
-      const { data: teamRow } = await supabase
-        .from("teams")
-        .select("id")
-        .eq("project_id", t.project_id)
-        .eq("hackathon_id", hackathonId)
-        .single();
-      if (teamRow) teamToProject.set(teamRow.id, t.project_id);
+      teamToProject.set(t.id, t.project_id);
     }
   }
 

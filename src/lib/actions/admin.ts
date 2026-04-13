@@ -22,7 +22,7 @@ export async function toggleVoting(hackathonId: string, open: boolean) {
 
   if (error) throw new Error("Nie udało się zaktualizować statusu głosowania");
 
-  revalidatePath("/admin");
+  revalidatePath("/", "layout");
 }
 
 export async function toggleUserRole(userId: string, role: "admin" | "participant") {
@@ -38,7 +38,7 @@ export async function toggleUserRole(userId: string, role: "admin" | "participan
 
   if (error) throw new Error("Nie udało się zmienić roli");
 
-  revalidatePath("/admin");
+  revalidatePath("/", "layout");
 }
 
 export async function toggleSubmissions(hackathonId: string, open: boolean) {
@@ -52,7 +52,7 @@ export async function toggleSubmissions(hackathonId: string, open: boolean) {
 
   if (error) throw new Error("Nie udało się zmienić statusu zgłoszeń");
 
-  revalidatePath("/admin");
+  revalidatePath("/", "layout");
 }
 
 export async function setSubmissionDeadline(hackathonId: string, deadline: string | null) {
@@ -66,7 +66,7 @@ export async function setSubmissionDeadline(hackathonId: string, deadline: strin
 
   if (error) throw new Error("Nie udało się ustawić deadline'u");
 
-  revalidatePath("/admin");
+  revalidatePath("/", "layout");
 }
 
 export async function setHackathonDate(hackathonId: string, date: string | null) {
@@ -80,7 +80,7 @@ export async function setHackathonDate(hackathonId: string, date: string | null)
 
   if (error) throw new Error("Nie udało się ustawić daty hackathonu");
 
-  revalidatePath("/admin");
+  revalidatePath("/", "layout");
 }
 
 export async function deleteProject(projectId: string) {
