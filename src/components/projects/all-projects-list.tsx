@@ -71,17 +71,6 @@ export function AllProjectsList({ projects }: AllProjectsListProps) {
                     <h3 className="font-space-grotesk text-base font-bold text-on-surface truncate sm:text-lg">
                       {project.name}
                     </h3>
-                    <p className="mt-0.5 text-xs text-on-surface-muted">
-                      {project.team_name ? (
-                        <span>
-                          Zespół <span className="text-primary-dim">{project.team_name}</span>
-                        </span>
-                      ) : project.is_solo ? (
-                        <span>{project.solo_user?.display_name ?? "Solo"}</span>
-                      ) : (
-                        <span className="text-on-surface-muted/50">—</span>
-                      )}
-                    </p>
                   </div>
 
                   {/* Status badge */}
@@ -103,12 +92,6 @@ export function AllProjectsList({ projects }: AllProjectsListProps) {
                   </p>
                 )}
 
-                {/* Members */}
-                {project.members.length > 0 && (
-                  <p className="mt-2 text-xs text-on-surface-muted">
-                    {project.members.map((m) => m.display_name).join(", ")}
-                  </p>
-                )}
               </div>
             </div>
           );

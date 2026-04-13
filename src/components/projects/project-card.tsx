@@ -5,10 +5,11 @@ import type { ProjectWithTeam } from "@/lib/types";
 
 interface ProjectCardProps {
   project: ProjectWithTeam;
+  showAuthors?: boolean;
   onClick: () => void;
 }
 
-export function ProjectCard({ project, onClick }: ProjectCardProps) {
+export function ProjectCard({ project, showAuthors = false, onClick }: ProjectCardProps) {
   const firstTag = project.tech_stack?.[0];
 
   return (
@@ -63,22 +64,24 @@ export function ProjectCard({ project, onClick }: ProjectCardProps) {
         </p>
 
         {/* Team */}
-        <div className="mt-auto flex items-center gap-2 pt-3">
-          <div className="flex -space-x-1.5">
-            {project.team.slice(0, 4).map((member) => (
-              <div
-                key={member.id}
-                className="flex h-6 w-6 items-center justify-center rounded-full border border-surface-low bg-surface-high text-[10px] font-bold uppercase text-primary-dim"
-                title={member.display_name}
-              >
-                {member.display_name?.charAt(0) ?? "?"}
-              </div>
-            ))}
+        {showAuthors && (
+          <div className="mt-auto flex items-center gap-2 pt-3">
+            <div className="flex -space-x-1.5">
+              {project.team.slice(0, 4).map((member) => (
+                <div
+                  key={member.id}
+                  className="flex h-6 w-6 items-center justify-center rounded-full border border-surface-low bg-surface-high text-[10px] font-bold uppercase text-primary-dim"
+                  title={member.display_name}
+                >
+                  {member.display_name?.charAt(0) ?? "?"}
+                </div>
+              ))}
+            </div>
+            <span className="truncate text-xs text-on-surface-muted">
+              {project.team.map((m) => m.display_name).join(", ")}
+            </span>
           </div>
-          <span className="truncate text-xs text-on-surface-muted">
-            {project.team.map((m) => m.display_name).join(", ")}
-          </span>
-        </div>
+        )}
       </div>
     </button>
   );

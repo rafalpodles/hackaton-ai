@@ -7,9 +7,10 @@ import { ProjectDetailModal } from "./project-detail-modal";
 
 interface ProjectGridProps {
   projects: ProjectWithTeam[];
+  showAuthors?: boolean;
 }
 
-export function ProjectGrid({ projects }: ProjectGridProps) {
+export function ProjectGrid({ projects, showAuthors = false }: ProjectGridProps) {
   const [selectedProject, setSelectedProject] =
     useState<ProjectWithTeam | null>(null);
 
@@ -20,6 +21,7 @@ export function ProjectGrid({ projects }: ProjectGridProps) {
           <ProjectCard
             key={project.id}
             project={project}
+            showAuthors={showAuthors}
             onClick={() => setSelectedProject(project)}
           />
         ))}
@@ -28,6 +30,7 @@ export function ProjectGrid({ projects }: ProjectGridProps) {
       {selectedProject && (
         <ProjectDetailModal
           project={selectedProject}
+          showAuthors={showAuthors}
           onClose={() => setSelectedProject(null)}
         />
       )}

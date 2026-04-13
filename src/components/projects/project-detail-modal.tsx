@@ -7,6 +7,7 @@ import { VideoPlayer } from "@/components/ui/video-player";
 
 interface ProjectDetailModalProps {
   project: ProjectWithTeam;
+  showAuthors?: boolean;
   onClose: () => void;
 }
 
@@ -14,6 +15,7 @@ type View = "video" | "presentation";
 
 export function ProjectDetailModal({
   project,
+  showAuthors = false,
   onClose,
 }: ProjectDetailModalProps) {
   const defaultView: View = project.video_url
@@ -152,34 +154,36 @@ export function ProjectDetailModal({
           </div>
 
           {/* Team */}
-          <div className="flex items-center gap-3">
-            <div className="flex -space-x-2">
-              {project.team.map((member) =>
-                member.avatar_url ? (
-                  <Image
-                    key={member.id}
-                    src={member.avatar_url}
-                    alt={member.display_name}
-                    width={32}
-                    height={32}
-                    className="rounded-full border-2 border-surface-low object-cover"
-                    title={member.display_name}
-                  />
-                ) : (
-                  <div
-                    key={member.id}
-                    className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-surface-low bg-primary/20 text-xs font-bold uppercase text-primary-dim"
-                    title={member.display_name}
-                  >
-                    {member.display_name?.charAt(0) ?? "?"}
-                  </div>
-                )
-              )}
+          {showAuthors && (
+            <div className="flex items-center gap-3">
+              <div className="flex -space-x-2">
+                {project.team.map((member) =>
+                  member.avatar_url ? (
+                    <Image
+                      key={member.id}
+                      src={member.avatar_url}
+                      alt={member.display_name}
+                      width={32}
+                      height={32}
+                      className="rounded-full border-2 border-surface-low object-cover"
+                      title={member.display_name}
+                    />
+                  ) : (
+                    <div
+                      key={member.id}
+                      className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-surface-low bg-primary/20 text-xs font-bold uppercase text-primary-dim"
+                      title={member.display_name}
+                    >
+                      {member.display_name?.charAt(0) ?? "?"}
+                    </div>
+                  )
+                )}
+              </div>
+              <span className="text-sm text-on-surface-muted">
+                {project.team.map((m) => m.display_name).join(", ")}
+              </span>
             </div>
-            <span className="text-sm text-on-surface-muted">
-              {project.team.map((m) => m.display_name).join(", ")}
-            </span>
-          </div>
+          )}
 
           {/* Description */}
           {project.description && (

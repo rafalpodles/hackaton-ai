@@ -11,6 +11,8 @@ export default async function HackathonProjectsPage({ params }: Props) {
   const hackathon = await getHackathonBySlug(slug);
   if (!hackathon) notFound();
 
+  const user = await getCurrentUser();
+  const isAdmin = user?.role === "admin";
   const projects = await getSubmittedProjects(hackathon.id);
 
   if (projects.length === 0) {
@@ -34,7 +36,7 @@ export default async function HackathonProjectsPage({ params }: Props) {
         </p>
       </div>
 
-      <ProjectGrid projects={projects} />
+      <ProjectGrid projects={projects} showAuthors={isAdmin} />
     </div>
   );
 }

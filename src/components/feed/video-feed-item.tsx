@@ -97,11 +97,6 @@ export function VideoFeedItem({
               {project.description}
             </p>
           )}
-          {project.team.length > 0 && (
-            <p className="mt-2 text-sm text-secondary">
-              {project.team.map((m) => m.display_name).join(", ")}
-            </p>
-          )}
         </div>
 
         <button

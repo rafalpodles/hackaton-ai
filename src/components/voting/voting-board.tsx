@@ -94,11 +94,6 @@ export default function VotingBoard({
                   <p className="truncate font-space-grotesk text-base font-bold text-on-surface">
                     {project?.name ?? "Nieznany projekt"}
                   </p>
-                  {project?.team && project.team.length > 0 && (
-                    <p className="truncate text-xs text-on-surface-muted">
-                      {project.team.map((m) => m.display_name).join(", ")}
-                    </p>
-                  )}
                 </div>
                 <svg
                   width="24"
