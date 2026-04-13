@@ -260,7 +260,7 @@ export default function Sidebar({ user, votingOpen, hackathonSlug }: SidebarProp
         <div className="border-t border-outline px-3 py-4">
           <button
             onClick={handleLogout}
-            className="w-full rounded-lg px-3 py-2 text-left font-space-grotesk text-xs uppercase tracking-wider text-on-surface-muted transition-colors hover:bg-surface-high hover:text-on-surface"
+            className="w-full rounded-lg px-3 py-2.5 text-left font-space-grotesk text-sm uppercase tracking-wide text-on-surface-muted/80 transition-colors hover:bg-surface-high hover:text-on-surface"
           >
             Wyloguj
           </button>
@@ -284,14 +284,14 @@ function NavLink({
   return (
     <Link
       href={href}
-      className={`flex items-center rounded-lg font-space-grotesk uppercase tracking-wider transition-colors ${
+      className={`flex items-center rounded-lg font-space-grotesk uppercase tracking-wide transition-colors ${
         small
-          ? "px-3 py-1.5 text-[10px]"
-          : "px-3 py-2 text-xs"
+          ? "px-3 py-1.5 text-xs"
+          : "px-3 py-2.5 text-sm"
       } ${
         active
-          ? "border-l-2 border-primary-dim bg-primary/15 text-primary-dim"
-          : "text-on-surface-muted hover:bg-surface-high hover:text-on-surface"
+          ? "border-l-2 border-primary-dim bg-primary/15 font-bold text-primary-dim"
+          : "text-on-surface-muted/80 hover:bg-surface-high hover:text-on-surface"
       }`}
     >
       {label}
