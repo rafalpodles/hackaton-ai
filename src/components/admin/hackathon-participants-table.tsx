@@ -9,6 +9,9 @@ interface Participant {
   user_id: string;
   role: string;
   project_id: string | null;
+  project_name: string | null;
+  team_name: string | null;
+  is_solo: boolean;
   display_name: string;
   email: string;
   avatar_url: string | null;
@@ -55,6 +58,7 @@ export default function HackathonParticipantsTable({
               <th className="w-10 px-3 py-3 text-center font-space-grotesk text-xs uppercase tracking-wider text-on-surface-muted">#</th>
               <th className="px-5 py-3 text-left font-space-grotesk text-xs uppercase tracking-wider text-on-surface-muted">Uczestnik</th>
               <th className="px-5 py-3 text-left font-space-grotesk text-xs uppercase tracking-wider text-on-surface-muted">Email</th>
+              <th className="px-5 py-3 text-left font-space-grotesk text-xs uppercase tracking-wider text-on-surface-muted">Zespół</th>
               <th className="px-5 py-3 text-left font-space-grotesk text-xs uppercase tracking-wider text-on-surface-muted">Rola</th>
               <th className="px-5 py-3 text-left font-space-grotesk text-xs uppercase tracking-wider text-on-surface-muted">Projekt</th>
             </tr>
@@ -79,6 +83,15 @@ export default function HackathonParticipantsTable({
                     </div>
                   </td>
                   <td className="px-5 py-4 text-sm text-on-surface-muted">{p.email}</td>
+                  <td className="px-5 py-4 text-sm">
+                    {p.team_name ? (
+                      <span className="text-on-surface">{p.team_name}</span>
+                    ) : p.is_solo ? (
+                      <span className="text-on-surface-muted italic">Solo</span>
+                    ) : (
+                      <span className="text-on-surface-muted/50">—</span>
+                    )}
+                  </td>
                   <td className="px-5 py-4">
                     {isSelf ? (
                       <span className="inline-block rounded-full bg-red-500/15 px-2.5 py-0.5 text-xs font-semibold text-red-400">
@@ -99,8 +112,10 @@ export default function HackathonParticipantsTable({
                       </button>
                     )}
                   </td>
-                  <td className="px-5 py-4 text-sm text-on-surface-muted">
-                    {p.project_id ? (
+                  <td className="px-5 py-4 text-sm">
+                    {p.project_name ? (
+                      <span className="text-on-surface">{p.project_name}</span>
+                    ) : p.project_id ? (
                       <span className="inline-block rounded-full bg-green-500/15 px-2.5 py-0.5 text-xs font-semibold text-green-400">Ma projekt</span>
                     ) : (
                       <span className="text-on-surface-muted/50">—</span>
@@ -111,7 +126,7 @@ export default function HackathonParticipantsTable({
             })}
             {participants.length === 0 && (
               <tr>
-                <td colSpan={5} className="px-5 py-8 text-center text-sm text-on-surface-muted">Brak uczestników</td>
+                <td colSpan={6} className="px-5 py-8 text-center text-sm text-on-surface-muted">Brak uczestników</td>
               </tr>
             )}
           </tbody>

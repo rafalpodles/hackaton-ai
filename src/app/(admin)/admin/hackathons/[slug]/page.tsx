@@ -55,7 +55,7 @@ export default async function HackathonAdminPage({
       .order("display_order"),
     supabase
       .from("hackathon_participants")
-      .select("*, profile:profiles!user_id(display_name, email, avatar_url)")
+      .select("*, profile:profiles!user_id(display_name, email, avatar_url), project:projects!project_id(name), team:teams!team_id(name, project_id)")
       .eq("hackathon_id", hackathon.id)
       .order("joined_at"),
     supabase
@@ -69,15 +69,40 @@ export default async function HackathonAdminPage({
   const projects = (projectsRaw ?? []) as Project[];
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const participants = (participantsRaw ?? []).map((p: any) => ({
-    id: p.id,
-    user_id: p.user_id,
-    role: p.role,
-    project_id: p.project_id,
-    display_name: p.profile?.display_name ?? "Nieznany",
-    email: p.profile?.email ?? "",
-    avatar_url: p.profile?.avatar_url ?? null,
-  }));
+  const participants = (participantsRaw ?? []).map((p: any) => {
+    const teamData = p.team as { name: string; project_id: string | null } | null;
+    return {
+      id: p.id,
+      user_id: p.user_id,
+      role: p.role,
+      project_id: p.project_id ?? teamData?.project_id ?? null,
+      project_name: p.project?.name ?? null,
+      team_name: teamData?.name ?? null,
+      is_solo: p.is_solo ?? false,
+      display_name: p.profile?.display_name ?? "Nieznany",
+      email: p.profile?.email ?? "",
+      avatar_url: p.profile?.avatar_url ?? null,
+    };
+  });
+
+  // Resolve project names for team members
+  const missingProjectIds = participants
+    .filter((p) => !p.project_name && p.project_id)
+    .map((p) => p.project_id!);
+
+  if (missingProjectIds.length > 0) {
+    const { data: teamProjects } = await supabase
+      .from("projects")
+      .select("id, name")
+      .in("id", missingProjectIds);
+
+    const projectNameMap = new Map((teamProjects ?? []).map((pr) => [pr.id, pr.name]));
+    for (const p of participants) {
+      if (!p.project_name && p.project_id) {
+        p.project_name = projectNameMap.get(p.project_id) ?? null;
+      }
+    }
+  }
 
   return (
     <div className="space-y-8">

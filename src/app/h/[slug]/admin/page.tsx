@@ -52,7 +52,7 @@ export default async function HackathonAdminPage({ params }: Props) {
       .order("display_order"),
     supabase
       .from("hackathon_participants")
-      .select("*, profile:profiles!user_id(display_name, email, avatar_url)")
+      .select("*, profile:profiles!user_id(display_name, email, avatar_url), project:projects!project_id(name), team:teams!team_id(name, project_id)")
       .eq("hackathon_id", hackathon.id)
       .order("joined_at"),
     supabase
@@ -66,15 +66,45 @@ export default async function HackathonAdminPage({ params }: Props) {
   const projects = (projectsRaw ?? []) as Project[];
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const participants = (participantsRaw ?? []).map((p: any) => ({
-    id: p.id,
-    user_id: p.user_id,
-    role: p.role,
-    project_id: p.project_id,
-    display_name: p.profile?.display_name ?? "Nieznany",
-    email: p.profile?.email ?? "",
-    avatar_url: p.profile?.avatar_url ?? null,
-  }));
+  const participants = (participantsRaw ?? []).map((p: any) => {
+    const teamData = p.team as { name: string; project_id: string | null } | null;
+    // Solo user: project from participant.project_id
+    // Team user: project from team.project_id (team leads submit)
+    const projectName = p.project?.name ?? null;
+    const teamProjectId = teamData?.project_id ?? null;
+
+    return {
+      id: p.id,
+      user_id: p.user_id,
+      role: p.role,
+      project_id: p.project_id ?? teamProjectId,
+      project_name: projectName,
+      team_name: teamData?.name ?? null,
+      is_solo: p.is_solo ?? false,
+      display_name: p.profile?.display_name ?? "Nieznany",
+      email: p.profile?.email ?? "",
+      avatar_url: p.profile?.avatar_url ?? null,
+    };
+  });
+
+  // For team members without direct project_id, resolve project name from team's project
+  const teamProjectIds = participants
+    .filter((p) => !p.project_name && p.project_id)
+    .map((p) => p.project_id!);
+
+  if (teamProjectIds.length > 0) {
+    const { data: teamProjects } = await supabase
+      .from("projects")
+      .select("id, name")
+      .in("id", teamProjectIds);
+
+    const projectNameMap = new Map((teamProjects ?? []).map((p) => [p.id, p.name]));
+    for (const p of participants) {
+      if (!p.project_name && p.project_id) {
+        p.project_name = projectNameMap.get(p.project_id) ?? null;
+      }
+    }
+  }
 
   return (
     <div className="space-y-8">
