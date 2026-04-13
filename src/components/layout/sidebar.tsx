@@ -24,11 +24,11 @@ export default function Sidebar({ user, votingOpen, hackathonSlug }: SidebarProp
   const h = hackathonSlug ? `/h/${hackathonSlug}` : "";
 
   const startItems = [
-    { label: "Garage Rules", href: "/rules" },
-    { label: "Poradnik", href: "/guide" },
-    { label: "Q&A", href: "/faq" },
+    { label: "Garage Rules", href: hackathonSlug ? `${h}/rules` : "/rules" },
+    { label: "Poradnik", href: hackathonSlug ? `${h}/guide` : "/guide" },
+    { label: "Q&A", href: hackathonSlug ? `${h}/faq` : "/faq" },
     ...(hackathonSlug ? [{ label: "Pomysły na projekty", href: `${h}/ideas` }] : []),
-    { label: "Przydatne prompty", href: "/prompts" },
+    { label: "Przydatne prompty", href: hackathonSlug ? `${h}/prompts` : "/prompts" },
   ];
 
   const hackathonItems = hackathonSlug
@@ -119,7 +119,7 @@ export default function Sidebar({ user, votingOpen, hackathonSlug }: SidebarProp
 
         {/* User identity */}
         <Link
-          href="/profile"
+          href={hackathonSlug ? `${h}/profile` : "/profile"}
           className="group/user flex items-center gap-3 rounded-xl px-5 py-6 transition-colors hover:bg-surface-high"
         >
           <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary font-space-grotesk text-sm font-bold text-white">
@@ -219,9 +219,9 @@ export default function Sidebar({ user, votingOpen, hackathonSlug }: SidebarProp
         {geocitiesEnabled && (
           <div className="px-3 pb-1">
             <Link
-              href="/guestbook"
+              href={hackathonSlug ? `${h}/guestbook` : "/guestbook"}
               className={`flex items-center rounded-lg px-3 py-2 font-space-grotesk text-xs uppercase tracking-wider transition-colors ${
-                isActive("/guestbook")
+                isActive(hackathonSlug ? `${h}/guestbook` : "/guestbook")
                   ? "border-l-2 border-primary-dim bg-primary/15 text-primary-dim"
                   : "text-on-surface-muted hover:bg-surface-high hover:text-on-surface"
               }`}
