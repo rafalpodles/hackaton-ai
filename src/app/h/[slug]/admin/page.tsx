@@ -2,6 +2,7 @@ import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentUser, getHackathonBySlug } from "@/lib/utils";
+import StatsCards from "@/components/admin/stats-cards";
 import HackathonSettingsForm from "@/components/admin/hackathon-settings-form";
 import HackathonVotingToggle from "@/components/admin/hackathon-voting-toggle";
 import HackathonSubmissionToggle from "@/components/admin/hackathon-submission-toggle";
@@ -44,6 +45,7 @@ export default async function HackathonAdminPage({ params }: Props) {
     { data: categoriesRaw },
     { data: participantsRaw },
     { data: projectsRaw },
+    { data: voterRows },
   ] = await Promise.all([
     supabase
       .from("hackathon_categories")
@@ -60,6 +62,10 @@ export default async function HackathonAdminPage({ params }: Props) {
       .select("*")
       .eq("hackathon_id", hackathon.id)
       .order("created_at", { ascending: false }),
+    supabase
+      .from("votes")
+      .select("voter_id")
+      .eq("hackathon_id", hackathon.id),
   ]);
 
   const categories = (categoriesRaw ?? []) as HackathonCategory[];
@@ -126,6 +132,20 @@ export default async function HackathonAdminPage({ params }: Props) {
           <HackathonVotingToggle hackathonId={hackathon.id} isOpen={hackathon.voting_open} />
         </div>
       </div>
+
+      {/* Stats */}
+      <StatsCards stats={(() => {
+        const totalProjects = projects.length;
+        const submittedCount = projects.filter((p) => p.is_submitted).length;
+        const uniqueVoters = new Set((voterRows ?? []).map((v: { voter_id: string }) => v.voter_id)).size;
+        const completionPct = totalProjects > 0 ? Math.round((submittedCount / totalProjects) * 100) : 0;
+        return [
+          { label: "Projekty", value: totalProjects },
+          { label: "Uczestnicy", value: participants.length },
+          { label: "Zagłosowało", value: uniqueVoters },
+          { label: "Ukończenie", value: `${completionPct}%` },
+        ];
+      })()} />
 
       {/* Dates */}
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
