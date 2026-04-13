@@ -51,9 +51,19 @@ export async function updateHackathon(hackathonId: string, data: Partial<{
   await requireAdmin();
   const supabase = await createClient();
 
+  const allowed = {
+    ...(data.name !== undefined && { name: data.name }),
+    ...(data.description !== undefined && { description: data.description }),
+    ...(data.hackathon_date !== undefined && { hackathon_date: data.hackathon_date }),
+    ...(data.submission_deadline !== undefined && { submission_deadline: data.submission_deadline }),
+    ...(data.submission_open !== undefined && { submission_open: data.submission_open }),
+    ...(data.voting_open !== undefined && { voting_open: data.voting_open }),
+    ...(data.status !== undefined && { status: data.status }),
+  };
+
   const { error } = await supabase
     .from("hackathons")
-    .update(data)
+    .update(allowed)
     .eq("id", hackathonId);
 
   if (error) throw new Error("Nie udało się zaktualizować hackathonu");
