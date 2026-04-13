@@ -70,8 +70,11 @@ export default function Sidebar({ user, votingOpen, hackathonSlug }: SidebarProp
   }, [open]);
 
   const isActive = (href: string) => {
+    if (href === "/") return pathname === "/";
     if (hackathonSlug && href === `/h/${hackathonSlug}`) return pathname === href;
-    return href === "/" ? pathname === "/" : pathname.startsWith(href);
+    // For admin links, use exact match to avoid /admin matching /admin/results
+    if (href.endsWith("/admin")) return pathname === href;
+    return pathname.startsWith(href);
   };
 
   const handleLogout = async () => {
