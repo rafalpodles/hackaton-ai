@@ -119,8 +119,7 @@ export async function deleteProject(projectId: string) {
   if (deleteError) throw new Error("Nie udało się usunąć projektu");
 
   revalidatePath("/admin");
-  revalidatePath("/");
-  revalidatePath("/feed");
+  revalidatePath("/", "layout");
 }
 
 export async function generateOpenRouterKey(
@@ -264,22 +263,26 @@ export async function getOpenRouterKeyUsage(
   };
 }
 
-export async function exportResults(): Promise<string> {
+export async function exportResults(hackathonId?: string): Promise<string> {
   await requireAdmin();
   const supabase = await createClient();
 
   const workbook = new ExcelJS.Workbook();
 
   // Sheet 1: Results — direct query instead of RPC
-  const { data: votes } = await supabase
+  let votesQuery = supabase
     .from("votes")
     .select("category, project_id, projects!project_id(name, id), profiles!voter_id(email)");
+  if (hackathonId) votesQuery = votesQuery.eq("hackathon_id", hackathonId);
+  const { data: votes } = await votesQuery;
 
   // Build team members map from hackathon_participants
-  const { data: allParticipants } = await supabase
+  let participantsQuery = supabase
     .from("hackathon_participants")
     .select("project_id, user:profiles!user_id(display_name)")
     .not("project_id", "is", null);
+  if (hackathonId) participantsQuery = participantsQuery.eq("hackathon_id", hackathonId);
+  const { data: allParticipants } = await participantsQuery;
 
   const teamMap: Record<string, string[]> = {};
   for (const p of allParticipants ?? []) {
@@ -355,7 +358,9 @@ export async function exportResults(): Promise<string> {
   }
 
   // Sheet 3: Projects
-  const { data: projects } = await supabase.from("projects").select("*");
+  let projectsQuery = supabase.from("projects").select("*");
+  if (hackathonId) projectsQuery = projectsQuery.eq("hackathon_id", hackathonId);
+  const { data: projects } = await projectsQuery;
   const projectsSheet = workbook.addWorksheet("Projects");
   projectsSheet.columns = [
     { header: "ID", key: "id", width: 36 },

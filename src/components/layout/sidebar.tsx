@@ -31,19 +31,23 @@ export default function Sidebar({ user, votingOpen, hackathonSlug }: SidebarProp
     { label: "Przydatne prompty", href: "/prompts" },
   ];
 
-  const hackathonItems = [
-    { label: "Zespół", href: `${h}/team` },
-    { label: "Mój projekt", href: `${h}/my-project` },
-  ];
+  const hackathonItems = hackathonSlug
+    ? [
+        { label: "Zespół", href: `${h}/team` },
+        { label: "Mój projekt", href: `${h}/my-project` },
+      ]
+    : [];
 
-  const galleryItems = [
-    { label: "Projekty", href: hackathonSlug ? `${h}` : "/" },
-    { label: "Live", href: `${h}/feed` },
-  ];
+  const galleryItems = hackathonSlug
+    ? [
+        { label: "Projekty", href: `${h}` },
+        { label: "Live", href: `${h}/feed` },
+      ]
+    : [];
 
   const adminItems = [
     { label: "Panel", href: "/admin" },
-    { label: "Wyniki", href: `${h}/results` },
+    ...(hackathonSlug ? [{ label: "Wyniki", href: `${h}/results` }] : [{ label: "Wyniki", href: "/admin/results" }]),
   ];
 
   // Close sidebar on route change (mobile)
@@ -158,31 +162,39 @@ export default function Sidebar({ user, votingOpen, hackathonSlug }: SidebarProp
             />
           ))}
 
-          <div className="my-4 border-t border-outline" />
-          <p className="mb-2 px-2 font-space-grotesk text-xs uppercase tracking-wider text-on-surface-muted">
-            Hackathon
-          </p>
-          {hackathonItems.map((item) => (
-            <NavLink
-              key={item.href}
-              href={item.href}
-              label={item.label}
-              active={isActive(item.href)}
-            />
-          ))}
+          {hackathonItems.length > 0 && (
+            <>
+              <div className="my-4 border-t border-outline" />
+              <p className="mb-2 px-2 font-space-grotesk text-xs uppercase tracking-wider text-on-surface-muted">
+                Hackathon
+              </p>
+              {hackathonItems.map((item) => (
+                <NavLink
+                  key={item.href}
+                  href={item.href}
+                  label={item.label}
+                  active={isActive(item.href)}
+                />
+              ))}
+            </>
+          )}
 
-          <div className="my-4 border-t border-outline" />
-          <p className="mb-2 px-2 font-space-grotesk text-xs uppercase tracking-wider text-on-surface-muted">
-            Galeria
-          </p>
-          {galleryItems.map((item) => (
-            <NavLink
-              key={item.href}
-              href={item.href}
-              label={item.label}
-              active={isActive(item.href)}
-            />
-          ))}
+          {galleryItems.length > 0 && (
+            <>
+              <div className="my-4 border-t border-outline" />
+              <p className="mb-2 px-2 font-space-grotesk text-xs uppercase tracking-wider text-on-surface-muted">
+                Galeria
+              </p>
+              {galleryItems.map((item) => (
+                <NavLink
+                  key={item.href}
+                  href={item.href}
+                  label={item.label}
+                  active={isActive(item.href)}
+                />
+              ))}
+            </>
+          )}
 
           {/* Admin section */}
           {user.role === "admin" && (

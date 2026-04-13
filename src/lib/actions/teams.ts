@@ -15,6 +15,20 @@ async function getAuthUser() {
   return { supabase, user };
 }
 
+async function getHackathonSlug(supabase: Awaited<ReturnType<typeof createClient>>, hackathonId: string): Promise<string> {
+  const { data } = await supabase
+    .from("hackathons")
+    .select("slug")
+    .eq("id", hackathonId)
+    .single();
+  if (!data) throw new Error("Nie znaleziono hackathonu");
+  return data.slug;
+}
+
+function revalidateHackathon(slug: string) {
+  revalidatePath(`/h/${slug}`, "layout");
+}
+
 export async function createTeam(name: string, hackathonId: string) {
   if (!name?.trim()) throw new Error("Nazwa zespołu jest wymagana");
 
@@ -70,8 +84,9 @@ export async function createTeam(name: string, hackathonId: string) {
     .eq("hackathon_id", hackathonId)
     .eq("user_id", user.id);
 
-  revalidatePath("/");
-  redirect("/team");
+  const slug = await getHackathonSlug(supabase, hackathonId);
+  revalidateHackathon(slug);
+  redirect(`/h/${slug}/team`);
 }
 
 export async function goSolo(hackathonId: string) {
@@ -99,8 +114,9 @@ export async function goSolo(hackathonId: string) {
     .delete()
     .eq("user_id", user.id);
 
-  revalidatePath("/");
-  redirect("/my-project");
+  const slug = await getHackathonSlug(supabase, hackathonId);
+  revalidateHackathon(slug);
+  redirect(`/h/${slug}/my-project`);
 }
 
 export async function requestJoinTeam(teamId: string) {
@@ -163,12 +179,20 @@ export async function requestJoinTeam(teamId: string) {
 
   if (error) throw new Error("Nie udało się wysłać prośby o dołączenie");
 
-  revalidatePath("/");
-  revalidatePath("/team");
+  const slug = await getHackathonSlug(supabase, team.hackathon_id);
+  revalidateHackathon(slug);
 }
 
 export async function cancelRequest(requestId: string) {
   const { supabase, user } = await getAuthUser();
+
+  // Get team's hackathon before deleting
+  const { data: request } = await supabase
+    .from("team_requests")
+    .select("team_id, team:teams!team_id(hackathon_id)")
+    .eq("id", requestId)
+    .eq("user_id", user.id)
+    .single();
 
   const { error } = await supabase
     .from("team_requests")
@@ -178,8 +202,11 @@ export async function cancelRequest(requestId: string) {
 
   if (error) throw new Error("Nie udało się anulować prośby");
 
-  revalidatePath("/team");
-  revalidatePath("/onboarding");
+  if (request?.team) {
+    const hackathonId = (request.team as unknown as { hackathon_id: string }).hackathon_id;
+    const slug = await getHackathonSlug(supabase, hackathonId);
+    revalidateHackathon(slug);
+  }
 }
 
 export async function approveRequest(requestId: string) {
@@ -263,7 +290,8 @@ export async function approveRequest(requestId: string) {
     .delete()
     .eq("user_id", request.user_id);
 
-  revalidatePath("/team");
+  const slug = await getHackathonSlug(supabase, team.hackathon_id);
+  revalidateHackathon(slug);
 }
 
 export async function rejectRequest(requestId: string) {
@@ -292,7 +320,17 @@ export async function rejectRequest(requestId: string) {
     .delete()
     .eq("id", requestId);
 
-  revalidatePath("/team");
+  if (request?.team_id) {
+    const { data: teamData } = await supabase
+      .from("teams")
+      .select("hackathon_id")
+      .eq("id", request.team_id)
+      .single();
+    if (teamData) {
+      const slug = await getHackathonSlug(supabase, teamData.hackathon_id);
+      revalidateHackathon(slug);
+    }
+  }
 }
 
 export async function leaveTeam(hackathonId: string) {
@@ -324,9 +362,9 @@ export async function leaveTeam(hackathonId: string) {
     .eq("hackathon_id", hackathonId)
     .eq("user_id", user.id);
 
-  revalidatePath("/");
-  revalidatePath("/team");
-  redirect("/onboarding");
+  const slug = await getHackathonSlug(supabase, hackathonId);
+  revalidateHackathon(slug);
+  redirect(`/h/${slug}/onboarding`);
 }
 
 export async function removeMember(memberId: string, hackathonId: string) {
@@ -364,7 +402,8 @@ export async function removeMember(memberId: string, hackathonId: string) {
     .eq("user_id", memberId)
     .eq("team_id", participant.team_id);
 
-  revalidatePath("/team");
+  const slug = await getHackathonSlug(supabase, hackathonId);
+  revalidateHackathon(slug);
 }
 
 export async function deleteTeam(hackathonId: string) {
@@ -421,6 +460,7 @@ export async function deleteTeam(hackathonId: string) {
     .delete()
     .eq("id", team.id);
 
-  revalidatePath("/");
-  redirect("/onboarding");
+  const slug = await getHackathonSlug(supabase, hackathonId);
+  revalidateHackathon(slug);
+  redirect(`/h/${slug}/onboarding`);
 }
