@@ -45,6 +45,12 @@ export async function updateSession(request: NextRequest) {
   // Landing page is public
   if (pathname === "/") return supabaseResponse;
 
+  // Per-hackathon public pages (projects grid, feed) — allow unauth
+  const hackathonPublicMatch = pathname.match(/^\/h\/([^/]+)(\/feed)?$/);
+  if (hackathonPublicMatch && !user) {
+    return supabaseResponse;
+  }
+
   if (!user && !isPublicPath) {
     return NextResponse.redirect(getRedirectUrl(request, "/login"));
   }

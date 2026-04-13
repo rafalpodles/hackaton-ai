@@ -56,7 +56,7 @@ export function HackathonTile({
     if (!isLoggedIn) {
       return (
         <div className="flex gap-3">
-          <Link href="/live">
+          <Link href={`/h/${hackathon.slug}`}>
             <GradientButton variant="ghost">Zobacz projekty</GradientButton>
           </Link>
           {!isFinished && (
