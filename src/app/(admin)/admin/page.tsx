@@ -1,65 +1,29 @@
 import { createClient } from "@/lib/supabase/server";
-import StatsCards from "@/components/admin/stats-cards";
-import ProjectsTable from "@/components/admin/projects-table";
+import Link from "next/link";
 import UsersTable from "@/components/admin/users-table";
-import VotingToggle from "@/components/admin/voting-toggle";
-import DeadlinePicker from "@/components/admin/deadline-picker";
-import HackathonDatePicker from "@/components/admin/hackathon-date-picker";
-import SubmissionToggle from "@/components/admin/submission-toggle";
 import { getOpenRouterKeyUsage } from "@/lib/actions/admin";
 import { getCurrentUser } from "@/lib/utils";
-import type { Project, Profile } from "@/lib/types";
+import type { Profile } from "@/lib/types";
 
 export default async function AdminDashboardPage() {
   const currentUser = await getCurrentUser();
   const supabase = await createClient();
 
-  const [
-    { count: projectCount, error: e1 },
-    { count: participantCount, error: e2 },
-    { data: voterRows, error: e3 },
-    { data: projectsRaw, error: e4 },
-    { data: settings, error: e5 },
-    { data: usersRaw, error: e6 },
-  ] = await Promise.all([
-    supabase
-      .from("projects")
-      .select("*", { count: "exact", head: true }),
-    supabase
-      .from("profiles")
-      .select("*", { count: "exact", head: true })
-      .not("project_id", "is", null),
-    supabase
-      .from("votes")
-      .select("voter_id"),
-    supabase
-      .from("projects")
-      .select("*"),
-    supabase
-      .from("app_settings")
-      .select("voting_open, submission_open, submission_deadline, hackathon_date")
-      .eq("id", 1)
-      .single(),
-    supabase
-      .from("profiles")
-      .select("*, project:projects!project_id(name), team:teams!team_id(name)")
-      .order("created_at", { ascending: true }),
-  ]);
+  const { data: usersRaw, error: usersError } = await supabase
+    .from("profiles")
+    .select("*")
+    .order("created_at", { ascending: true });
 
-  const queryError = e1 || e2 || e3 || e4 || e5 || e6;
-  const uniqueVoters = new Set((voterRows ?? []).map((v: { voter_id: string }) => v.voter_id)).size;
-  if (queryError) {
+  if (usersError) {
     return (
       <div className="rounded-xl border border-secondary/30 bg-secondary/5 p-6">
         <h2 className="font-space-grotesk text-lg font-bold text-secondary">
           Nie udało się załadować panelu
         </h2>
-        <p className="mt-2 text-sm text-on-surface-muted">{queryError.message}</p>
+        <p className="mt-2 text-sm text-on-surface-muted">{usersError.message}</p>
       </div>
     );
   }
-
-  const projects = (projectsRaw ?? []) as Project[];
 
   // Fetch auth users to get login status
   const { data: authData } = await supabase.auth.admin.listUsers({ perPage: 1000 });
@@ -77,9 +41,7 @@ export default async function AdminDashboardPage() {
   const usersBase = (usersRaw ?? []).map((u: any) => {
     const auth = authMap.get(u.id);
     return {
-      ...u as Profile,
-      project_name: (u.project as { name: string } | null)?.name ?? null,
-      team_name: (u.team as { name: string } | null)?.name ?? null,
+      ...(u as Profile),
       confirmed_at: auth?.confirmed_at ?? null,
       last_sign_in_at: auth?.last_sign_in_at ?? null,
     };
@@ -98,19 +60,6 @@ export default async function AdminDashboardPage() {
     })
   );
   const users = usageResults;
-  const totalProjects = projectCount ?? 0;
-  const submittedCount = projects.filter((p) => p.is_submitted).length;
-  const completionPct =
-    totalProjects > 0
-      ? Math.round((submittedCount / totalProjects) * 100)
-      : 0;
-
-  const stats = [
-    { label: "Wszystkie projekty", value: totalProjects },
-    { label: "Uczestnicy", value: participantCount ?? 0 },
-    { label: "Zagłosowało osób", value: uniqueVoters },
-    { label: "Ukończenie", value: `${completionPct}%` },
-  ];
 
   return (
     <div className="space-y-8">
@@ -118,26 +67,22 @@ export default async function AdminDashboardPage() {
         <h1 className="font-space-grotesk text-3xl font-bold text-on-surface">
           Panel admina
         </h1>
-        <div className="flex gap-3">
-          <SubmissionToggle isOpen={settings?.submission_open ?? false} />
-          <VotingToggle isOpen={settings?.voting_open ?? false} />
-        </div>
+        <Link
+          href="/"
+          className="inline-flex items-center gap-2 rounded-lg border border-outline px-4 py-2 text-sm text-on-surface-muted transition-colors hover:bg-surface-high hover:text-on-surface"
+        >
+          <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+          </svg>
+          Hackathony
+        </Link>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-        <HackathonDatePicker currentDate={settings?.hackathon_date ?? null} />
-        <DeadlinePicker currentDeadline={settings?.submission_deadline ?? null} />
-      </div>
+      <p className="text-sm text-on-surface-muted">
+        Aby zarządzać konkretnym hackathonem (ustawienia, kategorie, projekty, wyniki), wejdź w hackathon z listy na stronie głównej i użyj linku Admin w sidebarze.
+      </p>
 
-      <StatsCards stats={stats} />
-
-      <div className="space-y-4">
-        <h2 className="font-space-grotesk text-xl font-semibold text-on-surface">
-          Projekty
-        </h2>
-        <ProjectsTable projects={projects} />
-      </div>
-
+      {/* Users */}
       <div className="space-y-4">
         <h2 className="font-space-grotesk text-xl font-semibold text-on-surface">
           Użytkownicy

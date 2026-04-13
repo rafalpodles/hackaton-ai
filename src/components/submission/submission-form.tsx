@@ -7,12 +7,13 @@ import { FileUploadZone } from "./file-upload-zone";
 
 interface SubmissionFormProps {
   project: Project;
+  hackathonId: string;
   submissionOpen?: boolean;
   deadline?: string | null;
   canSubmit?: boolean;
 }
 
-export function SubmissionForm({ project, submissionOpen = true, deadline, canSubmit = true }: SubmissionFormProps) {
+export function SubmissionForm({ project, hackathonId, submissionOpen = true, deadline, canSubmit = true }: SubmissionFormProps) {
   const [isPending, startTransition] = useTransition();
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
@@ -60,16 +61,16 @@ export function SubmissionForm({ project, submissionOpen = true, deadline, canSu
   const [pdfUrl, setPdfUrl] = useState(project.pdf_url);
 
   const save = useCallback(
-    (data: Parameters<typeof updateProject>[1]) => {
+    (data: Parameters<typeof updateProject>[2]) => {
       startTransition(async () => {
         try {
-          await updateProject(project.id, data);
+          await updateProject(project.id, hackathonId, data);
         } catch {
           // Silently fail on auto-save
         }
       });
     },
-    [project.id]
+    [project.id, hackathonId]
   );
 
   const handleSubmit = () => {
@@ -101,7 +102,7 @@ export function SubmissionForm({ project, submissionOpen = true, deadline, canSu
 
     startTransition(async () => {
       try {
-        await submitProject(project.id);
+        await submitProject(project.id, hackathonId);
       } catch (err) {
         setSubmitError(
           err instanceof Error ? err.message : "Zgłoszenie nie powiodło się"
@@ -377,7 +378,7 @@ export function SubmissionForm({ project, submissionOpen = true, deadline, canSu
             onClick={() => {
               startTransition(async () => {
                 try {
-                  await updateProject(project.id, {
+                  await updateProject(project.id, hackathonId, {
                     name, description, idea_origin: ideaOrigin, journey,
                     tech_stack: techStack, video_url: videoUrl,
                     video_duration: videoDuration, thumbnail_url: thumbnailUrl,

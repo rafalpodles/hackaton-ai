@@ -253,8 +253,6 @@ export default function UsersTable({ currentUserId, users }: UsersTableProps) {
                     <span className="text-sm text-on-surface">
                       {user.team_name}
                     </span>
-                  ) : user.is_solo ? (
-                    <span className="text-sm text-on-surface-muted">Solo</span>
                   ) : (
                     <span className="text-sm text-on-surface-muted">—</span>
                   )}

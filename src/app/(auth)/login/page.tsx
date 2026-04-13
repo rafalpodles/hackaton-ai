@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { GlassCard } from "@/components/ui/glass-card";
 import { GradientButton } from "@/components/ui/gradient-button";
@@ -116,6 +117,17 @@ function LoginForm() {
               {loading ? "Logowanie..." : "Zaloguj się"}
             </GradientButton>
           </form>
+
+          {/* Link to register */}
+          <p className="mt-6 text-center text-sm text-on-surface-muted">
+            Nie masz konta?{" "}
+            <Link
+              href="/register"
+              className="text-primary-dim hover:text-primary transition-colors"
+            >
+              Zarejestruj się
+            </Link>
+          </p>
         </GlassCard>
 
         {/* Geocities Easter Egg */}

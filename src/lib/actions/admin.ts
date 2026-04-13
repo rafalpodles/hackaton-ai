@@ -11,19 +11,18 @@ async function requireAdmin() {
   return user;
 }
 
-export async function toggleVoting(open: boolean) {
+export async function toggleVoting(hackathonId: string, open: boolean) {
   await requireAdmin();
   const supabase = await createClient();
 
   const { error } = await supabase
-    .from("app_settings")
+    .from("hackathons")
     .update({ voting_open: open })
-    .eq("id", 1);
+    .eq("id", hackathonId);
 
   if (error) throw new Error("Nie udało się zaktualizować statusu głosowania");
 
-  revalidatePath("/admin");
-  revalidatePath("/vote");
+  revalidatePath("/", "layout");
 }
 
 export async function toggleUserRole(userId: string, role: "admin" | "participant") {
@@ -39,54 +38,49 @@ export async function toggleUserRole(userId: string, role: "admin" | "participan
 
   if (error) throw new Error("Nie udało się zmienić roli");
 
-  revalidatePath("/admin");
+  revalidatePath("/", "layout");
 }
 
-export async function toggleSubmissions(open: boolean) {
+export async function toggleSubmissions(hackathonId: string, open: boolean) {
   await requireAdmin();
   const supabase = await createClient();
 
   const { error } = await supabase
-    .from("app_settings")
+    .from("hackathons")
     .update({ submission_open: open })
-    .eq("id", 1);
+    .eq("id", hackathonId);
 
   if (error) throw new Error("Nie udało się zmienić statusu zgłoszeń");
 
-  revalidatePath("/admin");
-  revalidatePath("/my-project");
-  revalidatePath("/");
+  revalidatePath("/", "layout");
 }
 
-export async function setSubmissionDeadline(deadline: string | null) {
+export async function setSubmissionDeadline(hackathonId: string, deadline: string | null) {
   await requireAdmin();
   const supabase = await createClient();
 
   const { error } = await supabase
-    .from("app_settings")
+    .from("hackathons")
     .update({ submission_deadline: deadline })
-    .eq("id", 1);
+    .eq("id", hackathonId);
 
   if (error) throw new Error("Nie udało się ustawić deadline'u");
 
-  revalidatePath("/admin");
-  revalidatePath("/my-project");
-  revalidatePath("/");
+  revalidatePath("/", "layout");
 }
 
-export async function setHackathonDate(date: string | null) {
+export async function setHackathonDate(hackathonId: string, date: string | null) {
   await requireAdmin();
   const supabase = await createClient();
 
   const { error } = await supabase
-    .from("app_settings")
+    .from("hackathons")
     .update({ hackathon_date: date })
-    .eq("id", 1);
+    .eq("id", hackathonId);
 
   if (error) throw new Error("Nie udało się ustawić daty hackathonu");
 
-  revalidatePath("/admin");
-  revalidatePath("/");
+  revalidatePath("/", "layout");
 }
 
 export async function deleteProject(projectId: string) {
@@ -105,13 +99,16 @@ export async function deleteProject(projectId: string) {
     }
   }
 
-  // Unlink profiles
-  const { error: unlinkError } = await supabase
-    .from("profiles")
+  // Unlink participants and teams
+  await supabase
+    .from("hackathon_participants")
     .update({ project_id: null })
     .eq("project_id", projectId);
 
-  if (unlinkError) throw new Error("Nie udało się odłączyć członków zespołu");
+  await supabase
+    .from("teams")
+    .update({ project_id: null })
+    .eq("project_id", projectId);
 
   // Delete project (cascades votes)
   const { error: deleteError } = await supabase
@@ -122,8 +119,7 @@ export async function deleteProject(projectId: string) {
   if (deleteError) throw new Error("Nie udało się usunąć projektu");
 
   revalidatePath("/admin");
-  revalidatePath("/");
-  revalidatePath("/feed");
+  revalidatePath("/", "layout");
 }
 
 export async function generateOpenRouterKey(
@@ -267,28 +263,33 @@ export async function getOpenRouterKeyUsage(
   };
 }
 
-export async function exportResults(): Promise<string> {
+export async function exportResults(hackathonId?: string): Promise<string> {
   await requireAdmin();
   const supabase = await createClient();
 
   const workbook = new ExcelJS.Workbook();
 
   // Sheet 1: Results — direct query instead of RPC
-  const { data: votes } = await supabase
+  let votesQuery = supabase
     .from("votes")
     .select("category, project_id, projects!project_id(name, id), profiles!voter_id(email)");
+  if (hackathonId) votesQuery = votesQuery.eq("hackathon_id", hackathonId);
+  const { data: votes } = await votesQuery;
 
-  const { data: allProfiles } = await supabase
-    .from("profiles")
-    .select("display_name, project_id")
+  // Build team members map from hackathon_participants
+  let participantsQuery = supabase
+    .from("hackathon_participants")
+    .select("project_id, user:profiles!user_id(display_name)")
     .not("project_id", "is", null);
+  if (hackathonId) participantsQuery = participantsQuery.eq("hackathon_id", hackathonId);
+  const { data: allParticipants } = await participantsQuery;
 
-  // Build team members map
   const teamMap: Record<string, string[]> = {};
-  for (const p of allProfiles ?? []) {
+  for (const p of allParticipants ?? []) {
     if (p.project_id) {
+      const name = (p.user as unknown as { display_name: string })?.display_name ?? "";
       if (!teamMap[p.project_id]) teamMap[p.project_id] = [];
-      teamMap[p.project_id].push(p.display_name);
+      teamMap[p.project_id].push(name);
     }
   }
 
@@ -357,7 +358,9 @@ export async function exportResults(): Promise<string> {
   }
 
   // Sheet 3: Projects
-  const { data: projects } = await supabase.from("projects").select("*");
+  let projectsQuery = supabase.from("projects").select("*");
+  if (hackathonId) projectsQuery = projectsQuery.eq("hackathon_id", hackathonId);
+  const { data: projects } = await projectsQuery;
   const projectsSheet = workbook.addWorksheet("Projects");
   projectsSheet.columns = [
     { header: "ID", key: "id", width: 36 },

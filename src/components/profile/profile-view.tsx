@@ -4,7 +4,6 @@ import { useCallback, useRef, useState, useTransition } from "react";
 import Image from "next/image";
 import { createClient } from "@/lib/supabase/client";
 import { updateProfile, requestApiKey } from "@/lib/actions/profiles";
-import { leaveProject } from "@/lib/actions/projects";
 import ConfirmDialog from "@/components/ui/confirm-dialog";
 import type { Profile, Project } from "@/lib/types";
 
@@ -108,13 +107,9 @@ export default function ProfileView({
 
   const handleLeaveProject = useCallback(() => {
     setShowLeaveConfirm(false);
-    startTransition(async () => {
-      try {
-        await leaveProject();
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Nie udało się opuścić projektu");
-      }
-    });
+    // leaveProject requires hackathonId which is not available in global profile view.
+    // Users should leave their team/project from the hackathon-specific team page.
+    setError("Aby opuścić zespół, przejdź do strony zespołu w danym hackathonie.");
   }, []);
 
   return (

@@ -11,37 +11,48 @@ import { useGeocities } from "@/components/geocities/geocities-provider";
 interface SidebarProps {
   user: Profile;
   votingOpen: boolean;
+  hackathonSlug?: string;
 }
 
-const startItems = [
-  { label: "Garage Rules", href: "/rules" },
-  { label: "Poradnik", href: "/guide" },
-  { label: "Q&A", href: "/faq" },
-  { label: "Pomysły na projekty", href: "/ideas" },
-  { label: "Przydatne prompty", href: "/prompts" },
-];
-
-const hackathonItems = [
-  { label: "Zespół", href: "/team" },
-  { label: "Mój projekt", href: "/my-project" },
-];
-
-const galleryItems = [
-  { label: "Projekty", href: "/" },
-  { label: "Live", href: "/feed" },
-];
-
-const adminItems = [
-  { label: "Panel", href: "/admin" },
-  { label: "Wyniki", href: "/results" },
-];
-
-export default function Sidebar({ user, votingOpen }: SidebarProps) {
+export default function Sidebar({ user, votingOpen, hackathonSlug }: SidebarProps) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
   const supabase = createClient();
   const { enabled: geocitiesEnabled } = useGeocities();
+
+  const h = hackathonSlug ? `/h/${hackathonSlug}` : "";
+
+  const startItems = [
+    { label: "Garage Rules", href: hackathonSlug ? `${h}/rules` : "/rules" },
+    { label: "Poradnik", href: hackathonSlug ? `${h}/guide` : "/guide" },
+    { label: "Q&A", href: hackathonSlug ? `${h}/faq` : "/faq" },
+    ...(hackathonSlug ? [{ label: "Pomysły na projekty", href: `${h}/ideas` }] : []),
+    { label: "Przydatne prompty", href: hackathonSlug ? `${h}/prompts` : "/prompts" },
+  ];
+
+  const hackathonItems = hackathonSlug
+    ? [
+        { label: "Zespół", href: `${h}/team` },
+        { label: "Mój projekt", href: `${h}/my-project` },
+      ]
+    : [];
+
+  const galleryItems = hackathonSlug
+    ? [
+        { label: "Projekty", href: `${h}` },
+        { label: "Live", href: `${h}/feed` },
+      ]
+    : [];
+
+  const adminItems = hackathonSlug
+    ? [
+        { label: "Admin", href: `${h}/admin` },
+        { label: "Wyniki", href: `${h}/admin/results` },
+      ]
+    : [
+        { label: "Panel", href: "/admin" },
+      ];
 
   // Close sidebar on route change (mobile)
   useEffect(() => {
@@ -58,8 +69,10 @@ export default function Sidebar({ user, votingOpen }: SidebarProps) {
     }
   }, [open]);
 
-  const isActive = (href: string) =>
-    href === "/" ? pathname === "/" : pathname.startsWith(href);
+  const isActive = (href: string) => {
+    if (hackathonSlug && href === `/h/${hackathonSlug}`) return pathname === href;
+    return href === "/" ? pathname === "/" : pathname.startsWith(href);
+  };
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -110,7 +123,7 @@ export default function Sidebar({ user, votingOpen }: SidebarProps) {
 
         {/* User identity */}
         <Link
-          href="/profile"
+          href={hackathonSlug ? `${h}/profile` : "/profile"}
           className="group/user flex items-center gap-3 rounded-xl px-5 py-6 transition-colors hover:bg-surface-high"
         >
           <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary font-space-grotesk text-sm font-bold text-white">
@@ -137,7 +150,11 @@ export default function Sidebar({ user, votingOpen }: SidebarProps) {
 
         {/* Navigation */}
         <nav className="flex-1 space-y-1 px-3">
-          <p className="mb-2 px-2 font-space-grotesk text-xs uppercase tracking-wider text-on-surface-muted">
+          {hackathonSlug && (
+            <NavLink href="/" label="← Hackathony" active={false} />
+          )}
+
+          <p className="mb-2 mt-2 px-2 font-space-grotesk text-xs uppercase tracking-wider text-on-surface-muted">
             Na start
           </p>
           {startItems.map((item) => (
@@ -149,31 +166,39 @@ export default function Sidebar({ user, votingOpen }: SidebarProps) {
             />
           ))}
 
-          <div className="my-4 border-t border-outline" />
-          <p className="mb-2 px-2 font-space-grotesk text-xs uppercase tracking-wider text-on-surface-muted">
-            Hackathon
-          </p>
-          {hackathonItems.map((item) => (
-            <NavLink
-              key={item.href}
-              href={item.href}
-              label={item.label}
-              active={isActive(item.href)}
-            />
-          ))}
+          {hackathonItems.length > 0 && (
+            <>
+              <div className="my-4 border-t border-outline" />
+              <p className="mb-2 px-2 font-space-grotesk text-xs uppercase tracking-wider text-on-surface-muted">
+                Hackathon
+              </p>
+              {hackathonItems.map((item) => (
+                <NavLink
+                  key={item.href}
+                  href={item.href}
+                  label={item.label}
+                  active={isActive(item.href)}
+                />
+              ))}
+            </>
+          )}
 
-          <div className="my-4 border-t border-outline" />
-          <p className="mb-2 px-2 font-space-grotesk text-xs uppercase tracking-wider text-on-surface-muted">
-            Galeria
-          </p>
-          {galleryItems.map((item) => (
-            <NavLink
-              key={item.href}
-              href={item.href}
-              label={item.label}
-              active={isActive(item.href)}
-            />
-          ))}
+          {galleryItems.length > 0 && (
+            <>
+              <div className="my-4 border-t border-outline" />
+              <p className="mb-2 px-2 font-space-grotesk text-xs uppercase tracking-wider text-on-surface-muted">
+                Galeria
+              </p>
+              {galleryItems.map((item) => (
+                <NavLink
+                  key={item.href}
+                  href={item.href}
+                  label={item.label}
+                  active={isActive(item.href)}
+                />
+              ))}
+            </>
+          )}
 
           {/* Admin section */}
           {user.role === "admin" && (
@@ -198,9 +223,9 @@ export default function Sidebar({ user, votingOpen }: SidebarProps) {
         {geocitiesEnabled && (
           <div className="px-3 pb-1">
             <Link
-              href="/guestbook"
+              href={hackathonSlug ? `${h}/guestbook` : "/guestbook"}
               className={`flex items-center rounded-lg px-3 py-2 font-space-grotesk text-xs uppercase tracking-wider transition-colors ${
-                isActive("/guestbook")
+                isActive(hackathonSlug ? `${h}/guestbook` : "/guestbook")
                   ? "border-l-2 border-primary-dim bg-primary/15 text-primary-dim"
                   : "text-on-surface-muted hover:bg-surface-high hover:text-on-surface"
               }`}
@@ -215,7 +240,7 @@ export default function Sidebar({ user, votingOpen }: SidebarProps) {
         {votingOpen && (
           <div className="px-3 pb-3">
             <Link
-              href="/vote"
+              href={`${h}/vote`}
               className="block w-full rounded-lg bg-gradient-to-r from-primary to-secondary py-2.5 text-center font-space-grotesk text-sm font-bold uppercase tracking-wider text-white transition-opacity hover:opacity-90"
             >
               Głosuj

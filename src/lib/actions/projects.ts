@@ -1,7 +1,6 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 
 async function getAuthUser() {
@@ -13,50 +12,50 @@ async function getAuthUser() {
   return { supabase, user };
 }
 
-/** Get the project ID for the current user (from team or solo) */
+/** Get the project ID for the current user within a hackathon */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-async function getUserProjectId(supabase: any, userId: string) {
-  const { data: profile } = await supabase
-    .from("profiles")
+async function getUserProjectId(supabase: any, userId: string, hackathonId: string) {
+  const { data: participant } = await supabase
+    .from("hackathon_participants")
     .select("project_id, team_id, is_solo")
-    .eq("id", userId)
+    .eq("hackathon_id", hackathonId)
+    .eq("user_id", userId)
     .single();
 
-  if (!profile) throw new Error("Nie znaleziono profilu");
+  if (!participant) throw new Error("Nie jesteś uczestnikiem tego hackathonu");
 
-  // Solo user → uses profile.project_id
-  if (profile.is_solo && !profile.team_id) {
-    return { projectId: profile.project_id, isSolo: true, teamId: null };
+  // Solo user
+  if (participant.is_solo && !participant.team_id) {
+    return { projectId: participant.project_id, isSolo: true, teamId: null, isLeader: true };
   }
 
-  // Team member → uses team.project_id
-  if (profile.team_id) {
+  // Team member
+  if (participant.team_id) {
     const { data: team } = await supabase
       .from("teams")
       .select("project_id, leader_id")
-      .eq("id", profile.team_id)
+      .eq("id", participant.team_id)
       .single();
 
     return {
       projectId: team?.project_id ?? null,
       isSolo: false,
-      teamId: profile.team_id,
+      teamId: participant.team_id,
       isLeader: team?.leader_id === userId,
     };
   }
 
-  return { projectId: null, isSolo: false, teamId: null };
+  return { projectId: null, isSolo: false, teamId: null, isLeader: false };
 }
 
-export async function createProject(name: string) {
+export async function createProject(name: string, hackathonId: string) {
   if (!name?.trim()) throw new Error("Nazwa projektu jest wymagana");
 
   const { supabase, user } = await getAuthUser();
-  const ctx = await getUserProjectId(supabase, user.id);
+  const ctx = await getUserProjectId(supabase, user.id, hackathonId);
 
   if (ctx.projectId) throw new Error("Już masz projekt");
 
-  // Only leader or solo can create project
   if (!ctx.isSolo && !ctx.isLeader) {
     throw new Error("Tylko lider zespołu może utworzyć projekt");
   }
@@ -65,15 +64,16 @@ export async function createProject(name: string) {
 
   const { error } = await supabase
     .from("projects")
-    .insert({ id: projectId, name: name.trim(), description: "", idea_origin: "", journey: "" });
+    .insert({ id: projectId, name: name.trim(), description: "", idea_origin: "", journey: "", hackathon_id: hackathonId });
 
   if (error) throw new Error(`Nie udało się utworzyć projektu: ${error.message}`);
 
   if (ctx.isSolo) {
     await supabase
-      .from("profiles")
+      .from("hackathon_participants")
       .update({ project_id: projectId })
-      .eq("id", user.id);
+      .eq("hackathon_id", hackathonId)
+      .eq("user_id", user.id);
   } else if (ctx.teamId) {
     await supabase
       .from("teams")
@@ -82,11 +82,11 @@ export async function createProject(name: string) {
   }
 
   revalidatePath("/");
-  revalidatePath("/my-project");
 }
 
 export async function updateProject(
   projectId: string,
+  hackathonId: string,
   data: {
     name?: string;
     description?: string;
@@ -101,7 +101,7 @@ export async function updateProject(
   }
 ) {
   const { supabase, user } = await getAuthUser();
-  const ctx = await getUserProjectId(supabase, user.id);
+  const ctx = await getUserProjectId(supabase, user.id, hackathonId);
 
   if (ctx.projectId !== projectId) {
     throw new Error("Nie jesteś członkiem tego projektu");
@@ -137,18 +137,17 @@ export async function updateProject(
 
   if (error) throw new Error("Nie udało się zaktualizować projektu");
 
-  revalidatePath("/my-project");
+  revalidatePath("/");
 }
 
-export async function submitProject(projectId: string) {
+export async function submitProject(projectId: string, hackathonId: string) {
   const { supabase, user } = await getAuthUser();
-  const ctx = await getUserProjectId(supabase, user.id);
+  const ctx = await getUserProjectId(supabase, user.id, hackathonId);
 
   if (ctx.projectId !== projectId) {
     throw new Error("Nie jesteś członkiem tego projektu");
   }
 
-  // Only leader or solo can submit
   if (!ctx.isSolo && !ctx.isLeader) {
     throw new Error("Tylko lider zespołu może zgłosić projekt");
   }
@@ -163,9 +162,7 @@ export async function submitProject(projectId: string) {
   if (project.is_submitted) throw new Error("Projekt został już zgłoszony");
 
   if (!project.name || !project.description || !project.video_url) {
-    throw new Error(
-      "Brakuje wymaganych pól: nazwa, opis i wideo są wymagane"
-    );
+    throw new Error("Brakuje wymaganych pól: nazwa, opis i wideo są wymagane");
   }
 
   const { error } = await supabase
@@ -176,27 +173,26 @@ export async function submitProject(projectId: string) {
   if (error) throw new Error("Nie udało się zgłosić projektu");
 
   revalidatePath("/");
-  revalidatePath("/my-project");
-  redirect("/");
 }
 
-export async function leaveProject() {
+export async function leaveProject(hackathonId: string) {
   const { supabase, user } = await getAuthUser();
 
-  const { data: profile } = await supabase
-    .from("profiles")
+  const { data: participant } = await supabase
+    .from("hackathon_participants")
     .select("project_id, is_solo")
-    .eq("id", user.id)
+    .eq("hackathon_id", hackathonId)
+    .eq("user_id", user.id)
     .single();
 
-  if (!profile?.is_solo || !profile.project_id) {
+  if (!participant?.is_solo || !participant.project_id) {
     throw new Error("Nie masz projektu solo do opuszczenia");
   }
 
   const { data: project } = await supabase
     .from("projects")
     .select("is_submitted")
-    .eq("id", profile.project_id)
+    .eq("id", participant.project_id)
     .single();
 
   if (project?.is_submitted) {
@@ -204,10 +200,10 @@ export async function leaveProject() {
   }
 
   await supabase
-    .from("profiles")
+    .from("hackathon_participants")
     .update({ project_id: null })
-    .eq("id", user.id);
+    .eq("hackathon_id", hackathonId)
+    .eq("user_id", user.id);
 
   revalidatePath("/");
-  revalidatePath("/my-project");
 }

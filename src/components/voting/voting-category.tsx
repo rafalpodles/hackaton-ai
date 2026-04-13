@@ -1,10 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import type { VoteCategory, ProjectWithTeam } from "@/lib/types";
+import type { ProjectWithTeam } from "@/lib/types";
 
 interface VotingCategoryProps {
-  category: VoteCategory;
+  category: string;
   label: string;
   icon: string;
   projects: ProjectWithTeam[];
