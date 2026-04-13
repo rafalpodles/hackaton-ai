@@ -54,6 +54,7 @@ export function SubmissionForm({ project, hackathonId, submissionOpen = true, de
   );
   const [tagInput, setTagInput] = useState("");
   const [repoUrl, setRepoUrl] = useState(project.repo_url ?? "");
+  const [appUrl, setAppUrl] = useState(project.app_url ?? "");
 
   const [videoUrl, setVideoUrl] = useState(project.video_url);
   const [videoDuration, setVideoDuration] = useState(project.video_duration);
@@ -295,6 +296,24 @@ export function SubmissionForm({ project, hackathonId, submissionOpen = true, de
                 <div className="absolute bottom-0 left-0 h-[2px] w-full origin-left scale-x-0 bg-gradient-to-r from-primary to-secondary transition-transform duration-500 group-focus-within:scale-x-100" />
               </div>
             </div>
+            {/* App URL */}
+            <div className="space-y-2">
+              <h2 className="font-space-grotesk text-2xl font-bold text-on-surface">
+                Link do aplikacji
+              </h2>
+              <p className="text-xs text-on-surface-muted">Opcjonalne — link do działającej wersji</p>
+              <div className="group relative">
+                <input
+                  className="w-full border-none bg-black p-6 text-lg text-on-surface placeholder:text-on-surface-muted/30 focus:outline-none focus:ring-0"
+                  type="url"
+                  value={appUrl}
+                  onChange={(e) => setAppUrl(e.target.value)}
+                  onBlur={() => save({ app_url: appUrl || null })}
+                  placeholder="https://my-app.vercel.app/..."
+                />
+                <div className="absolute bottom-0 left-0 h-[2px] w-full origin-left scale-x-0 bg-gradient-to-r from-primary to-secondary transition-transform duration-500 group-focus-within:scale-x-100" />
+              </div>
+            </div>
           </div>
 
           {/* Right column — Asset uploads */}
@@ -390,7 +409,8 @@ export function SubmissionForm({ project, hackathonId, submissionOpen = true, de
                     name, description, idea_origin: ideaOrigin, journey,
                     tech_stack: techStack, video_url: videoUrl,
                     video_duration: videoDuration, thumbnail_url: thumbnailUrl,
-                    pdf_url: pdfUrl,
+                    pdf_url: pdfUrl, repo_url: repoUrl || null,
+                    app_url: appUrl || null,
                   });
                   setSaved(true);
                   setTimeout(() => setSaved(false), 2000);
