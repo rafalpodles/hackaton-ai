@@ -12,6 +12,9 @@ import HackathonCategories from "@/components/admin/hackathon-categories";
 import HackathonParticipantsTable from "@/components/admin/hackathon-participants-table";
 import ProjectsTable from "@/components/admin/projects-table";
 import type { Project, HackathonCategory } from "@/lib/types";
+import SurveyToggle from "@/components/admin/survey-toggle";
+import SurveySection from "@/components/admin/survey-section";
+import { getQuestionsForAdmin, getSurveyResults } from "@/lib/actions/survey";
 
 const STATUS_LABELS: Record<string, string> = {
   upcoming: "Nadchodzący",
@@ -46,26 +49,15 @@ export default async function HackathonAdminPage({ params }: Props) {
     { data: participantsRaw },
     { data: projectsRaw },
     { data: voterRows },
+    surveyQuestions,
+    surveyStats,
   ] = await Promise.all([
-    supabase
-      .from("hackathon_categories")
-      .select("*")
-      .eq("hackathon_id", hackathon.id)
-      .order("display_order"),
-    supabase
-      .from("hackathon_participants")
-      .select("*, profile:profiles!user_id(display_name, email, avatar_url), project:projects!project_id(name), team:teams!team_id(name, project_id)")
-      .eq("hackathon_id", hackathon.id)
-      .order("joined_at"),
-    supabase
-      .from("projects")
-      .select("*")
-      .eq("hackathon_id", hackathon.id)
-      .order("created_at", { ascending: false }),
-    supabase
-      .from("votes")
-      .select("voter_id")
-      .eq("hackathon_id", hackathon.id),
+    supabase.from("hackathon_categories").select("*").eq("hackathon_id", hackathon.id).order("display_order"),
+    supabase.from("hackathon_participants").select("*, profile:profiles!user_id(display_name, email, avatar_url), project:projects!project_id(name), team:teams!team_id(name, project_id)").eq("hackathon_id", hackathon.id).order("joined_at"),
+    supabase.from("projects").select("*").eq("hackathon_id", hackathon.id).order("created_at", { ascending: false }),
+    supabase.from("votes").select("voter_id").eq("hackathon_id", hackathon.id),
+    getQuestionsForAdmin(hackathon.id),
+    getSurveyResults(hackathon.id),
   ]);
 
   const categories = (categoriesRaw ?? []) as HackathonCategory[];
@@ -130,6 +122,7 @@ export default async function HackathonAdminPage({ params }: Props) {
         <div className="flex flex-wrap gap-3">
           <HackathonSubmissionToggle hackathonId={hackathon.id} isOpen={hackathon.submission_open} />
           <HackathonVotingToggle hackathonId={hackathon.id} isOpen={hackathon.voting_open} />
+          <SurveyToggle hackathonId={hackathon.id} isOpen={hackathon.survey_open} />
         </div>
       </div>
 
@@ -201,6 +194,18 @@ export default async function HackathonAdminPage({ params }: Props) {
           hackathonId={hackathon.id}
           participants={participants}
           currentUserId={currentUser.id}
+        />
+      </section>
+
+      {/* Survey */}
+      <section className="rounded-xl border border-outline bg-surface-low/60 p-6 backdrop-blur-md">
+        <h2 className="mb-5 font-space-grotesk text-lg font-semibold text-on-surface">
+          Ankieta pohackathonowa
+        </h2>
+        <SurveySection
+          hackathonId={hackathon.id}
+          initialQuestions={surveyQuestions}
+          stats={surveyStats}
         />
       </section>
 
