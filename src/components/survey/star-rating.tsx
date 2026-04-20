@@ -18,7 +18,7 @@ export function StarRating({
           disabled={disabled}
           onClick={() => onChange(star)}
           className={`text-4xl transition-transform hover:scale-110 disabled:cursor-default ${
-            star <= value ? "text-primary-dim" : "text-on-surface-muted/20"
+            star <= value ? "text-primary-dim" : "text-on-surface-muted/50"
           }`}
         >
           ★

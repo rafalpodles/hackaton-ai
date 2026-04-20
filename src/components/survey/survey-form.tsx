@@ -72,7 +72,7 @@ export function SurveyForm({
           ) : (
             <div className="group relative">
               <textarea
-                className="min-h-[120px] w-full resize-none border-none bg-black p-6 text-lg leading-relaxed text-on-surface placeholder:text-on-surface-muted/30 focus:outline-none focus:ring-0"
+                className="min-h-[120px] w-full resize-none border-none bg-surface-high p-6 text-lg leading-relaxed text-on-surface placeholder:text-on-surface-muted/50 focus:outline-none focus:ring-0"
                 value={texts[q.id] ?? ""}
                 onChange={(e) => setTexts((prev) => ({ ...prev, [q.id]: e.target.value }))}
                 placeholder="Wpisz swoją odpowiedź..."
