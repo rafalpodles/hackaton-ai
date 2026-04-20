@@ -24,7 +24,11 @@ export function SurveyForm({
   if (done) {
     return (
       <div className="flex flex-col items-center gap-4 py-16 text-center">
-        <div className="text-5xl">🙏</div>
+        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/15">
+          <svg className="h-8 w-8 text-primary-dim" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+          </svg>
+        </div>
         <h2 className="font-space-grotesk text-2xl font-bold text-on-surface">
           Dziękujemy za wypełnienie ankiety!
         </h2>
