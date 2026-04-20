@@ -86,6 +86,12 @@ export async function submitSurvey(
 
   const questionMap = new Map((questions ?? []).map((q) => [q.id, q.type]));
 
+  const questionIds = [...questionMap.keys()];
+  const answeredIds = new Set(answers.map((a) => a.question_id));
+  for (const id of questionIds) {
+    if (!answeredIds.has(id)) return { error: "Odpowiedz na wszystkie pytania." };
+  }
+
   for (const answer of answers) {
     const type = questionMap.get(answer.question_id);
     if (!type) return { error: `Nieprawidłowe pytanie.` };
@@ -112,6 +118,9 @@ export async function submitSurvey(
     if (error.code === "23505") return { error: "Ankieta już wypełniona." };
     return { error: "Nie udało się zapisać odpowiedzi." };
   }
+
+  revalidatePath("/h/[slug]/survey", "page");
+  revalidatePath("/h/[slug]/admin", "page");
 
   return { success: true };
 }
