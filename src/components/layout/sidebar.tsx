@@ -36,7 +36,6 @@ export default function Sidebar({ user, votingOpen, surveyOpen, hackathonSlug }:
     ? [
         { label: "Zespół", href: `${h}/team` },
         { label: "Mój projekt", href: `${h}/my-project` },
-        ...(surveyOpen ? [{ label: "Ankieta", href: `${h}/survey` }] : []),
       ]
     : [];
 
