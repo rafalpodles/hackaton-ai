@@ -253,6 +253,18 @@ export default function Sidebar({ user, votingOpen, surveyOpen, hackathonSlug }:
           </div>
         )}
 
+        {/* Survey CTA — only when survey is open */}
+        {surveyOpen && hackathonSlug && (
+          <div className="px-3 pb-3">
+            <Link
+              href={`${h}/survey`}
+              className="block w-full rounded-lg bg-gradient-to-r from-primary to-secondary py-2.5 text-center font-space-grotesk text-sm font-bold uppercase tracking-wider text-white transition-opacity hover:opacity-90"
+            >
+              Wypełnij ankietę
+            </Link>
+          </div>
+        )}
+
         {/* Geocities Easter Egg */}
         <div className="flex justify-center pb-1">
           <GeocitiesToggle />
