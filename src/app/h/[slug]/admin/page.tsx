@@ -136,6 +136,7 @@ export default async function HackathonAdminPage({ params }: Props) {
           { label: "Projekty", value: totalProjects },
           { label: "Uczestnicy", value: participants.length },
           { label: "Zagłosowało", value: uniqueVoters },
+          { label: "Ankiety", value: surveyStats.total_responses },
           { label: "Ukończenie", value: `${completionPct}%` },
         ];
       })()} />
