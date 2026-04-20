@@ -9,6 +9,7 @@ export interface Hackathon {
   submission_deadline: string | null;
   submission_open: boolean;
   voting_open: boolean;
+  survey_open: boolean;
   status: "upcoming" | "active" | "voting" | "finished";
   created_at: string;
   updated_at: string;
@@ -121,4 +122,28 @@ export interface VoteResult {
 export interface HackathonWithStats extends Hackathon {
   project_count: number;
   participant_count: number;
+}
+
+export interface SurveyQuestion {
+  id: string;
+  hackathon_id: string;
+  question: string;
+  type: "text" | "rating";
+  order: number;
+  created_at: string;
+}
+
+export interface SurveyQuestionResult {
+  question_id: string;
+  question: string;
+  type: "text" | "rating";
+  avg_rating: number | null;
+  distribution: Record<number, number> | null;
+  responses: { user_id: string; display_name: string; answer: string | number | null }[];
+}
+
+export interface SurveyStats {
+  total_participants: number;
+  total_responses: number;
+  results: SurveyQuestionResult[];
 }
