@@ -11,10 +11,11 @@ import { useGeocities } from "@/components/geocities/geocities-provider";
 interface SidebarProps {
   user: Profile;
   votingOpen: boolean;
+  surveyOpen?: boolean;
   hackathonSlug?: string;
 }
 
-export default function Sidebar({ user, votingOpen, hackathonSlug }: SidebarProps) {
+export default function Sidebar({ user, votingOpen, surveyOpen, hackathonSlug }: SidebarProps) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
@@ -35,6 +36,7 @@ export default function Sidebar({ user, votingOpen, hackathonSlug }: SidebarProp
     ? [
         { label: "Zespół", href: `${h}/team` },
         { label: "Mój projekt", href: `${h}/my-project` },
+        ...(surveyOpen ? [{ label: "Ankieta", href: `${h}/survey` }] : []),
       ]
     : [];
 

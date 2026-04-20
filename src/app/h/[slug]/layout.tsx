@@ -67,6 +67,7 @@ export default async function HackathonLayout({ children, params }: Props) {
         <Sidebar
           user={user}
           votingOpen={hackathon.voting_open}
+          surveyOpen={hackathon.survey_open}
           hackathonSlug={hackathon.slug}
         />
         <div className="lg:ml-60">
