@@ -46,6 +46,7 @@ export async function updateHackathon(hackathonId: string, data: Partial<{
   submission_deadline: string | null;
   submission_open: boolean;
   voting_open: boolean;
+  survey_open: boolean;
   status: string;
 }>) {
   await requireAdmin();
@@ -58,6 +59,7 @@ export async function updateHackathon(hackathonId: string, data: Partial<{
     ...(data.submission_deadline !== undefined && { submission_deadline: data.submission_deadline }),
     ...(data.submission_open !== undefined && { submission_open: data.submission_open }),
     ...(data.voting_open !== undefined && { voting_open: data.voting_open }),
+    ...(data.survey_open !== undefined && { survey_open: data.survey_open }),
     ...(data.status !== undefined && { status: data.status }),
   };
 
