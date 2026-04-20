@@ -246,7 +246,14 @@ export function SubmissionForm({ project, hackathonId, submissionOpen = true, de
               <h2 className="font-space-grotesk text-2xl font-bold text-on-surface">
                 Użyte AI toole
               </h2>
-              <div className="flex flex-wrap gap-3 bg-black p-6">
+              <div
+                className="flex min-h-[4rem] flex-wrap items-center gap-3 bg-black p-6 cursor-text"
+                onClick={(e) => {
+                  if (e.target === e.currentTarget) {
+                    e.currentTarget.querySelector("input")?.focus();
+                  }
+                }}
+              >
                 {techStack.map((tag) => (
                   <span
                     key={tag}
@@ -265,7 +272,7 @@ export function SubmissionForm({ project, hackathonId, submissionOpen = true, de
                   </span>
                 ))}
                 <input
-                  className="w-32 border-none bg-transparent font-space-grotesk text-sm tracking-widest text-on-surface-muted placeholder:text-on-surface-muted/30 focus:outline-none focus:ring-0"
+                  className="min-w-[8rem] flex-1 border-none bg-transparent font-space-grotesk text-sm tracking-widest text-on-surface-muted placeholder:text-on-surface-muted/30 focus:outline-none focus:ring-0"
                   value={tagInput}
                   onChange={(e) => setTagInput(e.target.value)}
                   onKeyDown={(e) => {
@@ -274,9 +281,10 @@ export function SubmissionForm({ project, hackathonId, submissionOpen = true, de
                       addTag();
                     }
                   }}
-                  placeholder="Dodaj..."
+                  placeholder="Dodaj narzędzie AI..."
                 />
               </div>
+              <p className="text-xs text-on-surface-muted/50">Wciśnij Enter aby dodać</p>
             </div>
             {/* Repo URL */}
             <div className="space-y-2">
