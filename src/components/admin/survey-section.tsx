@@ -53,11 +53,11 @@ function QuestionEditor({
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [questions, setQuestions] = useState<
-    { question: string; type: "text" | "rating"; order: number }[]
-  >(initialQuestions.map((q) => ({ question: q.question, type: q.type, order: q.order })));
+    { uid: string; question: string; type: "text" | "rating"; order: number }[]
+  >(() => initialQuestions.map((q) => ({ uid: q.id, question: q.question, type: q.type, order: q.order })));
 
   const addQuestion = () =>
-    setQuestions((prev) => [...prev, { question: "", type: "rating", order: prev.length }]);
+    setQuestions((prev) => [...prev, { uid: crypto.randomUUID(), question: "", type: "rating", order: prev.length }]);
 
   const removeQuestion = (i: number) =>
     setQuestions((prev) => prev.filter((_, idx) => idx !== i).map((q, idx) => ({ ...q, order: idx })));
@@ -84,7 +84,7 @@ function QuestionEditor({
   return (
     <div className="space-y-4">
       {questions.map((q, i) => (
-        <div key={i} className="flex items-start gap-3 rounded-lg bg-surface-high/40 p-4">
+        <div key={q.uid} className="flex items-start gap-3 rounded-lg bg-surface-high/40 p-4">
           <span className="mt-3 font-mono text-xs text-on-surface-muted">{i + 1}.</span>
           <div className="flex flex-1 flex-col gap-2">
             <input
@@ -188,7 +188,7 @@ function ResultsView({ stats }: { stats: SurveyStats | null }) {
               {r.responses.map((resp) => (
                 <li key={resp.user_id} className="text-sm text-on-surface-muted">
                   <span className="font-semibold text-on-surface">{resp.display_name}:</span>{" "}
-                  {resp.answer as string}
+                  {resp.answer ?? "—"}
                 </li>
               ))}
             </ul>
@@ -240,7 +240,7 @@ function PerUserView({ stats }: { stats: SurveyStats | null }) {
               {answers.map(({ question, answer }, i) => (
                 <div key={i}>
                   <p className="text-xs font-semibold text-on-surface-muted">{question}</p>
-                  <p className="text-sm text-on-surface">{String(answer)}</p>
+                  <p className="text-sm text-on-surface">{answer ?? "—"}</p>
                 </div>
               ))}
             </div>
