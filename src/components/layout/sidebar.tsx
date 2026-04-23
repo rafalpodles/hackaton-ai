@@ -255,8 +255,8 @@ export default function Sidebar({ user, votingOpen, surveyOpen, surveyResponded,
           </div>
         )}
 
-        {/* Survey / Results CTA — participants only */}
-        {surveyOpen && hackathonSlug && user.role !== "admin" && (
+        {/* Survey / Results CTA */}
+        {surveyOpen && hackathonSlug && (
           <div className="px-3 pb-3">
             {surveyResponded && hackathonFinished ? (
               <Link
