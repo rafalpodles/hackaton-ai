@@ -68,6 +68,7 @@ export default async function HackathonLayout({ children, params }: Props) {
           user={user}
           votingOpen={hackathon.voting_open}
           surveyOpen={hackathon.survey_open}
+          hackathonFinished={hackathon.status === "finished"}
           hackathonSlug={hackathon.slug}
         />
         <div className="lg:ml-60">

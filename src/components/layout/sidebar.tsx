@@ -12,10 +12,11 @@ interface SidebarProps {
   user: Profile;
   votingOpen: boolean;
   surveyOpen?: boolean;
+  hackathonFinished?: boolean;
   hackathonSlug?: string;
 }
 
-export default function Sidebar({ user, votingOpen, surveyOpen, hackathonSlug }: SidebarProps) {
+export default function Sidebar({ user, votingOpen, surveyOpen, hackathonFinished, hackathonSlug }: SidebarProps) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
@@ -43,6 +44,7 @@ export default function Sidebar({ user, votingOpen, surveyOpen, hackathonSlug }:
     ? [
         { label: "Projekty", href: `${h}` },
         { label: "Live", href: `${h}/feed` },
+        ...(hackathonFinished ? [{ label: "Wyniki", href: `${h}/results` }] : []),
       ]
     : [];
 
