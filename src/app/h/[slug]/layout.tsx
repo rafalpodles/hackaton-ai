@@ -63,7 +63,7 @@ export default async function HackathonLayout({ children, params }: Props) {
   const participant = await getParticipant(hackathon.id, user.id);
 
   let surveyRespondedByUser = false;
-  if (hackathon.survey_open && participant) {
+  if (hackathon.survey_open) {
     const supabase = await createClient();
     const { data } = await supabase
       .from("survey_responses")

@@ -258,7 +258,7 @@ export default function Sidebar({ user, votingOpen, surveyOpen, surveyResponded,
         {/* Survey / Results CTA */}
         {surveyOpen && hackathonSlug && (
           <div className="px-3 pb-3">
-            {surveyResponded && hackathonFinished ? (
+            {surveyResponded && (hackathonFinished || user.role === "admin") ? (
               <Link
                 href={`${h}/results`}
                 className="block w-full rounded-lg bg-gradient-to-r from-primary to-secondary py-2.5 text-center font-space-grotesk text-sm font-bold uppercase tracking-wider text-white transition-opacity hover:opacity-90"
