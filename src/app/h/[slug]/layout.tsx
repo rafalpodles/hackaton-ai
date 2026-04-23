@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { redirect, notFound } from "next/navigation";
 import { getCurrentUser, getHackathonBySlug, getParticipant } from "@/lib/utils";
+import { createClient } from "@/lib/supabase/server";
 import Sidebar from "@/components/layout/sidebar";
 import { CountdownBanner } from "@/components/layout/countdown-banner";
 import { HackathonProvider } from "@/components/layout/hackathon-provider";
@@ -61,6 +62,18 @@ export default async function HackathonLayout({ children, params }: Props) {
 
   const participant = await getParticipant(hackathon.id, user.id);
 
+  let surveyRespondedByUser = false;
+  if (hackathon.survey_open && participant) {
+    const supabase = await createClient();
+    const { data } = await supabase
+      .from("survey_responses")
+      .select("id")
+      .eq("hackathon_id", hackathon.id)
+      .eq("user_id", user.id)
+      .limit(1);
+    surveyRespondedByUser = (data?.length ?? 0) > 0;
+  }
+
   return (
     <HackathonProvider hackathon={hackathon} participant={participant}>
       <div className="min-h-screen">
@@ -68,6 +81,7 @@ export default async function HackathonLayout({ children, params }: Props) {
           user={user}
           votingOpen={hackathon.voting_open}
           surveyOpen={hackathon.survey_open}
+          surveyResponded={surveyRespondedByUser}
           hackathonFinished={hackathon.status === "finished"}
           hackathonSlug={hackathon.slug}
         />

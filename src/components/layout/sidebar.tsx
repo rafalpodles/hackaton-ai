@@ -12,11 +12,12 @@ interface SidebarProps {
   user: Profile;
   votingOpen: boolean;
   surveyOpen?: boolean;
+  surveyResponded?: boolean;
   hackathonFinished?: boolean;
   hackathonSlug?: string;
 }
 
-export default function Sidebar({ user, votingOpen, surveyOpen, hackathonFinished, hackathonSlug }: SidebarProps) {
+export default function Sidebar({ user, votingOpen, surveyOpen, surveyResponded, hackathonFinished, hackathonSlug }: SidebarProps) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
@@ -254,15 +255,24 @@ export default function Sidebar({ user, votingOpen, surveyOpen, hackathonFinishe
           </div>
         )}
 
-        {/* Survey CTA — only when survey is open */}
+        {/* Survey / Results CTA */}
         {surveyOpen && hackathonSlug && (
           <div className="px-3 pb-3">
-            <Link
-              href={`${h}/survey`}
-              className="block w-full rounded-lg bg-gradient-to-r from-primary to-secondary py-2.5 text-center font-space-grotesk text-sm font-bold uppercase tracking-wider text-white transition-opacity hover:opacity-90"
-            >
-              Wypełnij ankietę
-            </Link>
+            {surveyResponded && hackathonFinished ? (
+              <Link
+                href={`${h}/results`}
+                className="block w-full rounded-lg bg-gradient-to-r from-primary to-secondary py-2.5 text-center font-space-grotesk text-sm font-bold uppercase tracking-wider text-white transition-opacity hover:opacity-90"
+              >
+                Zobacz wyniki
+              </Link>
+            ) : !surveyResponded ? (
+              <Link
+                href={`${h}/survey`}
+                className="block w-full rounded-lg bg-gradient-to-r from-primary to-secondary py-2.5 text-center font-space-grotesk text-sm font-bold uppercase tracking-wider text-white transition-opacity hover:opacity-90"
+              >
+                Wypełnij ankietę
+              </Link>
+            ) : null}
           </div>
         )}
 
