@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { faqSections, type FaqSection, type FaqItem } from "@/lib/faq-data";
+import type { FaqSectionWithItems, FaqItem } from "@/lib/types";
+import { Markdown } from "@/components/ui/markdown";
 
 const iconMap: Record<string, React.ReactNode> = {
   key: (
@@ -56,7 +57,7 @@ const iconMap: Record<string, React.ReactNode> = {
   ),
 };
 
-export function FaqView() {
+export function FaqView({ sections }: { sections: FaqSectionWithItems[] }) {
   const [openItems, setOpenItems] = useState<Set<string>>(new Set());
   const [activeSection, setActiveSection] = useState<string | null>(null);
   const [search, setSearch] = useState("");
@@ -71,7 +72,7 @@ export function FaqView() {
   };
 
   const filteredSections = search.trim()
-    ? faqSections
+    ? sections
         .map((section) => ({
           ...section,
           items: section.items.filter((item) => {
@@ -84,8 +85,8 @@ export function FaqView() {
         }))
         .filter((section) => section.items.length > 0)
     : activeSection
-      ? faqSections.filter((s) => s.id === activeSection)
-      : faqSections;
+      ? sections.filter((s) => s.id === activeSection)
+      : sections;
 
   return (
     <div className="mx-auto max-w-3xl space-y-10 pb-20">
@@ -147,7 +148,7 @@ export function FaqView() {
           >
             Wszystkie
           </button>
-          {faqSections.map((section) => (
+          {sections.map((section) => (
             <button
               key={section.id}
               onClick={() =>
@@ -199,7 +200,7 @@ function SectionBlock({
   openItems,
   onToggle,
 }: {
-  section: FaqSection;
+  section: FaqSectionWithItems;
   openItems: Set<string>;
   onToggle: (id: string) => void;
 }) {
@@ -263,8 +264,8 @@ function AccordionItem({
       </button>
       {isOpen && (
         <div className="border-t border-outline/50 px-5 py-4">
-          <div className="whitespace-pre-line text-sm leading-relaxed text-on-surface/70">
-            {formatAnswer(item.answer)}
+          <div className="text-sm leading-relaxed">
+            <Markdown>{item.answer}</Markdown>
           </div>
         </div>
       )}
@@ -272,17 +273,3 @@ function AccordionItem({
   );
 }
 
-function formatAnswer(text: string): React.ReactNode {
-  // Split by **bold** markers and render
-  const parts = text.split(/(\*\*[^*]+\*\*)/g);
-  return parts.map((part, i) => {
-    if (part.startsWith("**") && part.endsWith("**")) {
-      return (
-        <strong key={i} className="font-semibold text-on-surface">
-          {part.slice(2, -2)}
-        </strong>
-      );
-    }
-    return part;
-  });
-}

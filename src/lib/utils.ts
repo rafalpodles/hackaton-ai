@@ -1,6 +1,15 @@
 import { cache } from "react";
 import { createClient } from "@/lib/supabase/server";
-import type { Profile, ProjectWithTeam, Hackathon, HackathonParticipant } from "@/lib/types";
+import type {
+  Profile,
+  ProjectWithTeam,
+  Hackathon,
+  HackathonParticipant,
+  RulesContent,
+  FaqSectionWithItems,
+  ProjectIdea,
+  UsefulPrompt,
+} from "@/lib/types";
 
 /**
  * Get current user profile. Cached per request via React.cache()
@@ -121,3 +130,73 @@ export const getSubmittedProjects = cache(async (hackathonId: string): Promise<P
     team: teamMap.get(p.id) ?? [],
   }));
 });
+
+export const getRulesContent = cache(
+  async (hackathonId: string): Promise<RulesContent | null> => {
+    const supabase = await createClient();
+    const { data } = await supabase
+      .from("hackathons")
+      .select("rules_content")
+      .eq("id", hackathonId)
+      .single();
+    return (data?.rules_content as RulesContent | null) ?? null;
+  }
+);
+
+export const getFaqForHackathon = cache(
+  async (hackathonId: string): Promise<FaqSectionWithItems[]> => {
+    const supabase = await createClient();
+    const { data: sections } = await supabase
+      .from("hackathon_faq_sections")
+      .select("*")
+      .eq("hackathon_id", hackathonId)
+      .order("display_order");
+
+    if (!sections || sections.length === 0) return [];
+
+    const { data: items } = await supabase
+      .from("hackathon_faq_items")
+      .select("*")
+      .in(
+        "section_id",
+        sections.map((s) => s.id)
+      )
+      .order("display_order");
+
+    const itemsBySection = new Map<string, FaqSectionWithItems["items"]>();
+    for (const it of items ?? []) {
+      const arr = itemsBySection.get(it.section_id) ?? [];
+      arr.push(it);
+      itemsBySection.set(it.section_id, arr);
+    }
+
+    return sections.map((s) => ({
+      ...s,
+      items: itemsBySection.get(s.id) ?? [],
+    }));
+  }
+);
+
+export const getIdeasForHackathon = cache(
+  async (hackathonId: string): Promise<ProjectIdea[]> => {
+    const supabase = await createClient();
+    const { data } = await supabase
+      .from("hackathon_project_ideas")
+      .select("*")
+      .eq("hackathon_id", hackathonId)
+      .order("display_order");
+    return (data ?? []) as ProjectIdea[];
+  }
+);
+
+export const getPromptsForHackathon = cache(
+  async (hackathonId: string): Promise<UsefulPrompt[]> => {
+    const supabase = await createClient();
+    const { data } = await supabase
+      .from("hackathon_prompts")
+      .select("*")
+      .eq("hackathon_id", hackathonId)
+      .order("display_order");
+    return (data ?? []) as UsefulPrompt[];
+  }
+);

@@ -27,11 +27,11 @@ export default function Sidebar({ user, votingOpen, surveyOpen, surveyResponded,
   const h = hackathonSlug ? `/h/${hackathonSlug}` : "";
 
   const startItems = [
-    { label: "Garage Rules", href: hackathonSlug ? `${h}/rules` : "/rules" },
+    ...(hackathonSlug ? [{ label: "Garage Rules", href: `${h}/rules` }] : []),
     { label: "Poradnik", href: hackathonSlug ? `${h}/guide` : "/guide" },
-    { label: "Q&A", href: hackathonSlug ? `${h}/faq` : "/faq" },
+    ...(hackathonSlug ? [{ label: "Q&A", href: `${h}/faq` }] : []),
     ...(hackathonSlug ? [{ label: "Pomysły na projekty", href: `${h}/ideas` }] : []),
-    { label: "Przydatne prompty", href: hackathonSlug ? `${h}/prompts` : "/prompts" },
+    ...(hackathonSlug ? [{ label: "Przydatne prompty", href: `${h}/prompts` }] : []),
   ];
 
   const hackathonItems = hackathonSlug

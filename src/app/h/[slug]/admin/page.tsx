@@ -15,6 +15,8 @@ import type { Project, HackathonCategory } from "@/lib/types";
 import SurveyToggle from "@/components/admin/survey-toggle";
 import SurveySection from "@/components/admin/survey-section";
 import { getQuestionsForAdmin, getSurveyResults } from "@/lib/actions/survey";
+import ContentCards from "@/components/admin/content-cards";
+import { getFaqForHackathon, getIdeasForHackathon, getPromptsForHackathon } from "@/lib/utils";
 
 const STATUS_LABELS: Record<string, string> = {
   upcoming: "Nadchodzący",
@@ -51,6 +53,9 @@ export default async function HackathonAdminPage({ params }: Props) {
     { data: voterRows },
     surveyQuestions,
     surveyStats,
+    faqSections,
+    ideas,
+    prompts,
   ] = await Promise.all([
     supabase.from("hackathon_categories").select("*").eq("hackathon_id", hackathon.id).order("display_order"),
     supabase.from("hackathon_participants").select("*, profile:profiles!user_id(display_name, email, avatar_url), project:projects!project_id(name), team:teams!team_id(name, project_id)").eq("hackathon_id", hackathon.id).order("joined_at"),
@@ -58,6 +63,9 @@ export default async function HackathonAdminPage({ params }: Props) {
     supabase.from("votes").select("voter_id").eq("hackathon_id", hackathon.id),
     getQuestionsForAdmin(hackathon.id),
     getSurveyResults(hackathon.id),
+    getFaqForHackathon(hackathon.id),
+    getIdeasForHackathon(hackathon.id),
+    getPromptsForHackathon(hackathon.id),
   ]);
 
   const categories = (categoriesRaw ?? []) as HackathonCategory[];
@@ -170,6 +178,19 @@ export default async function HackathonAdminPage({ params }: Props) {
           </span>
         </h2>
         <HackathonCategories hackathonId={hackathon.id} categories={categories} />
+      </section>
+
+      {/* Content */}
+      <section className="rounded-xl border border-outline bg-surface-low/60 p-6 backdrop-blur-md">
+        <h2 className="mb-5 font-space-grotesk text-lg font-semibold text-on-surface">
+          Treści hackathonu
+        </h2>
+        <ContentCards
+          slug={slug}
+          faqSectionCount={faqSections.length}
+          ideasCount={ideas.length}
+          promptsCount={prompts.length}
+        />
       </section>
 
       {/* Projects */}

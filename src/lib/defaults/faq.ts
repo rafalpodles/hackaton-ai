@@ -1,18 +1,18 @@
-export interface FaqItem {
+export interface DefaultFaqItem {
   question: string;
   answer: string;
 }
 
-export interface FaqSection {
-  id: string;
+export interface DefaultFaqSection {
+  slug: string;
   title: string;
   icon: string;
-  items: FaqItem[];
+  items: DefaultFaqItem[];
 }
 
-export const faqSections: FaqSection[] = [
+export const DEFAULT_FAQ: DefaultFaqSection[] = [
   {
-    id: "tokens",
+    slug: "tokens",
     title: "Tokeny i narzędzia AI",
     icon: "key",
     items: [
@@ -54,7 +54,7 @@ export const faqSections: FaqSection[] = [
     ],
   },
   {
-    id: "video",
+    slug: "video",
     title: "Nagrywanie video demo",
     icon: "video",
     items: [
@@ -76,7 +76,7 @@ export const faqSections: FaqSection[] = [
     ],
   },
   {
-    id: "rules",
+    slug: "rules",
     title: "Zasady i co się liczy",
     icon: "rules",
     items: [
@@ -108,7 +108,7 @@ export const faqSections: FaqSection[] = [
     ],
   },
   {
-    id: "voting",
+    slug: "voting",
     title: "Głosowanie i ocenianie",
     icon: "vote",
     items: [
@@ -135,7 +135,7 @@ export const faqSections: FaqSection[] = [
     ],
   },
   {
-    id: "submission",
+    slug: "submission",
     title: "Zgłaszanie projektu",
     icon: "submit",
     items: [
@@ -162,7 +162,7 @@ export const faqSections: FaqSection[] = [
     ],
   },
   {
-    id: "team",
+    slug: "team",
     title: "Zespół i organizacja",
     icon: "team",
     items: [
@@ -188,7 +188,7 @@ export const faqSections: FaqSection[] = [
     ],
   },
   {
-    id: "tech",
+    slug: "tech",
     title: "Stack technologiczny",
     icon: "tech",
     items: [
@@ -210,7 +210,7 @@ export const faqSections: FaqSection[] = [
     ],
   },
   {
-    id: "support",
+    slug: "support",
     title: "Pomoc i support",
     icon: "support",
     items: [
@@ -232,7 +232,7 @@ export const faqSections: FaqSection[] = [
     ],
   },
   {
-    id: "after",
+    slug: "after",
     title: "Po hackatonie",
     icon: "after",
     items: [
@@ -249,7 +249,7 @@ export const faqSections: FaqSection[] = [
     ],
   },
   {
-    id: "logistics",
+    slug: "logistics",
     title: "Logistyka dnia",
     icon: "logistics",
     items: [
