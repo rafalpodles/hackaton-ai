@@ -1,35 +1,19 @@
 "use client";
 
 import { useState } from "react";
-import { usefulPrompts } from "@/lib/guide-data";
+import type { UsefulPrompt } from "@/lib/types";
 
-export default function PromptsPage() {
+export default function PromptsList({ prompts }: { prompts: UsefulPrompt[] }) {
   return (
-    <div className="mx-auto max-w-3xl space-y-8">
-      <div>
-        <h1 className="font-space-grotesk text-3xl font-bold text-on-surface">
-          Przydatne prompty
-        </h1>
-        <p className="mt-2 text-on-surface-muted">
-          5 promptów, które przeprowadzą Cię od pomysłu do kodu. Traktuj AI jak
-          seniora, który prowadzi Cię przez proces.
-        </p>
-      </div>
-
-      <div className="flex flex-col gap-4">
-        {usefulPrompts.map((p) => (
-          <PromptCard key={p.number} prompt={p} />
-        ))}
-      </div>
+    <div className="flex flex-col gap-4">
+      {prompts.map((p) => (
+        <PromptCard key={p.id} prompt={p} />
+      ))}
     </div>
   );
 }
 
-function PromptCard({
-  prompt,
-}: {
-  prompt: (typeof usefulPrompts)[number];
-}) {
+function PromptCard({ prompt }: { prompt: UsefulPrompt }) {
   const [copied, setCopied] = useState(false);
 
   function handleCopy() {
