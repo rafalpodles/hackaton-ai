@@ -1,5 +1,9 @@
 export type Role = "participant" | "admin";
 
+export type PrizeIconKey = "energy" | "idea" | "value" | "trophy" | "star" | "heart" | "rocket" | "crown";
+
+export const PRIZE_ICON_KEYS: PrizeIconKey[] = ["energy", "idea", "value", "trophy", "star", "heart", "rocket", "crown"];
+
 export interface RulesContent {
   tagline: string;
   time_range: string;
@@ -14,7 +18,7 @@ export interface RulesContent {
   tokens_box_md: string;
   dont_come_if: string[];
   prizes: {
-    icon_key: "energy" | "idea" | "value";
+    icon_key: PrizeIconKey;
     title: string;
     description: string;
   }[];

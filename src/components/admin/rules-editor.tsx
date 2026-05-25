@@ -2,14 +2,24 @@
 
 import { useState, useTransition } from "react";
 import { updateRules } from "@/lib/actions/content";
-import type { RulesContent } from "@/lib/types";
+import type { RulesContent, PrizeIconKey } from "@/lib/types";
+import { PRIZE_ICON_KEYS } from "@/lib/types";
 
 interface RulesEditorProps {
   hackathonId: string;
   initial: RulesContent;
 }
 
-const PRIZE_ICON_OPTIONS: RulesContent["prizes"][number]["icon_key"][] = ["energy", "idea", "value"];
+const PRIZE_ICON_LABELS: Record<PrizeIconKey, string> = {
+  energy: "⚡ Energia",
+  idea: "💡 Pomysł",
+  value: "⚙️ Wartość",
+  trophy: "🏆 Trofeum",
+  star: "⭐ Gwiazda",
+  heart: "❤️ Serce",
+  rocket: "🚀 Rakieta",
+  crown: "👑 Korona",
+};
 
 export default function RulesEditor({ hackathonId, initial }: RulesEditorProps) {
   const [isPending, startTransition] = useTransition();
@@ -31,6 +41,24 @@ export default function RulesEditor({ hackathonId, initial }: RulesEditorProps) 
       ...c,
       prizes: c.prizes.map((p, idx) => (idx === i ? { ...p, ...patch } : p)),
     }));
+
+  const addPrize = () =>
+    setContent((c) => ({
+      ...c,
+      prizes: [...c.prizes, { icon_key: "trophy", title: "", description: "" }],
+    }));
+
+  const removePrize = (i: number) =>
+    setContent((c) => ({ ...c, prizes: c.prizes.filter((_, idx) => idx !== i) }));
+
+  const movePrize = (i: number, dir: -1 | 1) =>
+    setContent((c) => {
+      const j = i + dir;
+      if (j < 0 || j >= c.prizes.length) return c;
+      const next = [...c.prizes];
+      [next[i], next[j]] = [next[j], next[i]];
+      return { ...c, prizes: next };
+    });
 
   const updateScheduleItem = (i: number, patch: Partial<RulesContent["schedule"][number]>) =>
     setContent((c) => ({
@@ -183,24 +211,34 @@ export default function RulesEditor({ hackathonId, initial }: RulesEditorProps) 
         </div>
       </Section>
 
-      <Section title="Nagrody (3 karty)">
+      <Section title="Nagrody (dowolna liczba)">
         {content.prizes.map((p, i) => (
           <div key={i} className="rounded-lg bg-surface-high/40 p-3 space-y-2">
-            <div className="grid grid-cols-[120px_1fr] gap-2">
+            <div className="flex items-center gap-2">
+              <button type="button" onClick={() => movePrize(i, -1)} className="text-on-surface-muted hover:text-on-surface" disabled={i === 0}>↑</button>
+              <button type="button" onClick={() => movePrize(i, 1)} className="text-on-surface-muted hover:text-on-surface" disabled={i === content.prizes.length - 1}>↓</button>
               <select
-                className={fieldCls}
+                className={`${fieldCls} w-40`}
                 value={p.icon_key}
-                onChange={(e) => updatePrize(i, { icon_key: e.target.value as typeof PRIZE_ICON_OPTIONS[number] })}
+                onChange={(e) => updatePrize(i, { icon_key: e.target.value as PrizeIconKey })}
               >
-                {PRIZE_ICON_OPTIONS.map((k) => (
-                  <option key={k} value={k}>{k}</option>
+                {PRIZE_ICON_KEYS.map((k) => (
+                  <option key={k} value={k}>{PRIZE_ICON_LABELS[k]}</option>
                 ))}
               </select>
-              <input className={fieldCls} value={p.title} onChange={(e) => updatePrize(i, { title: e.target.value })} placeholder="Tytuł" />
+              <input className={`${fieldCls} flex-1`} value={p.title} onChange={(e) => updatePrize(i, { title: e.target.value })} placeholder="Tytuł" />
+              <button type="button" onClick={() => removePrize(i)} className="text-on-surface-muted hover:text-secondary">✕</button>
             </div>
             <textarea className={fieldCls} rows={2} value={p.description} onChange={(e) => updatePrize(i, { description: e.target.value })} placeholder="Opis" />
           </div>
         ))}
+        <button
+          type="button"
+          onClick={addPrize}
+          className="flex w-full items-center justify-center gap-2 rounded-lg border border-dashed border-outline px-4 py-2 text-sm text-on-surface-muted hover:border-primary-dim hover:text-primary-dim"
+        >
+          + dodaj nagrodę
+        </button>
       </Section>
 
       <Section title="Harmonogram">
