@@ -2,28 +2,8 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
-import { getCurrentUser } from "@/lib/utils";
 import type { SurveyQuestion, SurveyStats, SurveyQuestionResult } from "@/lib/types";
-
-async function requireAdmin() {
-  const user = await getCurrentUser();
-  if (!user || user.role !== "admin") throw new Error("Brak dostępu");
-  return user;
-}
-
-async function requireParticipant(hackathonId: string) {
-  const user = await getCurrentUser();
-  if (!user) throw new Error("Musisz być zalogowany");
-  const supabase = await createClient();
-  const { data: participant } = await supabase
-    .from("hackathon_participants")
-    .select("id")
-    .eq("hackathon_id", hackathonId)
-    .eq("user_id", user.id)
-    .single();
-  if (!participant) throw new Error("Nie jesteś uczestnikiem tego hackathonu");
-  return user;
-}
+import { requireAdmin, requireParticipant } from "@/lib/auth-guards";
 
 export async function getQuestionsForSurvey(
   hackathonId: string

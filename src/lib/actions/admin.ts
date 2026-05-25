@@ -2,14 +2,8 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
-import { getCurrentUser } from "@/lib/utils";
 import ExcelJS from "exceljs";
-
-async function requireAdmin() {
-  const user = await getCurrentUser();
-  if (!user || user.role !== "admin") throw new Error("Brak dostępu");
-  return user;
-}
+import { requireAdmin } from "@/lib/auth-guards";
 
 export async function toggleVoting(hackathonId: string, open: boolean) {
   await requireAdmin();
