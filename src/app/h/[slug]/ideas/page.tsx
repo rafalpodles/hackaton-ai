@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { getHackathonBySlug, getIdeasForHackathon } from "@/lib/utils";
+import { AdminEditButton } from "@/components/admin/admin-edit-button";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -13,6 +14,7 @@ export default async function HackathonIdeasPage({ params }: Props) {
   const ideas = await getIdeasForHackathon(hackathon.id);
 
   return (
+    <>
     <div className="mx-auto max-w-4xl space-y-8">
       <div>
         <h1 className="font-space-grotesk text-3xl font-bold text-on-surface">
@@ -56,5 +58,7 @@ export default async function HackathonIdeasPage({ params }: Props) {
         </div>
       )}
     </div>
+    <AdminEditButton href={`/h/${slug}/admin/content/ideas`} />
+    </>
   );
 }
