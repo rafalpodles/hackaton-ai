@@ -15,7 +15,7 @@ export default async function FaqPage({ params }: Props) {
   const sections = await getFaqForHackathon(hackathon.id);
   return (
     <>
-      <FaqView sections={sections} />
+      <FaqView sections={sections} supportChannel={hackathon.support_channel} />
       <AdminEditButton href={`/h/${slug}/admin/content/faq`} />
     </>
   );

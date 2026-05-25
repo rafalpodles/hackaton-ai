@@ -38,6 +38,7 @@ export interface Hackathon {
   survey_open: boolean;
   status: "upcoming" | "active" | "voting" | "finished";
   rules_content: RulesContent | null;
+  support_channel: string | null;
   created_at: string;
   updated_at: string;
 }

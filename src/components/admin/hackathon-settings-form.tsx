@@ -21,13 +21,19 @@ export default function HackathonSettingsForm({ hackathon }: { hackathon: Hackat
   const [name, setName] = useState(hackathon.name);
   const [description, setDescription] = useState(hackathon.description ?? "");
   const [status, setStatus] = useState<HackathonStatus>(hackathon.status);
+  const [supportChannel, setSupportChannel] = useState(hackathon.support_channel ?? "");
 
   const handleSave = () => {
     setError(null);
     setSuccess(false);
     startTransition(async () => {
       try {
-        await updateHackathon(hackathon.id, { name, description, status });
+        await updateHackathon(hackathon.id, {
+          name,
+          description,
+          status,
+          support_channel: supportChannel.trim() || null,
+        });
         setSuccess(true);
         setTimeout(() => setSuccess(false), 3000);
       } catch (err) {
@@ -74,6 +80,23 @@ export default function HackathonSettingsForm({ hackathon }: { hackathon: Hackat
           rows={4}
           className="w-full resize-none rounded-lg border border-outline bg-surface/60 px-4 py-2.5 text-sm text-on-surface focus:border-primary/40 focus:outline-none"
         />
+      </div>
+
+      {/* Support channel */}
+      <div>
+        <label className="mb-1.5 block font-space-grotesk text-xs font-bold uppercase tracking-wider text-on-surface-muted">
+          Kanał wsparcia (markdown)
+        </label>
+        <textarea
+          value={supportChannel}
+          onChange={(e) => setSupportChannel(e.target.value)}
+          rows={2}
+          placeholder='np. Napisz na kanale Teams **"AI Enablement Hackathon"**'
+          className="w-full resize-none rounded-lg border border-outline bg-surface/60 px-4 py-2.5 text-sm text-on-surface placeholder:text-on-surface-muted/40 focus:border-primary/40 focus:outline-none"
+        />
+        <p className="mt-1 text-[11px] text-on-surface-muted">
+          Pokazane w stopce FAQ i Poradnika. Pozostaw puste, żeby ukryć.
+        </p>
       </div>
 
       {/* Status */}

@@ -57,7 +57,13 @@ const iconMap: Record<string, React.ReactNode> = {
   ),
 };
 
-export function FaqView({ sections }: { sections: FaqSectionWithItems[] }) {
+export function FaqView({
+  sections,
+  supportChannel,
+}: {
+  sections: FaqSectionWithItems[];
+  supportChannel?: string | null;
+}) {
   const [openItems, setOpenItems] = useState<Set<string>>(new Set());
   const [activeSection, setActiveSection] = useState<string | null>(null);
   const [search, setSearch] = useState("");
@@ -183,14 +189,11 @@ export function FaqView({ sections }: { sections: FaqSectionWithItems[] }) {
       )}
 
       {/* Footer */}
-      <div className="rounded-xl border border-outline bg-surface-high/30 p-6 text-center">
-        <p className="text-sm text-on-surface-muted">
-          Nie znalazłeś odpowiedzi? Napisz na kanale Teams{" "}
-          <span className="font-semibold text-primary-dim">
-            &ldquo;AI Enablement Hackathon&rdquo;
-          </span>
-        </p>
-      </div>
+      {supportChannel && (
+        <div className="rounded-xl border border-outline bg-surface-high/30 p-6 text-center text-sm text-on-surface-muted">
+          <Markdown>{`Nie znalazłeś odpowiedzi? ${supportChannel}`}</Markdown>
+        </div>
+      )}
     </div>
   );
 }

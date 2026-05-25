@@ -13,6 +13,7 @@ import {
   type GuideStep,
   type CodeStep,
 } from "@/lib/guide-data";
+import { Markdown } from "@/components/ui/markdown";
 
 // ─── State persistence ───────────────────────────────────────────────
 
@@ -48,7 +49,7 @@ function detectOS(): OS {
 
 // ─── Main component ──────────────────────────────────────────────────
 
-export function GuideView() {
+export function GuideView({ supportChannel }: { supportChannel?: string | null } = {}) {
   const [selectedPath, setSelectedPath] = useState<Path | null>(null);
   const [selectedSubscription, setSelectedSubscription] = useState<Subscription | null>(null);
   const [expandedSteps, setExpandedSteps] = useState<Set<string>>(new Set());
@@ -188,14 +189,11 @@ export function GuideView() {
           ))}
 
           {/* Help footer */}
-          <div className="text-center text-xs text-on-surface-muted/60 mt-4 flex flex-col gap-1">
-            <p>
-              Masz problem? Napisz na kanale{" "}
-              <span className="font-semibold text-on-surface-muted">AI Enablement Hackaton</span>{" "}
-              na Teams — pomożemy!
-            </p>
-            <p>Ostatnia aktualizacja: marzec 2026</p>
-          </div>
+          {supportChannel && (
+            <div className="text-center text-xs text-on-surface-muted/60 mt-4">
+              <Markdown>{`Masz problem? ${supportChannel}`}</Markdown>
+            </div>
+          )}
         </>
       )}
     </div>
