@@ -4,6 +4,8 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { requireAdmin } from "@/lib/auth-guards";
+import { DEFAULT_RULES } from "@/lib/defaults/rules";
+import { seedHackathonContent } from "@/lib/defaults/seed";
 
 export async function createHackathon(data: {
   name: string;
@@ -16,16 +18,27 @@ export async function createHackathon(data: {
 
   const slug = data.slug.toLowerCase().replace(/[^a-z0-9-]/g, "-").replace(/-+/g, "-");
 
-  const { error } = await supabase.from("hackathons").insert({
-    name: data.name,
-    slug,
-    description: data.description,
-    hackathon_date: data.hackathon_date,
-  });
+  const { data: inserted, error } = await supabase
+    .from("hackathons")
+    .insert({
+      name: data.name,
+      slug,
+      description: data.description,
+      hackathon_date: data.hackathon_date,
+      rules_content: DEFAULT_RULES,
+    })
+    .select("id")
+    .single();
 
-  if (error) {
-    if (error.message.includes("duplicate")) throw new Error("Slug jest już zajęty");
+  if (error || !inserted) {
+    if (error?.message.includes("duplicate")) throw new Error("Slug jest już zajęty");
     throw new Error("Nie udało się utworzyć hackathonu");
+  }
+
+  try {
+    await seedHackathonContent(supabase, inserted.id);
+  } catch (e) {
+    console.error("Failed to seed default content for hackathon", inserted.id, e);
   }
 
   revalidatePath("/");
