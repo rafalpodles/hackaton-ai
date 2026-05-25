@@ -1,5 +1,31 @@
 export type Role = "participant" | "admin";
 
+export interface RulesContent {
+  tagline: string;
+  time_range: string;
+  what_is_md: string;
+  rules_cards: {
+    number: string;
+    title: string;
+    description: string;
+  }[];
+  before_intro: string;
+  before_checklist: string[];
+  tokens_box_md: string;
+  dont_come_if: string[];
+  prizes: {
+    icon_key: "energy" | "idea" | "value";
+    title: string;
+    description: string;
+  }[];
+  schedule: {
+    time: string;
+    title: string;
+    location: string;
+  }[];
+  closing_callout_md: string;
+}
+
 export interface Hackathon {
   id: string;
   name: string;
@@ -11,6 +37,7 @@ export interface Hackathon {
   voting_open: boolean;
   survey_open: boolean;
   status: "upcoming" | "active" | "voting" | "finished";
+  rules_content: RulesContent | null;
   created_at: string;
   updated_at: string;
 }
@@ -146,4 +173,44 @@ export interface SurveyStats {
   total_participants: number;
   total_responses: number;
   results: SurveyQuestionResult[];
+}
+
+export interface FaqItem {
+  id: string;
+  section_id: string;
+  question: string;
+  answer: string;
+  display_order: number;
+}
+
+export interface FaqSection {
+  id: string;
+  hackathon_id: string;
+  slug: string;
+  title: string;
+  icon: string;
+  display_order: number;
+}
+
+export interface FaqSectionWithItems extends FaqSection {
+  items: FaqItem[];
+}
+
+export interface ProjectIdea {
+  id: string;
+  hackathon_id: string;
+  name: string;
+  description: string;
+  tags: string[];
+  display_order: number;
+}
+
+export interface UsefulPrompt {
+  id: string;
+  hackathon_id: string;
+  number: number;
+  title: string;
+  description: string;
+  prompt: string;
+  display_order: number;
 }
