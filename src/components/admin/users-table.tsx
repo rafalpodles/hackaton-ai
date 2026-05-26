@@ -11,6 +11,7 @@ type SortDir = "asc" | "desc";
 
 interface UsersTableProps {
   currentUserId: string;
+  defaultApiKeyLimit: number;
   users: (Profile & {
     project_name?: string | null;
     team_name?: string | null;
@@ -33,7 +34,7 @@ function SortIcon({ active, dir }: { active: boolean; dir: SortDir }) {
   );
 }
 
-export default function UsersTable({ currentUserId, users }: UsersTableProps) {
+export default function UsersTable({ currentUserId, defaultApiKeyLimit, users }: UsersTableProps) {
   const [isPending, startTransition] = useTransition();
   const [deleteTarget, setDeleteTarget] = useState<{ id: string; name: string } | null>(null);
   const [limits, setLimits] = useState<Record<string, number>>({});
@@ -52,7 +53,7 @@ export default function UsersTable({ currentUserId, users }: UsersTableProps) {
     }
   };
 
-  const getLimit = (userId: string) => limits[userId] ?? 5;
+  const getLimit = (userId: string) => limits[userId] ?? defaultApiKeyLimit;
   const getExpDays = (userId: string) => expDays[userId] ?? 10;
 
   const filteredUsers = useMemo(() => {

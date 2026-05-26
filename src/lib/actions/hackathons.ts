@@ -56,6 +56,7 @@ export async function updateHackathon(hackathonId: string, data: Partial<{
   survey_open: boolean;
   status: string;
   support_channel: string | null;
+  api_key_default_limit_usd: number;
 }>) {
   await requireAdmin();
   const supabase = await createClient();
@@ -70,6 +71,7 @@ export async function updateHackathon(hackathonId: string, data: Partial<{
     ...(data.survey_open !== undefined && { survey_open: data.survey_open }),
     ...(data.status !== undefined && { status: data.status }),
     ...(data.support_channel !== undefined && { support_channel: data.support_channel }),
+    ...(data.api_key_default_limit_usd !== undefined && { api_key_default_limit_usd: data.api_key_default_limit_usd }),
   };
 
   const { error } = await supabase

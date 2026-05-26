@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { getCurrentUser } from "@/lib/utils";
+import { getCurrentUser, getApiKeyLimitForUser } from "@/lib/utils";
 import ProfileView from "@/components/profile/profile-view";
 import type { Profile, Project } from "@/lib/types";
 
@@ -67,6 +67,8 @@ export default async function ProfilePage() {
     }
   }
 
+  const apiKeyDefaultLimit = await getApiKeyLimitForUser(user.id);
+
   return (
     <ProfileView
       user={user}
@@ -74,6 +76,7 @@ export default async function ProfilePage() {
       team={team}
       keyUsage={keyUsage}
       keyLimit={keyLimit}
+      apiKeyDefaultLimit={apiKeyDefaultLimit}
     />
   );
 }

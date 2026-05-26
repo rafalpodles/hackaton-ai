@@ -200,3 +200,32 @@ export const getPromptsForHackathon = cache(
     return (data ?? []) as UsefulPrompt[];
   }
 );
+
+const DEFAULT_API_KEY_LIMIT = 5;
+
+export const getActiveHackathonApiKeyLimit = cache(async (): Promise<number> => {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("hackathons")
+    .select("api_key_default_limit_usd")
+    .in("status", ["active", "voting"])
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  return data?.api_key_default_limit_usd ?? DEFAULT_API_KEY_LIMIT;
+});
+
+export const getApiKeyLimitForUser = cache(async (userId: string): Promise<number> => {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("hackathon_participants")
+    .select("hackathon:hackathons!hackathon_id(api_key_default_limit_usd, status, created_at)")
+    .eq("user_id", userId);
+  const limits = (data ?? [])
+    .map((p) => p.hackathon as unknown as { api_key_default_limit_usd: number; status: string; created_at: string } | null)
+    .filter((h): h is { api_key_default_limit_usd: number; status: string; created_at: string } =>
+      h !== null && (h.status === "active" || h.status === "voting")
+    )
+    .sort((a, b) => b.created_at.localeCompare(a.created_at));
+  return limits[0]?.api_key_default_limit_usd ?? DEFAULT_API_KEY_LIMIT;
+});

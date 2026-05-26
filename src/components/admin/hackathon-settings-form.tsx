@@ -22,6 +22,7 @@ export default function HackathonSettingsForm({ hackathon }: { hackathon: Hackat
   const [description, setDescription] = useState(hackathon.description ?? "");
   const [status, setStatus] = useState<HackathonStatus>(hackathon.status);
   const [supportChannel, setSupportChannel] = useState(hackathon.support_channel ?? "");
+  const [apiKeyLimit, setApiKeyLimit] = useState<number>(hackathon.api_key_default_limit_usd ?? 5);
 
   const handleSave = () => {
     setError(null);
@@ -33,6 +34,7 @@ export default function HackathonSettingsForm({ hackathon }: { hackathon: Hackat
           description,
           status,
           support_channel: supportChannel.trim() || null,
+          api_key_default_limit_usd: apiKeyLimit,
         });
         setSuccess(true);
         setTimeout(() => setSuccess(false), 3000);
@@ -96,6 +98,24 @@ export default function HackathonSettingsForm({ hackathon }: { hackathon: Hackat
         />
         <p className="mt-1 text-[11px] text-on-surface-muted">
           Pokazane w stopce FAQ i Poradnika. Pozostaw puste, żeby ukryć.
+        </p>
+      </div>
+
+      {/* API key default limit */}
+      <div>
+        <label className="mb-1.5 block font-space-grotesk text-xs font-bold uppercase tracking-wider text-on-surface-muted">
+          Domyślny limit klucza API (USD)
+        </label>
+        <input
+          type="number"
+          min="0.01"
+          step="0.01"
+          value={apiKeyLimit}
+          onChange={(e) => setApiKeyLimit(parseFloat(e.target.value) || 0)}
+          className="w-32 rounded-lg border border-outline bg-surface/60 px-4 py-2.5 text-sm text-on-surface focus:border-primary/40 focus:outline-none"
+        />
+        <p className="mt-1 text-[11px] text-on-surface-muted">
+          Domyślna kwota przy generowaniu klucza OpenRouter dla uczestników. Widoczna też w profilu jako &quot;dostaniesz ${apiKeyLimit}&quot;.
         </p>
       </div>
 

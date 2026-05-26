@@ -43,6 +43,7 @@ export interface Hackathon {
   status: "upcoming" | "active" | "voting" | "finished";
   rules_content: RulesContent | null;
   support_channel: string | null;
+  api_key_default_limit_usd: number;
   created_at: string;
   updated_at: string;
 }

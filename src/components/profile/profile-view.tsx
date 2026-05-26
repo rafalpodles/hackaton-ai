@@ -13,6 +13,7 @@ interface ProfileViewProps {
   team: Pick<Profile, "id" | "display_name" | "avatar_url">[];
   keyUsage?: number | null;
   keyLimit?: number | null;
+  apiKeyDefaultLimit: number;
 }
 
 export default function ProfileView({
@@ -21,6 +22,7 @@ export default function ProfileView({
   team,
   keyUsage,
   keyLimit,
+  apiKeyDefaultLimit,
 }: ProfileViewProps) {
   const [isPending, startTransition] = useTransition();
   const [editingName, setEditingName] = useState(false);
@@ -542,7 +544,7 @@ env_key = "OPENROUTER_API_KEY"`}
           <div className="space-y-4">
             <p className="text-sm text-on-surface-muted">
               Nie masz subskrypcji AI lub wyczerpałeś tokeny podczas hackathonu?
-              Poproś o klucz API — dostaniesz $5 na tokeny OpenRouter.
+              Poproś o klucz API — dostaniesz ${apiKeyDefaultLimit} na tokeny OpenRouter.
             </p>
             <button
               type="button"

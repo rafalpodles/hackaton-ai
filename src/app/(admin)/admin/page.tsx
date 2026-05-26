@@ -2,7 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
 import UsersTable from "@/components/admin/users-table";
 import { getOpenRouterKeyUsage } from "@/lib/actions/admin";
-import { getCurrentUser } from "@/lib/utils";
+import { getCurrentUser, getActiveHackathonApiKeyLimit } from "@/lib/utils";
 import type { Profile } from "@/lib/types";
 
 export default async function AdminDashboardPage() {
@@ -87,7 +87,7 @@ export default async function AdminDashboardPage() {
         <h2 className="font-space-grotesk text-xl font-semibold text-on-surface">
           Użytkownicy
         </h2>
-        <UsersTable currentUserId={currentUser!.id} users={users} />
+        <UsersTable currentUserId={currentUser!.id} users={users} defaultApiKeyLimit={await getActiveHackathonApiKeyLimit()} />
       </div>
     </div>
   );
