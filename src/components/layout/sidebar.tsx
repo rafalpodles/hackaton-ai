@@ -15,9 +15,10 @@ interface SidebarProps {
   surveyResponded?: boolean;
   hackathonFinished?: boolean;
   hackathonSlug?: string;
+  hiddenStartPages?: string[];
 }
 
-export default function Sidebar({ user, votingOpen, surveyOpen, surveyResponded, hackathonFinished, hackathonSlug }: SidebarProps) {
+export default function Sidebar({ user, votingOpen, surveyOpen, surveyResponded, hackathonFinished, hackathonSlug, hiddenStartPages = [] }: SidebarProps) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
@@ -27,12 +28,12 @@ export default function Sidebar({ user, votingOpen, surveyOpen, surveyResponded,
   const h = hackathonSlug ? `/h/${hackathonSlug}` : "";
 
   const startItems = [
-    ...(hackathonSlug ? [{ label: "Garage Rules", href: `${h}/rules` }] : []),
-    { label: "Poradnik", href: hackathonSlug ? `${h}/guide` : "/guide" },
-    ...(hackathonSlug ? [{ label: "Q&A", href: `${h}/faq` }] : []),
-    ...(hackathonSlug ? [{ label: "Pomysły na projekty", href: `${h}/ideas` }] : []),
-    ...(hackathonSlug ? [{ label: "Przydatne prompty", href: `${h}/prompts` }] : []),
-  ];
+    ...(hackathonSlug ? [{ key: "rules", label: "Garage Rules", href: `${h}/rules` }] : []),
+    { key: "guide", label: "Poradnik", href: hackathonSlug ? `${h}/guide` : "/guide" },
+    ...(hackathonSlug ? [{ key: "faq", label: "Q&A", href: `${h}/faq` }] : []),
+    ...(hackathonSlug ? [{ key: "ideas", label: "Pomysły na projekty", href: `${h}/ideas` }] : []),
+    ...(hackathonSlug ? [{ key: "prompts", label: "Przydatne prompty", href: `${h}/prompts` }] : []),
+  ].filter((item) => !hiddenStartPages.includes(item.key));
 
   const hackathonItems = hackathonSlug
     ? [

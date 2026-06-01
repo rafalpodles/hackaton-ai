@@ -84,6 +84,7 @@ export default async function HackathonLayout({ children, params }: Props) {
           surveyResponded={surveyRespondedByUser}
           hackathonFinished={hackathon.status === "finished"}
           hackathonSlug={hackathon.slug}
+          hiddenStartPages={hackathon.hidden_start_pages ?? []}
         />
         <div className="lg:ml-60">
           {hackathon.hackathon_date && (

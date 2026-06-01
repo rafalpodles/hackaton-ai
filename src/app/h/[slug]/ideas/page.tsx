@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { getHackathonBySlug, getIdeasForHackathon } from "@/lib/utils";
+import { getHackathonBySlug, getIdeasForHackathon, assertStartPageVisible } from "@/lib/utils";
 import { AdminEditButton } from "@/components/admin/admin-edit-button";
 
 interface Props {
@@ -10,6 +10,7 @@ export default async function HackathonIdeasPage({ params }: Props) {
   const { slug } = await params;
   const hackathon = await getHackathonBySlug(slug);
   if (!hackathon) notFound();
+  await assertStartPageVisible(hackathon, "ideas");
 
   const ideas = await getIdeasForHackathon(hackathon.id);
 

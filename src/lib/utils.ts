@@ -1,5 +1,7 @@
 import { cache } from "react";
+import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { isStartPageHidden, type StartPageKey } from "@/lib/start-pages";
 import type {
   Profile,
   ProjectWithTeam,
@@ -40,6 +42,15 @@ export const getHackathonBySlug = cache(async (slug: string): Promise<Hackathon 
     .single();
   return data;
 });
+
+export async function assertStartPageVisible(
+  hackathon: Pick<Hackathon, "hidden_start_pages">,
+  key: StartPageKey,
+): Promise<void> {
+  if (!isStartPageHidden(hackathon.hidden_start_pages, key)) return;
+  const user = await getCurrentUser();
+  if (user?.role !== "admin") notFound();
+}
 
 /**
  * Get a user's participation record for a specific hackathon.

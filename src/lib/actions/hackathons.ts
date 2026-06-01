@@ -57,6 +57,7 @@ export async function updateHackathon(hackathonId: string, data: Partial<{
   status: string;
   support_channel: string | null;
   api_key_default_limit_usd: number;
+  hidden_start_pages: string[];
 }>) {
   await requireAdmin();
   const supabase = await createClient();
@@ -72,6 +73,7 @@ export async function updateHackathon(hackathonId: string, data: Partial<{
     ...(data.status !== undefined && { status: data.status }),
     ...(data.support_channel !== undefined && { support_channel: data.support_channel }),
     ...(data.api_key_default_limit_usd !== undefined && { api_key_default_limit_usd: data.api_key_default_limit_usd }),
+    ...(data.hidden_start_pages !== undefined && { hidden_start_pages: data.hidden_start_pages }),
   };
 
   const { error } = await supabase

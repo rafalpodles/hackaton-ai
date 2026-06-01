@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { getHackathonBySlug, getRulesContent } from "@/lib/utils";
+import { getHackathonBySlug, getRulesContent, assertStartPageVisible } from "@/lib/utils";
 import { GarageRulesView } from "@/components/rules/garage-rules-view";
 import { AdminEditButton } from "@/components/admin/admin-edit-button";
 
@@ -11,6 +11,7 @@ export default async function RulesPage({ params }: Props) {
   const { slug } = await params;
   const hackathon = await getHackathonBySlug(slug);
   if (!hackathon) notFound();
+  await assertStartPageVisible(hackathon, "rules");
 
   const rules = await getRulesContent(hackathon.id);
   if (!rules) {

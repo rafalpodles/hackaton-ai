@@ -16,6 +16,7 @@ import SurveyToggle from "@/components/admin/survey-toggle";
 import SurveySection from "@/components/admin/survey-section";
 import { getQuestionsForAdmin, getSurveyResults } from "@/lib/actions/survey";
 import ContentCards from "@/components/admin/content-cards";
+import StartPagesVisibility from "@/components/admin/start-pages-visibility";
 import { getFaqForHackathon, getIdeasForHackathon, getPromptsForHackathon } from "@/lib/utils";
 
 const STATUS_LABELS: Record<string, string> = {
@@ -190,6 +191,21 @@ export default async function HackathonAdminPage({ params }: Props) {
           faqSectionCount={faqSections.length}
           ideasCount={ideas.length}
           promptsCount={prompts.length}
+        />
+      </section>
+
+      {/* Start pages visibility */}
+      <section className="rounded-xl border border-outline bg-surface-low/60 p-6 backdrop-blur-md">
+        <h2 className="mb-1 font-space-grotesk text-lg font-semibold text-on-surface">
+          Widoczność podstron „Na start”
+        </h2>
+        <p className="mb-5 text-sm text-on-surface-muted">
+          Ukryte podstrony znikają z menu i są niedostępne dla uczestników (admin nadal może je podejrzeć).
+        </p>
+        <StartPagesVisibility
+          hackathonId={hackathon.id}
+          slug={slug}
+          hiddenPages={hackathon.hidden_start_pages ?? []}
         />
       </section>
 

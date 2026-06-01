@@ -44,6 +44,7 @@ export interface Hackathon {
   rules_content: RulesContent | null;
   support_channel: string | null;
   api_key_default_limit_usd: number;
+  hidden_start_pages: string[];
   created_at: string;
   updated_at: string;
 }
