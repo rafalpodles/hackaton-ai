@@ -62,6 +62,15 @@ const PRIZE_ICONS: Record<PrizeIconKey, React.ReactNode> = {
 };
 
 export function GarageRulesView({ hackathonDate, content }: GarageRulesViewProps) {
+  const prizesTitle = content.prizes_title?.trim() || "Nagrody";
+  const prizeCountLabel =
+    content.prizes.length === 1 ? "kategoria" : content.prizes.length < 5 ? "kategorie" : "kategorii";
+  const prizeWinnersLabel =
+    content.prizes.length === 1 ? "1 zwycięzca" : `${content.prizes.length} zwycięzców`;
+  const prizesSubtitle =
+    content.prizes_subtitle?.trim() ||
+    `${content.prizes.length} ${prizeCountLabel}, ${prizeWinnersLabel}.`;
+
   return (
     <div className="mx-auto max-w-3xl space-y-16 pb-20">
       <section className="space-y-4 pt-4 text-center">
@@ -122,10 +131,8 @@ export function GarageRulesView({ hackathonDate, content }: GarageRulesViewProps
         </div>
       </Section>
 
-      <Section title="Nagrody">
-        <p className="mb-6 text-on-surface/60">
-          {content.prizes.length} {content.prizes.length === 1 ? "kategoria" : content.prizes.length < 5 ? "kategorie" : "kategorii"}, {content.prizes.length === 1 ? "1 zwycięzca" : `${content.prizes.length} zwycięzców`}.
-        </p>
+      <Section title={prizesTitle}>
+        <p className="mb-6 text-on-surface/60">{prizesSubtitle}</p>
         <div
           className={`grid gap-4 ${
             content.prizes.length === 1

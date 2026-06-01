@@ -212,6 +212,24 @@ export default function RulesEditor({ hackathonId, initial }: RulesEditorProps) 
       </Section>
 
       <Section title="Nagrody (dowolna liczba)">
+        <div>
+          <label className={labelCls}>Nagłówek sekcji</label>
+          <input
+            className={fieldCls}
+            value={content.prizes_title ?? ""}
+            onChange={(e) => update("prizes_title", e.target.value)}
+            placeholder="Nagrody"
+          />
+        </div>
+        <div>
+          <label className={labelCls}>Podtytuł</label>
+          <input
+            className={fieldCls}
+            value={content.prizes_subtitle ?? ""}
+            onChange={(e) => update("prizes_subtitle", e.target.value)}
+            placeholder='Puste = auto: „X kategorii, Y zwycięzców"'
+          />
+        </div>
         {content.prizes.map((p, i) => (
           <div key={i} className="rounded-lg bg-surface-high/40 p-3 space-y-2">
             <div className="flex items-center gap-2">

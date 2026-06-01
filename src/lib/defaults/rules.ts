@@ -48,6 +48,8 @@ export const DEFAULT_RULES: RulesContent = {
     "Pracować na prywatnym komputerze",
     "Łączyć się przez hotspot",
   ],
+  prizes_title: "Nagrody",
+  prizes_subtitle: "",
   prizes: [
     {
       icon_key: "energy",

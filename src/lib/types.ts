@@ -17,6 +17,8 @@ export interface RulesContent {
   before_checklist: string[];
   tokens_box_md: string;
   dont_come_if: string[];
+  prizes_title?: string;
+  prizes_subtitle?: string;
   prizes: {
     icon_key: PrizeIconKey;
     title: string;
