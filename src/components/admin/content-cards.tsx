@@ -5,6 +5,7 @@ interface ContentCardsProps {
   faqSectionCount: number;
   ideasCount: number;
   promptsCount: number;
+  guideStepsCount: number;
 }
 
 interface CardProps {
@@ -38,6 +39,7 @@ export default function ContentCards({
   faqSectionCount,
   ideasCount,
   promptsCount,
+  guideStepsCount,
 }: ContentCardsProps) {
   return (
     <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -46,6 +48,12 @@ export default function ContentCards({
         emoji="📋"
         title="Garage Rules"
         subtitle="Zasady, harmonogram, nagrody"
+      />
+      <Card
+        href={`/h/${slug}/admin/content/guide`}
+        emoji="📚"
+        title="Poradnik"
+        subtitle={guideStepsCount === 0 ? "Brak custom kroków" : `${guideStepsCount} custom kroków`}
       />
       <Card
         href={`/h/${slug}/admin/content/faq`}
