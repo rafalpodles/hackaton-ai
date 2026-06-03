@@ -244,10 +244,16 @@ export default function RulesEditor({ hackathonId, initial }: RulesEditorProps) 
                   <option key={k} value={k}>{PRIZE_ICON_LABELS[k]}</option>
                 ))}
               </select>
-              <input className={`${fieldCls} flex-1`} value={p.title} onChange={(e) => updatePrize(i, { title: e.target.value })} placeholder="Tytuł" />
-              <button type="button" onClick={() => removePrize(i)} className="text-on-surface-muted hover:text-secondary">✕</button>
+              <button type="button" onClick={() => removePrize(i)} className="ml-auto text-on-surface-muted hover:text-secondary">✕</button>
             </div>
-            <textarea className={fieldCls} rows={2} value={p.description} onChange={(e) => updatePrize(i, { description: e.target.value })} placeholder="Opis" />
+            <div>
+              <label className={labelCls}>Nagłówek (pogrubiony)</label>
+              <input className={fieldCls} value={p.title} onChange={(e) => updatePrize(i, { title: e.target.value })} placeholder="np. Najlepszy projekt" />
+            </div>
+            <div>
+              <label className={labelCls}>Opis</label>
+              <textarea className={fieldCls} rows={2} value={p.description} onChange={(e) => updatePrize(i, { description: e.target.value })} placeholder="Szczegółowy opis nagrody" />
+            </div>
           </div>
         ))}
         <button
