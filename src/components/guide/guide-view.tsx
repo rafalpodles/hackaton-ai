@@ -194,8 +194,12 @@ export function GuideView({
                 })}
                 {customSteps
                   .filter((s) => s.category === group.category)
-                  .map((step) => (
-                    <CustomGuideStep key={step.id} step={step} />
+                  .map((step, ci) => (
+                    <CustomGuideStep
+                      key={step.id}
+                      step={step}
+                      displayNumber={filteredSteps.length + ci + 1}
+                    />
                   ))}
               </div>
             </div>
