@@ -176,13 +176,11 @@ export function GuideView({
 
               <div className="flex flex-col gap-3">
                 {group.steps.map((step, si) => {
-                  // Compute dynamic step number within the filtered path
-                  const globalIndex = filteredSteps.indexOf(step);
                   return (
                     <StepCard
                       key={step.id}
                       step={step}
-                      displayNumber={globalIndex + 1}
+                      displayNumber={si + 1}
                       expanded={expandedSteps.has(step.id)}
                       activeOS={activeOS}
                       activeSubscription={selectedSubscription}
@@ -201,6 +199,7 @@ export function GuideView({
                       displayNumber={group.steps.length + ci + 1}
                     />
                   ))}
+
               </div>
             </div>
           ))}
