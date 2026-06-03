@@ -70,7 +70,7 @@ export function CustomGuideStep({ step, displayNumber }: CustomGuideStepProps) {
       {/* Body */}
       {expanded && (
         <div className="px-5 pb-5 pt-0 ml-12">
-          <Markdown className="space-y-3 text-sm text-on-surface-muted leading-relaxed [&_a]:text-primary-dim [&_a]:underline [&_a]:underline-offset-2 [&_a:hover]:text-primary [&_strong]:font-semibold [&_strong]:text-on-surface [&_ul]:ml-4 [&_ul]:list-disc [&_ol]:ml-4 [&_ol]:list-decimal [&_code]:rounded [&_code]:bg-surface-high [&_code]:px-1 [&_code]:py-0.5 [&_code]:font-mono [&_code]:text-xs [&_h1]:font-space-grotesk [&_h1]:text-base [&_h1]:font-bold [&_h1]:text-on-surface [&_h2]:font-space-grotesk [&_h2]:text-sm [&_h2]:font-semibold [&_h2]:text-on-surface [&_h3]:font-space-grotesk [&_h3]:text-sm [&_h3]:font-semibold [&_h3]:text-on-surface [&_img]:rounded-lg [&_img]:border [&_img]:border-outline [&_img]:max-w-full [&_p]:leading-relaxed">
+          <Markdown className="space-y-3 text-sm text-on-surface-muted leading-relaxed [&_a]:text-primary-dim [&_a]:underline [&_a]:underline-offset-2 [&_a:hover]:text-primary [&_strong]:font-semibold [&_strong]:text-on-surface [&_ul]:ml-4 [&_ul]:list-disc [&_ol]:ml-4 [&_ol]:list-decimal [&_code]:rounded [&_code]:bg-primary/15 [&_code]:text-primary-dim [&_code]:px-1 [&_code]:py-0.5 [&_code]:font-mono [&_code]:text-xs [&_h1]:font-space-grotesk [&_h1]:text-base [&_h1]:font-bold [&_h1]:text-on-surface [&_h2]:font-space-grotesk [&_h2]:text-sm [&_h2]:font-semibold [&_h2]:text-on-surface [&_h3]:font-space-grotesk [&_h3]:text-sm [&_h3]:font-semibold [&_h3]:text-on-surface [&_img]:rounded-lg [&_img]:border [&_img]:border-outline [&_img]:max-w-full [&_p]:leading-relaxed">
             {step.content_md}
           </Markdown>
         </div>
