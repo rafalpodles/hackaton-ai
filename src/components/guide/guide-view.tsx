@@ -198,7 +198,7 @@ export function GuideView({
                     <CustomGuideStep
                       key={step.id}
                       step={step}
-                      displayNumber={filteredSteps.length + ci + 1}
+                      displayNumber={group.steps.length + ci + 1}
                     />
                   ))}
               </div>
