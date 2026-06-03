@@ -224,3 +224,167 @@ export async function updatePrompts(
   revalidatePath(`/h/[slug]/admin/content/prompts`, "page");
   return { success: true };
 }
+
+export interface GuideStepInput {
+  category: "fundamenty" | "ai-tools" | "weryfikacja";
+  title: string;
+  content_md: string;
+  order_index: number;
+}
+
+export async function createGuideStep(
+  hackathonId: string,
+  input: GuideStepInput
+): Promise<ActionResult & { id?: string }> {
+  try {
+    await requireAdmin();
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : "Brak dostępu" };
+  }
+
+  if (!input.title?.trim()) return { error: "Tytuł kroku jest wymagany." };
+  if (!["fundamenty", "ai-tools", "weryfikacja"].includes(input.category)) {
+    return { error: "Nieprawidłowa kategoria." };
+  }
+
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("hackathon_guide_steps")
+    .insert({
+      hackathon_id: hackathonId,
+      category: input.category,
+      title: input.title.trim(),
+      content_md: input.content_md,
+      order_index: input.order_index,
+    })
+    .select("id")
+    .single();
+
+  if (error) return { error: "Nie udało się dodać kroku." };
+
+  revalidatePath(`/h/[slug]/guide`, "page");
+  revalidatePath(`/h/[slug]/admin/content/guide`, "page");
+  return { success: true, id: data.id };
+}
+
+export async function updateGuideStep(
+  stepId: string,
+  hackathonId: string,
+  input: Partial<GuideStepInput>
+): Promise<ActionResult> {
+  try {
+    await requireAdmin();
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : "Brak dostępu" };
+  }
+
+  if (input.title !== undefined && !input.title.trim()) {
+    return { error: "Tytuł kroku jest wymagany." };
+  }
+  if (input.category !== undefined && !["fundamenty", "ai-tools", "weryfikacja"].includes(input.category)) {
+    return { error: "Nieprawidłowa kategoria." };
+  }
+
+  const supabase = await createClient();
+  const patch: Record<string, unknown> = {};
+  if (input.category !== undefined) patch.category = input.category;
+  if (input.title !== undefined) patch.title = input.title.trim();
+  if (input.content_md !== undefined) patch.content_md = input.content_md;
+  if (input.order_index !== undefined) patch.order_index = input.order_index;
+
+  const { error } = await supabase
+    .from("hackathon_guide_steps")
+    .update(patch)
+    .eq("id", stepId)
+    .eq("hackathon_id", hackathonId);
+
+  if (error) return { error: "Nie udało się zapisać kroku." };
+
+  revalidatePath(`/h/[slug]/guide`, "page");
+  revalidatePath(`/h/[slug]/admin/content/guide`, "page");
+  return { success: true };
+}
+
+export async function deleteGuideStep(
+  stepId: string,
+  hackathonId: string
+): Promise<ActionResult> {
+  try {
+    await requireAdmin();
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : "Brak dostępu" };
+  }
+
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("hackathon_guide_steps")
+    .delete()
+    .eq("id", stepId)
+    .eq("hackathon_id", hackathonId);
+
+  if (error) return { error: "Nie udało się usunąć kroku." };
+
+  revalidatePath(`/h/[slug]/guide`, "page");
+  revalidatePath(`/h/[slug]/admin/content/guide`, "page");
+  return { success: true };
+}
+
+export async function reorderGuideSteps(
+  hackathonId: string,
+  steps: { id: string; order_index: number }[]
+): Promise<ActionResult> {
+  try {
+    await requireAdmin();
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : "Brak dostępu" };
+  }
+
+  const supabase = await createClient();
+  for (const s of steps) {
+    const { error } = await supabase
+      .from("hackathon_guide_steps")
+      .update({ order_index: s.order_index })
+      .eq("id", s.id)
+      .eq("hackathon_id", hackathonId);
+    if (error) return { error: "Nie udało się zmienić kolejności kroków." };
+  }
+
+  revalidatePath(`/h/[slug]/guide`, "page");
+  revalidatePath(`/h/[slug]/admin/content/guide`, "page");
+  return { success: true };
+}
+
+export async function uploadGuideImage(
+  hackathonId: string,
+  formData: FormData
+): Promise<ActionResult & { url?: string }> {
+  try {
+    await requireAdmin();
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : "Brak dostępu" };
+  }
+
+  const file = formData.get("file") as File | null;
+  if (!file) return { error: "Brak pliku." };
+
+  const allowedTypes = ["image/jpeg", "image/png", "image/gif", "image/webp"];
+  if (!allowedTypes.includes(file.type)) {
+    return { error: "Dozwolone formaty: JPG, PNG, GIF, WebP." };
+  }
+
+  const ext = file.name.split(".").pop() ?? "png";
+  const fileName = `${hackathonId}/${crypto.randomUUID()}.${ext}`;
+
+  const supabase = await createClient();
+  const { error } = await supabase.storage
+    .from("guide-images")
+    .upload(fileName, file, { contentType: file.type });
+
+  if (error) return { error: "Nie udało się przesłać pliku." };
+
+  const { data: { publicUrl } } = supabase.storage
+    .from("guide-images")
+    .getPublicUrl(fileName);
+
+  return { success: true, url: publicUrl };
+}
