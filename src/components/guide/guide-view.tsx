@@ -14,6 +14,8 @@ import {
   type CodeStep,
 } from "@/lib/guide-data";
 import { Markdown } from "@/components/ui/markdown";
+import { CustomGuideStep } from "@/components/guide/custom-guide-step";
+import type { HackathonGuideStep } from "@/lib/types";
 
 // ─── State persistence ───────────────────────────────────────────────
 
@@ -49,7 +51,13 @@ function detectOS(): OS {
 
 // ─── Main component ──────────────────────────────────────────────────
 
-export function GuideView({ supportChannel }: { supportChannel?: string | null } = {}) {
+export function GuideView({
+  supportChannel,
+  customSteps = [],
+}: {
+  supportChannel?: string | null;
+  customSteps?: HackathonGuideStep[];
+} = {}) {
   const [selectedPath, setSelectedPath] = useState<Path | null>(null);
   const [selectedSubscription, setSelectedSubscription] = useState<Subscription | null>(null);
   const [expandedSteps, setExpandedSteps] = useState<Set<string>>(new Set());
@@ -184,6 +192,11 @@ export function GuideView({ supportChannel }: { supportChannel?: string | null }
                     />
                   );
                 })}
+                {customSteps
+                  .filter((s) => s.category === group.category)
+                  .map((step) => (
+                    <CustomGuideStep key={step.id} step={step} />
+                  ))}
               </div>
             </div>
           ))}
