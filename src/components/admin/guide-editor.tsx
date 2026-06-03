@@ -41,6 +41,8 @@ export default function GuideEditor({ hackathonId, initial }: GuideEditorProps) 
   const [isPending, startTransition] = useTransition();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const editFileInputRef = useRef<HTMLInputElement>(null);
+  const newCursorPosRef = useRef<number | null>(null);
+  const editCursorPosRef = useRef<number | null>(null);
 
   const flash = () => {
     setSaved(true);
@@ -135,6 +137,15 @@ export default function GuideEditor({ hackathonId, initial }: GuideEditorProps) 
         reordered.map((s) => ({ id: s.id, order_index: s.order_index }))
       );
     });
+  };
+
+  const insertAtCursor = (
+    current: string,
+    cursorPos: number | null,
+    snippet: string
+  ): string => {
+    if (cursorPos === null) return current + snippet;
+    return current.slice(0, cursorPos) + snippet + current.slice(cursorPos);
   };
 
   const handleImageUpload = async (
@@ -269,6 +280,9 @@ export default function GuideEditor({ hackathonId, initial }: GuideEditorProps) 
                           onChange={(e) =>
                             setEditDraft((d) => ({ ...d, content_md: e.target.value }))
                           }
+                          onSelect={(e) => {
+                            editCursorPosRef.current = (e.target as HTMLTextAreaElement).selectionStart;
+                          }}
                         />
                         <div className="mt-1">
                           <input
@@ -282,7 +296,7 @@ export default function GuideEditor({ hackathonId, initial }: GuideEditorProps) 
                               handleImageUpload(file, (url) => {
                                 setEditDraft((d) => ({
                                   ...d,
-                                  content_md: (d.content_md ?? step.content_md) + `\n![](${url})`,
+                                  content_md: insertAtCursor(d.content_md ?? step.content_md, editCursorPosRef.current, `\n![](${url})`),
                                 }));
                               });
                               e.target.value = "";
@@ -368,6 +382,9 @@ export default function GuideEditor({ hackathonId, initial }: GuideEditorProps) 
                 className={`${fieldCls} min-h-[200px] font-mono text-xs`}
                 value={newDraft.content_md}
                 onChange={(e) => setNewDraft((d) => ({ ...d, content_md: e.target.value }))}
+                onSelect={(e) => {
+                  newCursorPosRef.current = (e.target as HTMLTextAreaElement).selectionStart;
+                }}
                 placeholder="## Nagłówek&#10;&#10;Treść kroku w Markdown..."
               />
               <div className="mt-1">
@@ -382,7 +399,7 @@ export default function GuideEditor({ hackathonId, initial }: GuideEditorProps) 
                     handleImageUpload(file, (url) => {
                       setNewDraft((d) => ({
                         ...d,
-                        content_md: d.content_md + `\n![](${url})`,
+                        content_md: insertAtCursor(d.content_md, newCursorPosRef.current, `\n![](${url})`),
                       }));
                     });
                     e.target.value = "";
