@@ -14,6 +14,8 @@ import {
   type CodeStep,
 } from "@/lib/guide-data";
 import { Markdown } from "@/components/ui/markdown";
+import { CustomGuideStep } from "@/components/guide/custom-guide-step";
+import type { HackathonGuideStep } from "@/lib/types";
 
 // ─── State persistence ───────────────────────────────────────────────
 
@@ -49,7 +51,13 @@ function detectOS(): OS {
 
 // ─── Main component ──────────────────────────────────────────────────
 
-export function GuideView({ supportChannel }: { supportChannel?: string | null } = {}) {
+export function GuideView({
+  supportChannel,
+  customSteps = [],
+}: {
+  supportChannel?: string | null;
+  customSteps?: HackathonGuideStep[];
+} = {}) {
   const [selectedPath, setSelectedPath] = useState<Path | null>(null);
   const [selectedSubscription, setSelectedSubscription] = useState<Subscription | null>(null);
   const [expandedSteps, setExpandedSteps] = useState<Set<string>>(new Set());
@@ -168,13 +176,11 @@ export function GuideView({ supportChannel }: { supportChannel?: string | null }
 
               <div className="flex flex-col gap-3">
                 {group.steps.map((step, si) => {
-                  // Compute dynamic step number within the filtered path
-                  const globalIndex = filteredSteps.indexOf(step);
                   return (
                     <StepCard
                       key={step.id}
                       step={step}
-                      displayNumber={globalIndex + 1}
+                      displayNumber={si + 1}
                       expanded={expandedSteps.has(step.id)}
                       activeOS={activeOS}
                       activeSubscription={selectedSubscription}
@@ -184,6 +190,16 @@ export function GuideView({ supportChannel }: { supportChannel?: string | null }
                     />
                   );
                 })}
+                {customSteps
+                  .filter((s) => s.category === group.category)
+                  .map((step, ci) => (
+                    <CustomGuideStep
+                      key={step.id}
+                      step={step}
+                      displayNumber={group.steps.length + ci + 1}
+                    />
+                  ))}
+
               </div>
             </div>
           ))}

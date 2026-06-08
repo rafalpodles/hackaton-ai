@@ -223,3 +223,13 @@ export interface UsefulPrompt {
   prompt: string;
   display_order: number;
 }
+
+export interface HackathonGuideStep {
+  id: string;
+  hackathon_id: string;
+  category: "fundamenty" | "ai-tools" | "weryfikacja";
+  order_index: number;
+  title: string;
+  content_md: string;
+  created_at: string;
+}

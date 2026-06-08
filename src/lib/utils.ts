@@ -11,6 +11,7 @@ import type {
   FaqSectionWithItems,
   ProjectIdea,
   UsefulPrompt,
+  HackathonGuideStep,
 } from "@/lib/types";
 
 /**
@@ -240,3 +241,15 @@ export const getApiKeyLimitForUser = cache(async (userId: string): Promise<numbe
     .sort((a, b) => b.created_at.localeCompare(a.created_at));
   return limits[0]?.api_key_default_limit_usd ?? DEFAULT_API_KEY_LIMIT;
 });
+
+export const getGuideStepsForHackathon = cache(
+  async (hackathonId: string): Promise<HackathonGuideStep[]> => {
+    const supabase = await createClient();
+    const { data } = await supabase
+      .from("hackathon_guide_steps")
+      .select("*")
+      .eq("hackathon_id", hackathonId)
+      .order("order_index");
+    return (data ?? []) as HackathonGuideStep[];
+  }
+);

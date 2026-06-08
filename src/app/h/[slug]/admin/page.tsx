@@ -17,7 +17,7 @@ import SurveySection from "@/components/admin/survey-section";
 import { getQuestionsForAdmin, getSurveyResults } from "@/lib/actions/survey";
 import ContentCards from "@/components/admin/content-cards";
 import StartPagesVisibility from "@/components/admin/start-pages-visibility";
-import { getFaqForHackathon, getIdeasForHackathon, getPromptsForHackathon } from "@/lib/utils";
+import { getFaqForHackathon, getIdeasForHackathon, getPromptsForHackathon, getGuideStepsForHackathon } from "@/lib/utils";
 
 const STATUS_LABELS: Record<string, string> = {
   upcoming: "Nadchodzący",
@@ -57,6 +57,7 @@ export default async function HackathonAdminPage({ params }: Props) {
     faqSections,
     ideas,
     prompts,
+    guideSteps,
   ] = await Promise.all([
     supabase.from("hackathon_categories").select("*").eq("hackathon_id", hackathon.id).order("display_order"),
     supabase.from("hackathon_participants").select("*, profile:profiles!user_id(display_name, email, avatar_url), project:projects!project_id(name), team:teams!team_id(name, project_id)").eq("hackathon_id", hackathon.id).order("joined_at"),
@@ -67,6 +68,7 @@ export default async function HackathonAdminPage({ params }: Props) {
     getFaqForHackathon(hackathon.id),
     getIdeasForHackathon(hackathon.id),
     getPromptsForHackathon(hackathon.id),
+    getGuideStepsForHackathon(hackathon.id),
   ]);
 
   const categories = (categoriesRaw ?? []) as HackathonCategory[];
@@ -191,6 +193,7 @@ export default async function HackathonAdminPage({ params }: Props) {
           faqSectionCount={faqSections.length}
           ideasCount={ideas.length}
           promptsCount={prompts.length}
+          guideStepsCount={guideSteps.length}
         />
       </section>
 
