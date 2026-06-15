@@ -4,17 +4,19 @@ import { GradientButton } from "@/components/ui/gradient-button";
 
 interface VoteSubmitBarProps {
   selections: Record<string, string | null>;
+  totalCategories: number;
   onSubmit: () => void;
   submitting: boolean;
 }
 
 export default function VoteSubmitBar({
   selections,
+  totalCategories,
   onSubmit,
   submitting,
 }: VoteSubmitBarProps) {
   const count = Object.values(selections).filter(Boolean).length;
-  const allSelected = count === 3;
+  const allSelected = count === totalCategories;
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-30 border-t border-outline bg-surface-low/80 backdrop-blur-md lg:left-60">
@@ -25,7 +27,7 @@ export default function VoteSubmitBar({
             Wybrano
           </span>
           <span className="font-space-grotesk text-xl font-bold tabular-nums text-on-surface">
-            {String(count).padStart(2, "0")} / 03
+            {String(count).padStart(2, "0")} / {String(totalCategories).padStart(2, "0")}
           </span>
         </div>
 

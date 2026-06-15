@@ -80,9 +80,9 @@ export default async function HackathonVotePage({ params }: Props) {
         </p>
       </div>
 
-      {/* TODO: pass categories to VotingBoard after voting-board component is updated to accept dynamic categories */}
       <VotingBoard
         projects={projects}
+        categories={categories}
         ownProjectId={ownProjectId}
         hasVoted={hasVoted}
         votedFor={votedFor}
