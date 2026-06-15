@@ -2,19 +2,14 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import type { ProjectWithTeam } from "@/lib/types";
+import type { ProjectWithTeam, HackathonCategory } from "@/lib/types";
 import { castVotes } from "@/lib/actions/voting";
 import VotingCategory from "./voting-category";
 import VoteSubmitBar from "./vote-submit-bar";
 
-const CATEGORIES: { key: string; label: string; icon: string }[] = [
-  { key: "concept_to_reality", label: "Droga od koncepcji do realizacji", icon: "\u26A1" },
-  { key: "creativity", label: "Kreatywno\u015b\u0107 pomys\u0142u", icon: "\u2728" },
-  { key: "usefulness", label: "Przydatno\u015b\u0107 / warto\u015b\u0107 u\u017cytkowa", icon: "\u2699" },
-];
-
 interface VotingBoardProps {
   projects: ProjectWithTeam[];
+  categories: HackathonCategory[];
   ownProjectId: string | null;
   hasVoted: boolean;
   votedFor?: Record<string, string>;
@@ -23,6 +18,7 @@ interface VotingBoardProps {
 
 export default function VotingBoard({
   projects,
+  categories,
   ownProjectId,
   hasVoted,
   votedFor = {},
@@ -33,13 +29,9 @@ export default function VotingBoard({
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const [selections, setSelections] = useState<
-    Record<string, string | null>
-  >({
-    concept_to_reality: null,
-    creativity: null,
-    usefulness: null,
-  });
+  const [selections, setSelections] = useState<Record<string, string | null>>(
+    () => Object.fromEntries(categories.map((c) => [c.slug, null]))
+  );
 
   if (hasVoted) {
     // Build a map of project_id -> project for quick lookup
@@ -77,16 +69,15 @@ export default function VotingBoard({
           <h3 className="font-space-grotesk text-sm font-semibold uppercase tracking-wider text-on-surface-muted">
             Twoje wybory
           </h3>
-          {CATEGORIES.map((cat) => {
-            const projectId = votedFor[cat.key];
+          {categories.map((cat) => {
+            const projectId = votedFor[cat.slug];
             const project = projectId ? projectMap.get(projectId) : null;
 
             return (
               <div
-                key={cat.key}
+                key={cat.slug}
                 className="flex items-center gap-4 rounded-xl border border-primary/20 bg-primary/5 px-5 py-4"
               >
-                <span className="text-xl">{cat.icon}</span>
                 <div className="min-w-0 flex-1">
                   <p className="text-xs font-medium uppercase tracking-wider text-primary-dim">
                     {cat.label}
@@ -135,7 +126,7 @@ export default function VotingBoard({
         project_id: project_id!,
       }));
 
-    if (votes.length !== 3) return;
+    if (votes.length !== categories.length) return;
 
     setSubmitting(true);
     setError(null);
@@ -165,22 +156,22 @@ export default function VotingBoard({
       )}
 
       <div className="grid grid-cols-1 gap-6 pb-24 lg:grid-cols-3">
-        {CATEGORIES.map((cat) => (
+        {categories.map((cat) => (
           <VotingCategory
-            key={cat.key}
-            category={cat.key}
+            key={cat.slug}
+            category={cat.slug}
             label={cat.label}
-            icon={cat.icon}
             projects={projects}
-            selectedProjectId={selections[cat.key]}
+            selectedProjectId={selections[cat.slug]}
             ownProjectId={ownProjectId}
-            onSelect={(pid) => handleSelect(cat.key, pid)}
+            onSelect={(pid) => handleSelect(cat.slug, pid)}
           />
         ))}
       </div>
 
       <VoteSubmitBar
         selections={selections}
+        totalCategories={categories.length}
         onSubmit={handleSubmit}
         submitting={submitting || isPending}
       />

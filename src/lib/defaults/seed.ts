@@ -4,11 +4,17 @@ import { DEFAULT_FAQ } from "./faq";
 import { DEFAULT_IDEAS } from "./ideas";
 import { DEFAULT_PROMPTS } from "./prompts";
 
+const DEFAULT_CATEGORIES = [
+  { slug: "concept_to_reality", label: "Droga od koncepcji do realizacji ⚡", display_order: 1 },
+  { slug: "creativity", label: "Kreatywność pomysłu ✨", display_order: 2 },
+  { slug: "usefulness", label: "Przydatność / wartość użytkowa ⚙️", display_order: 3 },
+];
+
 export async function seedHackathonContent(
   supabase: SupabaseClient,
   hackathonId: string
-): Promise<{ rules: boolean; faq: boolean; ideas: boolean; prompts: boolean }> {
-  const result = { rules: false, faq: false, ideas: false, prompts: false };
+): Promise<{ rules: boolean; faq: boolean; ideas: boolean; prompts: boolean; categories: boolean }> {
+  const result = { rules: false, faq: false, ideas: false, prompts: false, categories: false };
 
   const { data: h } = await supabase
     .from("hackathons")
@@ -92,6 +98,23 @@ export async function seedHackathonContent(
       }))
     );
     result.prompts = true;
+  }
+
+  const { data: existingCategories } = await supabase
+    .from("hackathon_categories")
+    .select("id")
+    .eq("hackathon_id", hackathonId)
+    .limit(1);
+  if (!existingCategories || existingCategories.length === 0) {
+    await supabase.from("hackathon_categories").insert(
+      DEFAULT_CATEGORIES.map((cat) => ({
+        hackathon_id: hackathonId,
+        slug: cat.slug,
+        label: cat.label,
+        display_order: cat.display_order,
+      }))
+    );
+    result.categories = true;
   }
 
   return result;

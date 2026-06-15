@@ -6,7 +6,7 @@ import type { ProjectWithTeam } from "@/lib/types";
 interface VotingCategoryProps {
   category: string;
   label: string;
-  icon: string;
+  icon?: string;
   projects: ProjectWithTeam[];
   selectedProjectId: string | null;
   ownProjectId: string | null;
@@ -15,7 +15,6 @@ interface VotingCategoryProps {
 
 export default function VotingCategory({
   label,
-  icon,
   projects,
   selectedProjectId,
   ownProjectId,
@@ -23,8 +22,7 @@ export default function VotingCategory({
 }: VotingCategoryProps) {
   return (
     <div className="rounded-xl border border-outline bg-surface-low p-5">
-      <h3 className="mb-4 flex items-center gap-2 font-space-grotesk text-lg font-bold text-on-surface">
-        <span className="text-xl">{icon}</span>
+      <h3 className="mb-4 font-space-grotesk text-lg font-bold text-on-surface">
         {label}
       </h3>
 
