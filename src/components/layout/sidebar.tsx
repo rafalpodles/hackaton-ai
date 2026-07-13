@@ -106,7 +106,6 @@ export default function Sidebar({ user, votingOpen, surveyOpen, surveyResponded,
 
   return (
     <>
-      {/* Mobile hamburger button */}
       <button
         type="button"
         onClick={() => setOpen(true)}
@@ -118,7 +117,6 @@ export default function Sidebar({ user, votingOpen, surveyOpen, surveyResponded,
         </svg>
       </button>
 
-      {/* Overlay (mobile only) */}
       {open && (
         <div
           className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm lg:hidden"
@@ -126,13 +124,11 @@ export default function Sidebar({ user, votingOpen, surveyOpen, surveyResponded,
         />
       )}
 
-      {/* Sidebar */}
       <aside
         className={`fixed left-0 top-0 z-50 flex h-screen w-72 flex-col overflow-y-auto border-r border-white/[0.08] bg-[rgba(9,9,14,.72)] px-[18px] py-[22px] backdrop-blur-[14px] transition-transform duration-300 lg:translate-x-0 ${
           open ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        {/* Mobile close button */}
         <button
           type="button"
           onClick={() => setOpen(false)}
@@ -144,7 +140,6 @@ export default function Sidebar({ user, votingOpen, surveyOpen, surveyResponded,
           </svg>
         </button>
 
-        {/* User identity */}
         <Link
           href={hackathonSlug ? `${h}/profile` : "/profile"}
           className="flex items-center gap-3 rounded-xl px-[6px] pb-[18px] pt-2 transition-colors hover:bg-white/[0.04]"
@@ -170,7 +165,6 @@ export default function Sidebar({ user, votingOpen, surveyOpen, surveyResponded,
           </Link>
         )}
 
-        {/* Navigation */}
         <nav className="flex-1">
           <NavSection label="NA START" items={startItems} isActive={isActive} />
           <NavSection label="HACKATHON" items={hackathonItems} isActive={isActive} />
@@ -180,7 +174,6 @@ export default function Sidebar({ user, votingOpen, surveyOpen, surveyResponded,
           )}
         </nav>
 
-        {/* Geocities Guestbook link */}
         {geocitiesEnabled && (
           <Link
             href={hackathonSlug ? `${h}/guestbook` : "/guestbook"}
@@ -191,14 +184,12 @@ export default function Sidebar({ user, votingOpen, surveyOpen, surveyResponded,
           </Link>
         )}
 
-        {/* Vote CTA — only when voting is open */}
         {votingOpen && (
           <Link href={`${h}/vote`} className={`mt-[26px] ${gradientCta}`} style={gradientStyle}>
             GŁOSUJ
           </Link>
         )}
 
-        {/* Survey / Results CTA */}
         {surveyOpen && hackathonSlug && (
           <>
             {surveyResponded && (hackathonFinished || user.role === "admin") ? (
@@ -217,12 +208,10 @@ export default function Sidebar({ user, votingOpen, surveyOpen, surveyResponded,
           &lt;90s&gt;
         </div>
 
-        {/* Geocities Easter Egg */}
         <div className="flex justify-center pb-1">
           <GeocitiesToggle />
         </div>
 
-        {/* Logout */}
         <button
           onClick={handleLogout}
           className="mt-2 px-2 py-3 text-left font-jetbrains-mono text-xs tracking-[0.16em] text-on-surface-dim transition-colors hover:text-secondary"

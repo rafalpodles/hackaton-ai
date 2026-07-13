@@ -10,21 +10,23 @@ export interface HeroStat {
 
 function StatValue({ target, run }: { target: number; run: boolean }) {
   const reduced = usePrefersReducedMotion();
-  const [value, setValue] = useState(reduced ? target : 0);
+  const [animated, setAnimated] = useState(0);
   const started = useRef(false);
 
   useEffect(() => {
-    if (!run || reduced || started.current) return;
+    if (reduced || !run || started.current) return;
     started.current = true;
+    let rafId = 0;
     const start = performance.now();
     const dur = 1400;
     const step = (t: number) => {
       const p = Math.min(1, (t - start) / dur);
       const e = 1 - Math.pow(1 - p, 3);
-      setValue(Math.round(target * e));
-      if (p < 1) requestAnimationFrame(step);
+      setAnimated(Math.round(target * e));
+      if (p < 1) rafId = requestAnimationFrame(step);
     };
-    requestAnimationFrame(step);
+    rafId = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(rafId);
   }, [run, reduced, target]);
 
   return (
@@ -38,7 +40,7 @@ function StatValue({ target, run }: { target: number; run: boolean }) {
         color: "transparent",
       }}
     >
-      {value}
+      {reduced ? target : animated}
     </div>
   );
 }
