@@ -6,6 +6,7 @@ import { LandingHero } from "@/components/landing/garage/landing-hero";
 import { StatsRow } from "@/components/landing/garage/stats-row";
 import { Ticker } from "@/components/landing/garage/ticker";
 import { GarageHackathonCard } from "@/components/landing/garage/garage-hackathon-card";
+import { plForm } from "@/lib/format";
 import type { HackathonWithStats } from "@/lib/types";
 
 export default async function LandingPage() {
@@ -85,7 +86,10 @@ export default async function LandingPage() {
 
   const tickerText =
     hackathonsWithStats
-      .map((h) => `◇ ${h.name} · ${h.project_count} projektów`)
+      .map(
+        (h) =>
+          `◇ ${h.name} · ${h.project_count} ${plForm(h.project_count, "projekt", "projekty", "projektów")}`
+      )
       .join("   ") || "◇ Build something real. Ship it in one day.";
 
   return (

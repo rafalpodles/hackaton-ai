@@ -8,9 +8,9 @@ const LINES = [
   "> mounting /garage ................ [OK]",
   "> loading vibe_coding_engine ...... [OK]",
   "> connecting AI providers ......... [OK]",
-  "> indexing 22 projects ............ [OK]",
+  "> indexing projects .............. [OK]",
   "> counting votes .................. [OK]",
-  "> ready. welcome, rpo.",
+  "> ready. welcome, hacker.",
 ];
 
 type Phase = "pending" | "running" | "hidden";
@@ -52,7 +52,6 @@ export function BootOverlay() {
     }
 
     if (reduced) {
-      // Skip the typewriter entirely for reduced-motion users.
       setPhase("hidden");
       markBooted();
       return;

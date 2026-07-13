@@ -1,8 +1,6 @@
 @import "tailwindcss";
 
 @theme {
-  /* Garage OS palette — dark, terminal/tech aesthetic. Token names kept stable
-     (surface/primary/secondary/outline…) so existing utilities keep resolving. */
   --color-ink: #07070b;
   --color-surface: #0e0e15;
   --color-surface-low: #14141d;

@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import type { HackathonCategory, VoteResult } from "@/lib/types";
+import { plForm } from "@/lib/format";
 
 export interface VoteResultsData {
   categories: HackathonCategory[];
@@ -73,7 +74,5 @@ export async function getVoteResults(hackathonId: string): Promise<VoteResultsDa
 }
 
 export function voteLabel(count: number): string {
-  if (count === 1) return "głos";
-  if (count >= 2 && count <= 4) return "głosy";
-  return "głosów";
+  return plForm(count, "głos", "głosy", "głosów");
 }

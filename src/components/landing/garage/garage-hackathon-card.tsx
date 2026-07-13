@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useTransition } from "react";
 import { joinHackathon } from "@/lib/actions/hackathon-join";
+import { formatDatePl, plForm } from "@/lib/format";
 import { useTilt } from "./use-motion";
 
 interface GarageHackathonCardProps {
@@ -28,27 +29,11 @@ const STATUS_META: Record<string, { dot: string; label: string }> = {
   finished: { dot: "#8b8b9a", label: "ZAKOŃCZONY" },
 };
 
-function formatDatePl(dateStr: string): string {
-  return new Date(dateStr).toLocaleDateString("pl-PL", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  });
-}
-
-function plForm(n: number, one: string, few: string, many: string): string {
-  if (n === 1) return one;
-  const rem10 = n % 10;
-  const rem100 = n % 100;
-  if (rem10 >= 2 && rem10 <= 4 && !(rem100 >= 12 && rem100 <= 14)) return few;
-  return many;
-}
-
 function metaLine(h: GarageHackathonCardProps["hackathon"]): string {
   const parts: string[] = [];
   if (h.hackathon_date) parts.push(formatDatePl(h.hackathon_date));
   parts.push(
-    `${h.participant_count} ${plForm(h.participant_count, "uczestnik", "uczestników", "uczestników")}`
+    `${h.participant_count} ${plForm(h.participant_count, "uczestnik", "uczestnicy", "uczestników")}`
   );
   parts.push(
     `${h.project_count} ${plForm(h.project_count, "projekt", "projekty", "projektów")}`
@@ -145,6 +130,11 @@ export function GarageHackathonCard({
             <div className="mt-[14px] font-jetbrains-mono text-[13px] tracking-[0.1em] text-on-surface-muted">
               {metaLine(hackathon)}
             </div>
+            {hackathon.description && (
+              <p className="mt-4 line-clamp-2 max-w-[540px] text-[15px] leading-relaxed text-on-surface-muted">
+                {hackathon.description}
+              </p>
+            )}
           </div>
           {ctaNode}
         </div>
@@ -173,6 +163,11 @@ export function GarageHackathonCard({
           <div className="mt-[14px] font-jetbrains-mono text-[13px] tracking-[0.1em] text-on-surface-muted">
             {metaLine(hackathon)}
           </div>
+          {hackathon.description && (
+            <p className="mt-3 line-clamp-2 max-w-[540px] text-[15px] leading-relaxed text-on-surface-muted">
+              {hackathon.description}
+            </p>
+          )}
         </div>
         {ctaNode}
       </div>
