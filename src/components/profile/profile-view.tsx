@@ -140,7 +140,7 @@ export default function ProfileView({
             />
           ) : (
             <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-primary to-secondary">
-              <span className="font-space-grotesk text-3xl font-bold text-white">
+              <span className="font-chakra-petch text-3xl font-bold text-white">
                 {initial}
               </span>
             </div>

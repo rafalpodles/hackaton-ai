@@ -21,7 +21,7 @@ export default async function AdminFaqPage({ params }: Props) {
   return (
     <div className="mx-auto max-w-4xl space-y-6 py-8">
       <div className="flex items-center justify-between">
-        <h1 className="font-space-grotesk text-2xl font-bold text-on-surface">
+        <h1 className="font-chakra-petch text-2xl font-bold text-on-surface">
           FAQ — {hackathon.name}
         </h1>
         <Link

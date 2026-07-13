@@ -147,7 +147,7 @@ export function ProjectDetailModal({
             <div className="h-1 w-12 rounded-full bg-gradient-to-r from-primary to-secondary" />
             <h2
               id="project-detail-title"
-              className="font-space-grotesk text-2xl font-bold leading-tight text-on-surface"
+              className="font-chakra-petch text-2xl font-bold leading-tight text-on-surface"
             >
               {project.name}
             </h2>

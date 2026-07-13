@@ -13,7 +13,7 @@ export default function StatsCards({ stats }: StatsCardsProps) {
           <p className="font-space-grotesk text-xs uppercase tracking-wider text-on-surface-muted">
             {stat.label}
           </p>
-          <p className="mt-2 font-space-grotesk text-2xl font-bold text-on-surface">
+          <p className="mt-2 font-chakra-petch text-2xl font-bold text-on-surface">
             {stat.value}
           </p>
           {stat.change && (

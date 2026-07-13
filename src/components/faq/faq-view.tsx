@@ -98,10 +98,13 @@ export function FaqView({
     <div className="mx-auto max-w-3xl space-y-10 pb-20">
       {/* Hero */}
       <section className="space-y-4 pt-4 text-center">
-        <h1 className="bg-gradient-to-r from-primary-dim to-secondary bg-clip-text font-space-grotesk text-5xl font-black uppercase tracking-wider text-transparent sm:text-6xl">
+        <h1
+          className="gos-gradient-text font-chakra-petch font-bold leading-[0.9]"
+          style={{ fontSize: "clamp(56px, 10vw, 130px)" }}
+        >
           Q&A
         </h1>
-        <p className="text-lg text-on-surface/80">
+        <p className="text-lg text-on-surface-muted">
           Odpowiedzi na najczęstsze pytania uczestników
         </p>
       </section>

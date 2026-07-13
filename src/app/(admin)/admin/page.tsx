@@ -64,7 +64,7 @@ export default async function AdminDashboardPage() {
   return (
     <div className="space-y-8">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <h1 className="font-space-grotesk text-3xl font-bold text-on-surface">
+        <h1 className="font-chakra-petch text-3xl font-bold text-on-surface">
           Panel admina
         </h1>
         <Link

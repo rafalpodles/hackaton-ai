@@ -159,7 +159,7 @@ export default async function HackathonTeamPage({ params }: Props) {
   return (
     <div className="mx-auto max-w-2xl space-y-8">
       <div>
-        <h1 className="font-space-grotesk text-3xl font-bold text-on-surface">
+        <h1 className="font-chakra-petch text-4xl font-bold leading-[0.95] text-on-surface sm:text-5xl">
           {teamData.name}
         </h1>
         {isLeader && (

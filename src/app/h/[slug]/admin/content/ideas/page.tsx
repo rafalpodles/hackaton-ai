@@ -21,7 +21,7 @@ export default async function AdminIdeasPage({ params }: Props) {
   return (
     <div className="mx-auto max-w-3xl space-y-6 py-8">
       <div className="flex items-center justify-between">
-        <h1 className="font-space-grotesk text-2xl font-bold text-on-surface">
+        <h1 className="font-chakra-petch text-2xl font-bold text-on-surface">
           Pomysły — {hackathon.name}
         </h1>
         <Link

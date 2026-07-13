@@ -30,7 +30,7 @@ export function VideoFeed({ projects }: VideoFeedProps) {
 
         {/* End slide */}
         <div className="flex h-screen snap-start flex-col items-center justify-center gap-6">
-          <h2 className="font-space-grotesk text-3xl font-bold text-on-surface">
+          <h2 className="font-chakra-petch text-3xl font-bold text-on-surface">
             To wszystko!
           </h2>
           <p className="text-on-surface-muted">

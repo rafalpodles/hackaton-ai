@@ -20,7 +20,7 @@ export default async function HackathonVotePage({ params }: Props) {
   if (!hackathon.voting_open) {
     return (
       <div className="flex flex-col items-center justify-center py-20">
-        <h1 className="font-space-grotesk text-3xl font-bold text-on-surface">
+        <h1 className="font-chakra-petch text-3xl font-bold text-on-surface">
           Głosowanie jeszcze nie jest otwarte
         </h1>
         <p className="mt-2 text-on-surface-muted">
@@ -72,7 +72,7 @@ export default async function HackathonVotePage({ params }: Props) {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-space-grotesk text-3xl font-bold text-on-surface">
+        <h1 className="font-chakra-petch text-3xl font-bold text-on-surface">
           Głosuj na swoich faworytów
         </h1>
         <p className="mt-1 text-on-surface-muted">

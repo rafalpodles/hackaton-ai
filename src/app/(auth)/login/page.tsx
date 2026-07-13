@@ -57,7 +57,7 @@ function LoginForm() {
           </h1>
 
           {/* Heading */}
-          <h2 className="font-space-grotesk text-2xl font-bold text-on-surface text-center mb-8">
+          <h2 className="font-chakra-petch text-2xl font-bold text-on-surface text-center mb-8">
             Witaj, hackerze!
           </h2>
 

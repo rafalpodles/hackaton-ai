@@ -65,7 +65,7 @@ export default function NewHackathonPage() {
             <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
           </svg>
         </button>
-        <h1 className="font-space-grotesk text-3xl font-bold text-on-surface">
+        <h1 className="font-chakra-petch text-3xl font-bold text-on-surface">
           Nowy hackathon
         </h1>
       </div>

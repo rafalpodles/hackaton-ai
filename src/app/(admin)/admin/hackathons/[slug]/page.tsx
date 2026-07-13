@@ -119,7 +119,7 @@ export default async function HackathonAdminPage({
           </Link>
           <div>
             <div className="flex items-center gap-3">
-              <h1 className="font-space-grotesk text-3xl font-bold text-on-surface">
+              <h1 className="font-chakra-petch text-3xl font-bold text-on-surface">
                 {hackathon.name}
               </h1>
               <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${STATUS_COLORS[hackathon.status] ?? STATUS_COLORS.upcoming}`}>

@@ -61,7 +61,7 @@ export default function ChangePasswordPage() {
             Spyrosoft AI Hackathon
           </h1>
 
-          <h2 className="font-space-grotesk text-2xl font-bold text-on-surface text-center mb-4">
+          <h2 className="font-chakra-petch text-2xl font-bold text-on-surface text-center mb-4">
             Zmień hasło
           </h2>
 

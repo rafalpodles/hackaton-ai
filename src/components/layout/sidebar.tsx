@@ -18,6 +18,19 @@ interface SidebarProps {
   hiddenStartPages?: string[];
 }
 
+interface NavItemData {
+  key?: string;
+  label: string;
+  href: string;
+  en: string;
+}
+
+const ACTIVE_STYLE: React.CSSProperties = {
+  background: "linear-gradient(120deg, rgba(99,102,241,.22), rgba(255,90,77,.12))",
+  border: "1px solid rgba(139,140,245,.4)",
+  boxShadow: "inset 3px 0 0 #8b8cf5",
+};
+
 export default function Sidebar({ user, votingOpen, surveyOpen, surveyResponded, hackathonFinished, hackathonSlug, hiddenStartPages = [] }: SidebarProps) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
@@ -27,44 +40,40 @@ export default function Sidebar({ user, votingOpen, surveyOpen, surveyResponded,
 
   const h = hackathonSlug ? `/h/${hackathonSlug}` : "";
 
-  const startItems = [
-    ...(hackathonSlug ? [{ key: "rules", label: "Garage Rules", href: `${h}/rules` }] : []),
-    { key: "guide", label: "Poradnik", href: hackathonSlug ? `${h}/guide` : "/guide" },
-    ...(hackathonSlug ? [{ key: "faq", label: "Q&A", href: `${h}/faq` }] : []),
-    ...(hackathonSlug ? [{ key: "ideas", label: "Pomysły na projekty", href: `${h}/ideas` }] : []),
-    ...(hackathonSlug ? [{ key: "prompts", label: "Przydatne prompty", href: `${h}/prompts` }] : []),
-  ].filter((item) => !hiddenStartPages.includes(item.key));
+  const startItems: NavItemData[] = [
+    ...(hackathonSlug ? [{ key: "rules", label: "Garage Rules", href: `${h}/rules`, en: "rules" }] : []),
+    { key: "guide", label: "Poradnik", href: hackathonSlug ? `${h}/guide` : "/guide", en: "guide" },
+    ...(hackathonSlug ? [{ key: "faq", label: "Q&A", href: `${h}/faq`, en: "faq" }] : []),
+    ...(hackathonSlug ? [{ key: "ideas", label: "Pomysły na projekty", href: `${h}/ideas`, en: "ideas" }] : []),
+    ...(hackathonSlug ? [{ key: "prompts", label: "Przydatne prompty", href: `${h}/prompts`, en: "prompts" }] : []),
+  ].filter((item) => !hiddenStartPages.includes(item.key ?? ""));
 
-  const hackathonItems = hackathonSlug
+  const hackathonItems: NavItemData[] = hackathonSlug
     ? [
-        { label: "Zespół", href: `${h}/team` },
-        { label: "Mój projekt", href: `${h}/my-project` },
+        { label: "Zespół", href: `${h}/team`, en: "team" },
+        { label: "Mój projekt", href: `${h}/my-project`, en: "project" },
       ]
     : [];
 
-  const galleryItems = hackathonSlug
+  const galleryItems: NavItemData[] = hackathonSlug
     ? [
-        { label: "Projekty", href: `${h}` },
-        { label: "Live", href: `${h}/feed` },
-        ...(hackathonFinished ? [{ label: "Wyniki", href: `${h}/results` }] : []),
+        { label: "Projekty", href: `${h}`, en: "gallery" },
+        { label: "Live", href: `${h}/feed`, en: "stream" },
+        ...(hackathonFinished ? [{ label: "Wyniki", href: `${h}/results`, en: "results" }] : []),
       ]
     : [];
 
-  const adminItems = hackathonSlug
+  const adminItems: NavItemData[] = hackathonSlug
     ? [
-        { label: "Admin", href: `${h}/admin` },
-        { label: "Wyniki", href: `${h}/admin/results` },
+        { label: "Admin", href: `${h}/admin`, en: "admin" },
+        { label: "Wyniki", href: `${h}/admin/results`, en: "export" },
       ]
-    : [
-        { label: "Panel", href: "/admin" },
-      ];
+    : [{ label: "Panel", href: "/admin", en: "panel" }];
 
-  // Close sidebar on route change (mobile)
   useEffect(() => {
     setOpen(false);
   }, [pathname]);
 
-  // Prevent body scroll when mobile sidebar is open
   useEffect(() => {
     if (open) {
       document.body.style.overflow = "hidden";
@@ -77,7 +86,6 @@ export default function Sidebar({ user, votingOpen, surveyOpen, surveyResponded,
   const isActive = (href: string) => {
     if (href === "/") return pathname === "/";
     if (hackathonSlug && href === `/h/${hackathonSlug}`) return pathname === href;
-    // For admin links, use exact match to avoid /admin matching /admin/results
     if (href.endsWith("/admin")) return pathname === href;
     return pathname.startsWith(href);
   };
@@ -89,13 +97,20 @@ export default function Sidebar({ user, votingOpen, surveyOpen, surveyResponded,
 
   const initial = user.display_name?.charAt(0).toUpperCase() ?? "?";
 
+  const gradientCta =
+    "block w-full rounded-[13px] py-[13px] text-center font-chakra-petch text-sm font-bold tracking-[0.08em] text-white";
+  const gradientStyle = {
+    background: "linear-gradient(120deg, #6366f1, #a855f7, #ff5a4d)",
+    boxShadow: "0 12px 30px -10px rgba(129,90,241,.7)",
+  };
+
   return (
     <>
       {/* Mobile hamburger button */}
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="fixed left-4 top-4 z-50 flex h-10 w-10 items-center justify-center rounded-lg bg-surface-high/80 backdrop-blur-md text-on-surface lg:hidden"
+        className="fixed left-4 top-4 z-50 flex h-10 w-10 items-center justify-center rounded-lg bg-surface-high/80 text-on-surface backdrop-blur-md lg:hidden"
         aria-label="Open menu"
       >
         <svg className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
@@ -113,7 +128,7 @@ export default function Sidebar({ user, votingOpen, surveyOpen, surveyResponded,
 
       {/* Sidebar */}
       <aside
-        className={`fixed left-0 top-0 z-50 flex h-screen w-60 flex-col bg-surface-low/80 backdrop-blur-[20px] border-r border-outline transition-transform duration-300 lg:translate-x-0 ${
+        className={`fixed left-0 top-0 z-50 flex h-screen w-72 flex-col overflow-y-auto border-r border-white/[0.08] bg-[rgba(9,9,14,.72)] px-[18px] py-[22px] backdrop-blur-[14px] transition-transform duration-300 lg:translate-x-0 ${
           open ? "translate-x-0" : "-translate-x-full"
         }`}
       >
@@ -121,7 +136,7 @@ export default function Sidebar({ user, votingOpen, surveyOpen, surveyResponded,
         <button
           type="button"
           onClick={() => setOpen(false)}
-          className="absolute right-3 top-5 flex h-8 w-8 items-center justify-center rounded-lg text-on-surface-muted hover:text-on-surface lg:hidden"
+          className="absolute right-3 top-4 flex h-8 w-8 items-center justify-center rounded-lg text-on-surface-muted hover:text-on-surface lg:hidden"
           aria-label="Close menu"
         >
           <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
@@ -132,150 +147,75 @@ export default function Sidebar({ user, votingOpen, surveyOpen, surveyResponded,
         {/* User identity */}
         <Link
           href={hackathonSlug ? `${h}/profile` : "/profile"}
-          className="group/user flex items-center gap-3 rounded-xl px-5 py-6 transition-colors hover:bg-surface-high"
+          className="flex items-center gap-3 rounded-xl px-[6px] pb-[18px] pt-2 transition-colors hover:bg-white/[0.04]"
         >
-          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary font-space-grotesk text-sm font-bold text-white">
+          <div
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[12px] font-chakra-petch text-xl font-bold text-white"
+            style={{ background: "linear-gradient(135deg, #6366f1, #ff5a4d)", boxShadow: "0 0 20px rgba(99,102,241,.5)" }}
+          >
             {initial}
           </div>
           <div className="min-w-0 flex-1">
-            <p className="truncate text-sm font-semibold text-on-surface">
-              {user.display_name}
-            </p>
-            <p className="truncate text-xs text-on-surface-muted">
-              {user.email}
-            </p>
+            <p className="truncate text-[15px] font-semibold text-on-surface">{user.display_name}</p>
+            <p className="truncate font-jetbrains-mono text-[11px] text-on-surface-dim">{user.email}</p>
           </div>
-          <svg
-            className="h-4 w-4 shrink-0 text-on-surface-muted opacity-0 transition-opacity group-hover/user:opacity-100"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth={1.5}
-            viewBox="0 0 24 24"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
-          </svg>
         </Link>
 
+        {hackathonSlug && (
+          <Link
+            href="/"
+            className="px-2 py-[10px] font-jetbrains-mono text-xs tracking-[0.16em] text-on-surface-dim transition-colors hover:text-on-surface"
+          >
+            ← HACKATHONY
+          </Link>
+        )}
+
         {/* Navigation */}
-        <nav className="flex-1 space-y-1 px-3">
-          {hackathonSlug && (
-            <NavLink href="/" label="← Hackathony" active={false} />
-          )}
-
-          <p className="mb-2 mt-2 px-2 font-space-grotesk text-xs uppercase tracking-wider text-on-surface-muted">
-            Na start
-          </p>
-          {startItems.map((item) => (
-            <NavLink
-              key={item.href}
-              href={item.href}
-              label={item.label}
-              active={isActive(item.href)}
-            />
-          ))}
-
-          {hackathonItems.length > 0 && (
-            <>
-              <div className="my-4 border-t border-outline" />
-              <p className="mb-2 px-2 font-space-grotesk text-xs uppercase tracking-wider text-on-surface-muted">
-                Hackathon
-              </p>
-              {hackathonItems.map((item) => (
-                <NavLink
-                  key={item.href}
-                  href={item.href}
-                  label={item.label}
-                  active={isActive(item.href)}
-                />
-              ))}
-            </>
-          )}
-
-          {galleryItems.length > 0 && (
-            <>
-              <div className="my-4 border-t border-outline" />
-              <p className="mb-2 px-2 font-space-grotesk text-xs uppercase tracking-wider text-on-surface-muted">
-                Galeria
-              </p>
-              {galleryItems.map((item) => (
-                <NavLink
-                  key={item.href}
-                  href={item.href}
-                  label={item.label}
-                  active={isActive(item.href)}
-                />
-              ))}
-            </>
-          )}
-
-          {/* Admin section */}
+        <nav className="flex-1">
+          <NavSection label="NA START" items={startItems} isActive={isActive} />
+          <NavSection label="HACKATHON" items={hackathonItems} isActive={isActive} />
+          <NavSection label="GALERIA" items={galleryItems} isActive={isActive} />
           {user.role === "admin" && (
-            <>
-              <div className="my-4 border-t border-outline" />
-              <p className="mb-2 px-2 font-space-grotesk text-xs uppercase tracking-wider text-on-surface-muted">
-                Admin
-              </p>
-              {adminItems.map((item) => (
-                <NavLink
-                  key={item.href}
-                  href={item.href}
-                  label={item.label}
-                  active={isActive(item.href)}
-                />
-              ))}
-            </>
+            <NavSection label="ADMIN" items={adminItems} isActive={isActive} />
           )}
         </nav>
 
         {/* Geocities Guestbook link */}
         {geocitiesEnabled && (
-          <div className="px-3 pb-1">
-            <Link
-              href={hackathonSlug ? `${h}/guestbook` : "/guestbook"}
-              className={`flex items-center rounded-lg px-3 py-2 font-space-grotesk text-xs uppercase tracking-wider transition-colors ${
-                isActive(hackathonSlug ? `${h}/guestbook` : "/guestbook")
-                  ? "border-l-2 border-primary-dim bg-primary/15 text-primary-dim"
-                  : "text-on-surface-muted hover:bg-surface-high hover:text-on-surface"
-              }`}
-              style={{ animation: "geocities-rainbow 2s linear infinite" }}
-            >
-              &#9733; Guestbook &#9733;
-            </Link>
-          </div>
+          <Link
+            href={hackathonSlug ? `${h}/guestbook` : "/guestbook"}
+            className="mt-2 flex items-center rounded-[11px] px-3 py-2 font-jetbrains-mono text-xs uppercase tracking-[0.16em] text-on-surface-muted transition-colors hover:bg-white/5 hover:text-on-surface"
+            style={{ animation: "geocities-rainbow 2s linear infinite" }}
+          >
+            &#9733; Guestbook &#9733;
+          </Link>
         )}
 
         {/* Vote CTA — only when voting is open */}
         {votingOpen && (
-          <div className="px-3 pb-3">
-            <Link
-              href={`${h}/vote`}
-              className="block w-full rounded-lg bg-gradient-to-r from-primary to-secondary py-2.5 text-center font-space-grotesk text-sm font-bold uppercase tracking-wider text-white transition-opacity hover:opacity-90"
-            >
-              Głosuj
-            </Link>
-          </div>
+          <Link href={`${h}/vote`} className={`mt-[26px] ${gradientCta}`} style={gradientStyle}>
+            GŁOSUJ
+          </Link>
         )}
 
         {/* Survey / Results CTA */}
         {surveyOpen && hackathonSlug && (
-          <div className="px-3 pb-3">
+          <>
             {surveyResponded && (hackathonFinished || user.role === "admin") ? (
-              <Link
-                href={`${h}/results`}
-                className="block w-full rounded-lg bg-gradient-to-r from-primary to-secondary py-2.5 text-center font-space-grotesk text-sm font-bold uppercase tracking-wider text-white transition-opacity hover:opacity-90"
-              >
-                Zobacz wyniki
+              <Link href={`${h}/results`} className={`mt-3 ${gradientCta}`} style={gradientStyle}>
+                ZOBACZ WYNIKI
               </Link>
             ) : !surveyResponded ? (
-              <Link
-                href={`${h}/survey`}
-                className="block w-full rounded-lg bg-gradient-to-r from-primary to-secondary py-2.5 text-center font-space-grotesk text-sm font-bold uppercase tracking-wider text-white transition-opacity hover:opacity-90"
-              >
-                Wypełnij ankietę
+              <Link href={`${h}/survey`} className={`mt-3 ${gradientCta}`} style={gradientStyle}>
+                WYPEŁNIJ ANKIETĘ
               </Link>
             ) : null}
-          </div>
+          </>
         )}
+
+        <div className="py-[14px] text-center font-jetbrains-mono text-[11px] tracking-[0.2em] text-on-surface-faint">
+          &lt;90s&gt;
+        </div>
 
         {/* Geocities Easter Egg */}
         <div className="flex justify-center pb-1">
@@ -283,44 +223,50 @@ export default function Sidebar({ user, votingOpen, surveyOpen, surveyResponded,
         </div>
 
         {/* Logout */}
-        <div className="border-t border-outline px-3 py-4">
-          <button
-            onClick={handleLogout}
-            className="w-full rounded-lg px-3 py-2.5 text-left font-space-grotesk text-sm uppercase tracking-wide text-on-surface-muted/80 transition-colors hover:bg-surface-high hover:text-on-surface"
-          >
-            Wyloguj
-          </button>
-        </div>
+        <button
+          onClick={handleLogout}
+          className="mt-2 px-2 py-3 text-left font-jetbrains-mono text-xs tracking-[0.16em] text-on-surface-dim transition-colors hover:text-secondary"
+        >
+          WYLOGUJ
+        </button>
       </aside>
     </>
   );
 }
 
-function NavLink({
-  href,
+function NavSection({
   label,
-  active,
-  small,
+  items,
+  isActive,
 }: {
-  href: string;
   label: string;
-  active: boolean;
-  small?: boolean;
+  items: NavItemData[];
+  isActive: (href: string) => boolean;
 }) {
+  if (items.length === 0) return null;
   return (
-    <Link
-      href={href}
-      className={`flex items-center rounded-lg font-space-grotesk uppercase tracking-wide transition-colors ${
-        small
-          ? "px-3 py-1.5 text-xs"
-          : "px-3 py-2.5 text-sm"
-      } ${
-        active
-          ? "border-l-2 border-primary-dim bg-primary/15 font-bold text-primary-dim"
-          : "text-on-surface-muted/80 hover:bg-surface-high hover:text-on-surface"
-      }`}
-    >
-      {label}
-    </Link>
+    <div className="mt-4">
+      <div className="px-2 py-[6px] font-jetbrains-mono text-[10.5px] tracking-[0.24em] text-on-surface-faint">
+        {label}
+      </div>
+      {items.map((item) => {
+        const active = isActive(item.href);
+        return (
+          <Link
+            key={item.href}
+            href={item.href}
+            style={active ? ACTIVE_STYLE : undefined}
+            className={`my-[3px] flex items-center justify-between gap-2 rounded-[11px] px-3 py-[11px] text-[14.5px] font-semibold transition-colors ${
+              active ? "text-white" : "border border-transparent text-on-surface-muted hover:bg-white/5"
+            }`}
+          >
+            <span>{item.label}</span>
+            <span className="font-jetbrains-mono text-[10px] tracking-[0.1em] text-on-surface-faint">
+              {item.en}
+            </span>
+          </Link>
+        );
+      })}
+    </div>
   );
 }

@@ -69,7 +69,7 @@ export default async function HackathonOnboardingPage({ params }: Props) {
 
   return (
     <div className="mx-auto max-w-2xl space-y-10 py-8">
-      <h1 className="font-space-grotesk text-3xl font-bold text-on-surface">
+      <h1 className="font-chakra-petch text-3xl font-bold text-on-surface">
         Zaczynamy!
       </h1>
 

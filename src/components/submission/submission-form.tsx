@@ -143,7 +143,7 @@ export function SubmissionForm({ project, hackathonId, submissionOpen = true, de
         <header className="mb-12">
           <div className="flex items-start justify-between gap-4">
             <div>
-              <h1 className="font-space-grotesk text-5xl font-extrabold tracking-tighter text-on-surface">
+              <h1 className="font-chakra-petch text-5xl font-extrabold tracking-tighter text-on-surface">
                 MÓJ PROJEKT
               </h1>
               <p className="mt-2 max-w-2xl text-lg font-light text-on-surface-muted">
@@ -171,7 +171,7 @@ export function SubmissionForm({ project, hackathonId, submissionOpen = true, de
               <label className="font-space-grotesk text-[10px] font-bold uppercase tracking-[0.2em] text-primary-dim">
                 Podstawy
               </label>
-              <h2 className="font-space-grotesk text-2xl font-bold text-on-surface">
+              <h2 className="font-chakra-petch text-2xl font-bold text-on-surface">
                 Jak się nazywa Twój projekt?
               </h2>
               <div className="group relative">
@@ -188,7 +188,7 @@ export function SubmissionForm({ project, hackathonId, submissionOpen = true, de
 
             {/* Description */}
             <div className="space-y-2">
-              <h2 className="font-space-grotesk text-2xl font-bold text-on-surface">
+              <h2 className="font-chakra-petch text-2xl font-bold text-on-surface">
                 Co robi Twój projekt?
               </h2>
               <div className="group relative">
@@ -209,7 +209,7 @@ export function SubmissionForm({ project, hackathonId, submissionOpen = true, de
 
             {/* Idea Origin */}
             <div className="space-y-2">
-              <h2 className="font-space-grotesk text-2xl font-bold text-on-surface">
+              <h2 className="font-chakra-petch text-2xl font-bold text-on-surface">
                 Czego się nauczyłeś/nauczyliście?
               </h2>
               <div className="group relative">
@@ -226,7 +226,7 @@ export function SubmissionForm({ project, hackathonId, submissionOpen = true, de
 
             {/* Journey */}
             <div className="space-y-2">
-              <h2 className="font-space-grotesk text-2xl font-bold text-on-surface">
+              <h2 className="font-chakra-petch text-2xl font-bold text-on-surface">
                 Jak wyglądała Twoja droga?
               </h2>
               <div className="group relative">
@@ -243,7 +243,7 @@ export function SubmissionForm({ project, hackathonId, submissionOpen = true, de
 
             {/* Tech Stack */}
             <div className="space-y-4">
-              <h2 className="font-space-grotesk text-2xl font-bold text-on-surface">
+              <h2 className="font-chakra-petch text-2xl font-bold text-on-surface">
                 Użyte AI toole
               </h2>
               <div
@@ -288,7 +288,7 @@ export function SubmissionForm({ project, hackathonId, submissionOpen = true, de
             </div>
             {/* Repo URL */}
             <div className="space-y-2">
-              <h2 className="font-space-grotesk text-2xl font-bold text-on-surface">
+              <h2 className="font-chakra-petch text-2xl font-bold text-on-surface">
                 Link do repozytorium
               </h2>
               <p className="text-xs text-on-surface-muted">Opcjonalne</p>
@@ -306,7 +306,7 @@ export function SubmissionForm({ project, hackathonId, submissionOpen = true, de
             </div>
             {/* App URL */}
             <div className="space-y-2">
-              <h2 className="font-space-grotesk text-2xl font-bold text-on-surface">
+              <h2 className="font-chakra-petch text-2xl font-bold text-on-surface">
                 Link do aplikacji
               </h2>
               <p className="text-xs text-on-surface-muted">Opcjonalne — link do działającej wersji</p>

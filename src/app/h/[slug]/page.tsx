@@ -26,14 +26,17 @@ export default async function HackathonProjectsPage({ params }: Props) {
   }
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="font-space-grotesk text-3xl font-bold text-on-surface">
+    <div className="space-y-9">
+      <div className="flex flex-wrap items-baseline gap-4">
+        <h1
+          className="font-chakra-petch font-bold leading-[0.95] text-on-surface"
+          style={{ fontSize: "clamp(40px, 6vw, 72px)" }}
+        >
           Projekty
         </h1>
-        <p className="mt-1 text-on-surface-muted">
+        <span className="font-jetbrains-mono text-[13px] text-on-surface-dim">
           {projects.length} zgłoszonych projektów
-        </p>
+        </span>
       </div>
 
       <ProjectGrid projects={projects} showAuthors={isAdmin} />

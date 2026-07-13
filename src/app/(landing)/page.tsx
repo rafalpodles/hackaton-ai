@@ -1,33 +1,24 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentUser } from "@/lib/utils";
-import { HackathonTile } from "@/components/landing/hackathon-tile";
+import { LandingTopBar } from "@/components/landing/garage/landing-top-bar";
+import { LandingHero } from "@/components/landing/garage/landing-hero";
+import { StatsRow } from "@/components/landing/garage/stats-row";
+import { Ticker } from "@/components/landing/garage/ticker";
+import { GarageHackathonCard } from "@/components/landing/garage/garage-hackathon-card";
 import type { HackathonWithStats } from "@/lib/types";
 
 export default async function LandingPage() {
   const supabase = await createClient();
   const user = await getCurrentUser();
 
-  // Query all hackathons ordered by created_at DESC
   const { data: hackathons } = await supabase
     .from("hackathons")
     .select("*")
     .order("created_at", { ascending: false });
 
-  if (!hackathons || hackathons.length === 0) {
-    return (
-      <div className="py-16 text-center">
-        <h1 className="font-space-grotesk text-4xl font-bold text-on-surface mb-4">
-          Hackathony Spyrosoft
-        </h1>
-        <p className="text-on-surface-muted">Brak hackathonów.</p>
-      </div>
-    );
-  }
-
-  // Get participant IDs for current user
   let participantHackathonIds = new Set<string>();
-  if (user) {
+  if (user && hackathons?.length) {
     const { data: participations } = await supabase
       .from("hackathon_participants")
       .select("hackathon_id")
@@ -37,25 +28,27 @@ export default async function LandingPage() {
     );
   }
 
-  // Get stats per hackathon: project count and participant count
-  const hackathonIds = hackathons.map((h) => h.id);
+  const hackathonIds = (hackathons ?? []).map((h) => h.id);
 
-  const { data: projectCounts } = await supabase
-    .from("projects")
-    .select("hackathon_id")
-    .in("hackathon_id", hackathonIds)
-    .eq("is_submitted", true);
+  const { data: projectCounts } = hackathonIds.length
+    ? await supabase
+        .from("projects")
+        .select("hackathon_id")
+        .in("hackathon_id", hackathonIds)
+        .eq("is_submitted", true)
+    : { data: [] };
 
-  const { data: participantCounts } = await supabase
-    .from("hackathon_participants")
-    .select("hackathon_id")
-    .in("hackathon_id", hackathonIds);
+  const { data: participantCounts } = hackathonIds.length
+    ? await supabase
+        .from("hackathon_participants")
+        .select("hackathon_id")
+        .in("hackathon_id", hackathonIds)
+    : { data: [] };
 
   const projectCountMap = new Map<string, number>();
   for (const row of projectCounts ?? []) {
     projectCountMap.set(row.hackathon_id, (projectCountMap.get(row.hackathon_id) ?? 0) + 1);
   }
-
   const participantCountMap = new Map<string, number>();
   for (const row of participantCounts ?? []) {
     participantCountMap.set(
@@ -64,84 +57,132 @@ export default async function LandingPage() {
     );
   }
 
-  const hackathonsWithStats: HackathonWithStats[] = hackathons.map((h) => ({
+  const hackathonsWithStats: HackathonWithStats[] = (hackathons ?? []).map((h) => ({
     ...h,
     project_count: projectCountMap.get(h.id) ?? 0,
     participant_count: participantCountMap.get(h.id) ?? 0,
   }));
 
-  const activeHackathons = hackathonsWithStats.filter(
-    (h) => h.status !== "finished"
-  );
-  const finishedHackathons = hackathonsWithStats.filter(
-    (h) => h.status === "finished"
-  );
+  const activeHackathons = hackathonsWithStats.filter((h) => h.status !== "finished");
+  const finishedHackathons = hackathonsWithStats.filter((h) => h.status === "finished");
+
+  const totalParticipants = hackathonsWithStats.reduce((s, h) => s + h.participant_count, 0);
+  const totalProjects = hackathonsWithStats.reduce((s, h) => s + h.project_count, 0);
+
+  const heroStats = [
+    { n: totalParticipants, label: "UCZESTNIKÓW" },
+    { n: totalProjects, label: "PROJEKTÓW" },
+    { n: 3, label: "KATEGORIE" },
+    { n: 90, label: "SEKUND / IDEA" },
+  ];
+
+  const primaryHref =
+    activeHackathons[0]?.slug
+      ? `/h/${activeHackathons[0].slug}`
+      : finishedHackathons[0]?.slug
+        ? `/h/${finishedHackathons[0].slug}`
+        : "/";
+
+  const tickerText =
+    hackathonsWithStats
+      .map((h) => `◇ ${h.name} · ${h.project_count} projektów`)
+      .join("   ") || "◇ Build something real. Ship it in one day.";
 
   return (
-    <div className="py-8">
-      <div className="mb-12 text-center">
-        <h1 className="font-space-grotesk text-4xl font-bold text-on-surface mb-3">
-          Hackathony Spyrosoft
-        </h1>
-        <p className="text-on-surface-muted text-lg max-w-2xl mx-auto">
-          Dołącz do hackathonu, zbuduj coś niesamowitego i rywalizuj z najlepszymi.
-        </p>
+    <>
+      <LandingTopBar
+        email={user?.email}
+        displayName={user?.display_name}
+        isLoggedIn={!!user}
+      />
+
+      <LandingHero primaryHref={primaryHref} />
+      <StatsRow stats={heroStats} />
+      <Ticker text={tickerText} />
+
+      <section className="mx-auto max-w-[1200px] px-[clamp(20px,5vw,64px)] py-20">
+        {activeHackathons.length > 0 && (
+          <>
+            <div className="mb-7 flex items-baseline gap-4">
+              <h2
+                className="font-chakra-petch font-bold text-on-surface"
+                style={{ fontSize: "clamp(26px, 3vw, 40px)" }}
+              >
+                Aktywne i nadchodzące
+              </h2>
+              <span className="font-jetbrains-mono text-xs tracking-[0.14em] text-[#6f6f88]">
+                {"// ACTIVE"}
+              </span>
+            </div>
+            <div className="mb-[52px] flex flex-col gap-6">
+              {activeHackathons.map((h) => (
+                <GarageHackathonCard
+                  key={h.id}
+                  hackathon={h}
+                  isParticipant={participantHackathonIds.has(h.id)}
+                  isLoggedIn={!!user}
+                  variant="active"
+                />
+              ))}
+            </div>
+          </>
+        )}
+
+        {finishedHackathons.length > 0 && (
+          <>
+            <div className="mb-7 flex items-baseline gap-4">
+              <h2
+                className="font-chakra-petch font-bold text-[#c9c9d6]"
+                style={{ fontSize: "clamp(24px, 3vw, 36px)" }}
+              >
+                Zakończone
+              </h2>
+              <span className="font-jetbrains-mono text-xs tracking-[0.14em] text-[#6f6f88]">
+                {"// ARCHIVE"}
+              </span>
+            </div>
+            <div className="flex flex-col gap-6">
+              {finishedHackathons.map((h) => (
+                <GarageHackathonCard
+                  key={h.id}
+                  hackathon={h}
+                  isParticipant={participantHackathonIds.has(h.id)}
+                  isLoggedIn={!!user}
+                  variant="archive"
+                />
+              ))}
+            </div>
+          </>
+        )}
+
+        {hackathonsWithStats.length === 0 && (
+          <p className="text-center font-jetbrains-mono text-on-surface-muted">
+            Brak hackathonów.
+          </p>
+        )}
+
         {user?.role === "admin" && (
-          <div className="mt-6 flex justify-center gap-3">
+          <div className="mt-14 flex flex-wrap justify-center gap-3">
             <Link
               href="/admin/hackathons/new"
-              className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-primary to-secondary px-5 py-2.5 font-space-grotesk text-sm font-bold text-white transition-all hover:shadow-[0_0_20px_rgba(70,70,204,0.3)]"
+              className="rounded-[12px] px-5 py-[10px] font-chakra-petch text-sm font-bold text-white"
+              style={{ background: "linear-gradient(120deg, #6366f1, #ff5a4d)" }}
             >
-              <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-              </svg>
-              Nowy hackathon
+              + Nowy hackathon
             </Link>
             <Link
               href="/admin"
-              className="inline-flex items-center gap-2 rounded-lg border border-outline px-5 py-2.5 font-space-grotesk text-sm font-bold text-on-surface-muted transition-colors hover:bg-surface-high hover:text-on-surface"
+              className="rounded-[12px] border border-outline px-5 py-[10px] font-chakra-petch text-sm font-bold text-on-surface-muted transition-colors hover:bg-surface-high hover:text-on-surface"
             >
               Panel admina
             </Link>
           </div>
         )}
-      </div>
+      </section>
 
-      {activeHackathons.length > 0 && (
-        <section className="mb-12">
-          <h2 className="font-space-grotesk text-2xl font-bold text-on-surface mb-6">
-            Aktywne i nadchodzące
-          </h2>
-          <div className="grid gap-6 md:grid-cols-2">
-            {activeHackathons.map((hackathon) => (
-              <HackathonTile
-                key={hackathon.id}
-                hackathon={hackathon}
-                isParticipant={participantHackathonIds.has(hackathon.id)}
-                isLoggedIn={!!user}
-              />
-            ))}
-          </div>
-        </section>
-      )}
-
-      {finishedHackathons.length > 0 && (
-        <section>
-          <h2 className="font-space-grotesk text-2xl font-bold text-on-surface mb-6">
-            Zakończone
-          </h2>
-          <div className="grid gap-6 md:grid-cols-2">
-            {finishedHackathons.map((hackathon) => (
-              <HackathonTile
-                key={hackathon.id}
-                hackathon={hackathon}
-                isParticipant={participantHackathonIds.has(hackathon.id)}
-                isLoggedIn={!!user}
-              />
-            ))}
-          </div>
-        </section>
-      )}
-    </div>
+      <footer className="border-t border-white/[0.06] p-10 text-center font-jetbrains-mono text-[11px] tracking-[0.2em] text-[#4a4a5c]">
+        SPYROSOFT_HACKATHON_OS · 2026 · &lt;90s/&gt;
+      </footer>
+    </>
   );
 }
