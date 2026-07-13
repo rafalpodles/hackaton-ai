@@ -37,7 +37,7 @@ export default function AdminResultsPage() {
 
   return (
     <div className="space-y-8">
-      <h1 className="font-space-grotesk text-3xl font-bold text-on-surface">
+      <h1 className="font-chakra-petch text-3xl font-bold text-on-surface">
         Eksport wyników
       </h1>
 

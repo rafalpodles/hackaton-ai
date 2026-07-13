@@ -121,7 +121,7 @@ export default async function HackathonAdminPage({ params }: Props) {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <div className="flex items-center gap-3">
-            <h1 className="font-space-grotesk text-3xl font-bold text-on-surface">
+            <h1 className="font-chakra-petch text-3xl font-bold text-on-surface">
               Admin: {hackathon.name}
             </h1>
             <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${STATUS_COLORS[hackathon.status] ?? STATUS_COLORS.upcoming}`}>

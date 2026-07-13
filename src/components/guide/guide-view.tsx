@@ -226,7 +226,10 @@ function HeroHeader({
   onResetPath: () => void;
 }) {
   return (
-    <div className="relative overflow-hidden rounded-2xl bg-surface-low/80 backdrop-blur-[20px] border border-outline p-8 pb-6">
+    <div
+      className="relative overflow-hidden rounded-[22px] border border-white/10 p-8 pb-6"
+      style={{ background: "linear-gradient(135deg, rgba(99,102,241,.14), rgba(255,90,77,.06))" }}
+    >
       {/* Ambient glows */}
       <div className="absolute -top-24 -right-24 w-64 h-64 bg-primary/20 rounded-full blur-[100px] pointer-events-none" />
       <div className="absolute -bottom-16 -left-16 w-48 h-48 bg-secondary/15 rounded-full blur-[80px] pointer-events-none" />
@@ -234,10 +237,8 @@ function HeroHeader({
       <div className="relative z-10">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <h1 className="font-space-grotesk text-4xl md:text-5xl font-bold tracking-tight">
-              <span className="bg-gradient-to-r from-primary-dim to-secondary bg-clip-text text-transparent">
-                PRZYGOTUJ
-              </span>{" "}
+            <h1 className="font-chakra-petch text-4xl md:text-6xl font-bold leading-[0.95]">
+              <span className="gos-gradient-text">PRZYGOTUJ</span>{" "}
               <span className="text-on-surface">SIĘ</span>
             </h1>
 

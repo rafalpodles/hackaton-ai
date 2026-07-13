@@ -21,7 +21,7 @@ export default async function SurveyPage({ params }: Props) {
   if (!hackathon.survey_open) {
     return (
       <div className="flex flex-col items-center gap-4 py-24 text-center">
-        <h1 className="font-space-grotesk text-3xl font-bold text-on-surface">Ankieta</h1>
+        <h1 className="font-chakra-petch text-3xl font-bold text-on-surface">Ankieta</h1>
         <p className="text-on-surface-muted">Ankieta nie jest jeszcze dostępna.</p>
       </div>
     );
@@ -37,7 +37,7 @@ export default async function SurveyPage({ params }: Props) {
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
           </svg>
         </div>
-        <h1 className="font-space-grotesk text-3xl font-bold text-on-surface">
+        <h1 className="font-chakra-petch text-3xl font-bold text-on-surface">
           Dziękujemy za wypełnienie ankiety!
         </h1>
         <p className="text-on-surface-muted">Twoje odpowiedzi zostały zapisane.</p>
@@ -48,7 +48,7 @@ export default async function SurveyPage({ params }: Props) {
   if (questions.length === 0) {
     return (
       <div className="flex flex-col items-center gap-4 py-24 text-center">
-        <h1 className="font-space-grotesk text-3xl font-bold text-on-surface">Ankieta</h1>
+        <h1 className="font-chakra-petch text-3xl font-bold text-on-surface">Ankieta</h1>
         <p className="text-on-surface-muted">Brak pytań w ankiecie.</p>
       </div>
     );
@@ -57,7 +57,7 @@ export default async function SurveyPage({ params }: Props) {
   return (
     <div className="mx-auto max-w-2xl">
       <header className="mb-12">
-        <h1 className="font-space-grotesk text-5xl font-extrabold tracking-tighter text-on-surface">
+        <h1 className="font-chakra-petch text-5xl font-extrabold tracking-tighter text-on-surface">
           ANKIETA
         </h1>
         <p className="mt-2 text-lg font-light text-on-surface-muted">

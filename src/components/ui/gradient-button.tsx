@@ -12,13 +12,13 @@ export const GradientButton = forwardRef<HTMLButtonElement, GradientButtonProps>
     ref
   ) {
     const base =
-      "font-space-grotesk font-bold text-sm tracking-wide uppercase transition-all duration-200 rounded-md px-6 py-3 cursor-pointer";
+      "font-chakra-petch font-bold text-sm uppercase tracking-[0.08em] transition-all duration-200 rounded-[12px] px-6 py-3 cursor-pointer";
     const width = fullWidth ? "w-full" : "";
     const variants = {
       primary:
-        "bg-gradient-to-r from-primary to-secondary text-white hover:shadow-[0_0_20px_rgba(70,70,204,0.4)] disabled:opacity-50 disabled:cursor-not-allowed",
+        "bg-[linear-gradient(120deg,#6366f1,#a855f7,#ff5a4d)] text-white shadow-[0_12px_30px_-12px_rgba(129,90,241,.7)] hover:shadow-[0_16px_40px_-12px_rgba(129,90,241,.9)] disabled:opacity-50 disabled:cursor-not-allowed",
       ghost:
-        "bg-transparent border border-outline text-primary-dim hover:border-primary-dim",
+        "bg-white/[0.04] border border-white/[0.14] text-on-surface hover:border-white/40",
     };
     return (
       <button

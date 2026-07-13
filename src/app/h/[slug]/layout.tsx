@@ -86,7 +86,7 @@ export default async function HackathonLayout({ children, params }: Props) {
           hackathonSlug={hackathon.slug}
           hiddenStartPages={hackathon.hidden_start_pages ?? []}
         />
-        <div className="lg:ml-60">
+        <div className="lg:ml-72">
           {hackathon.hackathon_date && (
             <CountdownBanner
               hackathonDate={hackathon.hackathon_date}

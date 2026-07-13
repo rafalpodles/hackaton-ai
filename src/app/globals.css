@@ -1,28 +1,75 @@
 @import "tailwindcss";
 
 @theme {
-  --color-surface: #0e0e13;
-  --color-surface-low: #131318;
-  --color-surface-high: #1f1f26;
-  --color-surface-bright: #2c2b33;
-  --color-primary: #4646CC;
-  --color-primary-dim: #a4a5ff;
-  --color-secondary: #FF4D29;
-  --color-secondary-dim: #ff7255;
-  --color-on-surface: #f8f5fd;
-  --color-on-surface-muted: #9896a3;
-  --color-outline: rgba(166, 165, 255, 0.15);
+  /* Garage OS palette — dark, terminal/tech aesthetic. Token names kept stable
+     (surface/primary/secondary/outline…) so existing utilities keep resolving. */
+  --color-ink: #07070b;
+  --color-surface: #0e0e15;
+  --color-surface-low: #14141d;
+  --color-surface-high: #1f1f2b;
+  --color-surface-bright: #2c2b3a;
+  --color-primary: #6366f1;
+  --color-primary-dim: #8b8cf5;
+  --color-secondary: #ff5a4d;
+  --color-secondary-dim: #ff8a80;
+  --color-violet: #a855f7;
+  --color-coral: #ff5a4d;
+  --color-cyan: #2ee6cf;
+  --color-amber: #ffc14d;
+  --color-on-surface: #f5f5fa;
+  --color-on-surface-muted: #a6a6b8;
+  --color-on-surface-dim: #8b8b9a;
+  --color-on-surface-faint: #55556a;
+  --color-outline: rgba(255, 255, 255, 0.1);
 
   --font-space-grotesk: var(--font-space-grotesk);
   --font-manrope: var(--font-manrope);
+  --font-chakra-petch: var(--font-chakra-petch);
+  --font-jetbrains-mono: var(--font-jetbrains-mono);
 }
 
 body {
-  font-family: var(--font-manrope), sans-serif;
+  font-family: var(--font-space-grotesk), system-ui, sans-serif;
 }
 
 h1, h2, h3, h4, h5, h6, .font-display {
-  font-family: var(--font-space-grotesk), sans-serif;
+  font-family: var(--font-chakra-petch), sans-serif;
+}
+
+::selection {
+  background: #ff5a4d;
+  color: #07070b;
+}
+
+/* ==========================================================
+   GARAGE OS — signature gradients, keyframes & motion helpers
+   ========================================================== */
+@keyframes gridPan { 0% { background-position: 0 0, 0 0; } 100% { background-position: 0 -1400px, 0 -1400px; } }
+@keyframes auroraA { 0%, 100% { transform: translate(-8%, -6%) scale(1.1); opacity: .55; } 50% { transform: translate(10%, 8%) scale(1.35); opacity: .8; } }
+@keyframes auroraB { 0%, 100% { transform: translate(12%, 10%) scale(1.2); opacity: .5; } 50% { transform: translate(-10%, -8%) scale(1.05); opacity: .75; } }
+@keyframes tick { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+@keyframes blinkCursor { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
+@keyframes riseIn { 0% { opacity: 0; transform: translateY(26px); } 100% { opacity: 1; transform: translateY(0); } }
+@keyframes barGrow { 0% { transform: scaleX(0); } 100% { transform: scaleX(1); } }
+@keyframes glitchClip { 0%, 100% { clip-path: inset(0 0 0 0); } 20% { clip-path: inset(20% 0 55% 0); } 40% { clip-path: inset(70% 0 8% 0); } 60% { clip-path: inset(35% 0 40% 0); } 80% { clip-path: inset(10% 0 75% 0); } }
+@keyframes pulseDot { 0%, 100% { box-shadow: 0 0 0 0 rgba(46, 230, 207, .55); } 70% { box-shadow: 0 0 0 10px rgba(46, 230, 207, 0); } }
+@keyframes spinSlow { to { transform: rotate(360deg); } }
+@keyframes sheen { 0% { transform: translateX(-120%); } 60%, 100% { transform: translateX(220%); } }
+
+.gos-gradient-text {
+  background: linear-gradient(115deg, #c7c8ff, #ff9d90);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.gos-rise { animation: riseIn .45s ease; }
+.gos-pulse-dot { animation: pulseDot 2s infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  /* Stylesheet !important overrides inline `style="animation:…"` on decorative elements. */
+  .gos-rise,
+  [data-gos-anim] { animation: none !important; }
 }
 
 /* Modal animations */

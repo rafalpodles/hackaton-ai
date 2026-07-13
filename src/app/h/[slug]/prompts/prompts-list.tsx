@@ -23,29 +23,27 @@ function PromptCard({ prompt }: { prompt: UsefulPrompt }) {
   }
 
   return (
-    <div className="rounded-xl border border-outline bg-surface-high/30 overflow-hidden">
-      <div className="px-5 py-4">
-        <div className="flex items-center gap-3 mb-2">
-          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary/15 font-space-grotesk text-sm font-bold text-primary-dim">
-            {prompt.number}
-          </span>
-          <div>
-            <h3 className="font-space-grotesk text-base font-bold text-on-surface">
-              {prompt.title}
-            </h3>
-            <p className="text-xs text-on-surface-muted">{prompt.description}</p>
-          </div>
+    <div className="overflow-hidden rounded-[18px] border border-white/10 bg-[rgba(14,14,21,.6)]">
+      <div className="flex items-center gap-4 border-b border-white/[0.07] px-6 py-[22px]">
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[11px] bg-[rgba(139,140,245,.14)] font-jetbrains-mono text-base font-bold text-primary-dim">
+          {prompt.number}
+        </span>
+        <div>
+          <h3 className="font-chakra-petch text-xl font-bold text-on-surface">
+            {prompt.title}
+          </h3>
+          <p className="text-sm text-on-surface-dim">{prompt.description}</p>
         </div>
       </div>
 
-      <div className="relative border-t border-outline/50 bg-surface/50">
-        <pre className="overflow-x-auto px-5 py-4 text-sm text-on-surface-muted whitespace-pre-wrap leading-relaxed">
+      <div className="relative">
+        <pre className="overflow-x-auto whitespace-pre-wrap px-6 py-[22px] font-jetbrains-mono text-[13.5px] leading-[1.7] text-[#a8ffe9]">
           {prompt.prompt}
         </pre>
         <button
           type="button"
           onClick={handleCopy}
-          className="absolute right-3 top-3 rounded-md bg-surface-high px-3 py-1.5 text-xs font-medium text-on-surface-muted transition-colors hover:bg-primary/20 hover:text-primary-dim"
+          className="absolute right-4 top-4 rounded-lg bg-white/[0.06] px-3 py-[6px] text-xs text-[#c9c9d6] transition-colors hover:bg-[rgba(139,140,245,.2)] hover:text-primary-dim"
         >
           {copied ? "Skopiowano!" : "Kopiuj"}
         </button>

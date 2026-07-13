@@ -58,14 +58,14 @@ export function CountdownBanner({ hackathonDate, submissionDeadline, votingOpen 
   if (timeLeft === "") return null; // initial render
 
   return (
-    <div className="flex items-center justify-center gap-3 bg-gradient-to-r from-primary/10 to-secondary/10 border-b border-outline px-4 py-2">
+    <div className="flex items-center justify-center gap-3 border-b border-white/[0.08] bg-gradient-to-r from-primary/10 to-secondary/10 px-4 py-2 backdrop-blur-[10px]">
       {state === "voting" ? (
         <>
           <span className="relative flex h-2.5 w-2.5">
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-amber-400 opacity-75" />
             <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-amber-400" />
           </span>
-          <span className="font-space-grotesk text-xs font-bold uppercase tracking-[0.15em] text-amber-400">
+          <span className="font-jetbrains-mono text-xs font-bold uppercase tracking-[0.15em] text-amber-400">
             Hackathon zakończony — czas na głosowanie!
           </span>
         </>
@@ -74,7 +74,7 @@ export function CountdownBanner({ hackathonDate, submissionDeadline, votingOpen 
           <span className="relative flex h-2.5 w-2.5">
             <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-gray-400" />
           </span>
-          <span className="font-space-grotesk text-xs font-bold uppercase tracking-[0.15em] text-gray-400">
+          <span className="font-jetbrains-mono text-xs font-bold uppercase tracking-[0.15em] text-gray-400">
             Hackathon zakończony
           </span>
         </>
@@ -84,16 +84,16 @@ export function CountdownBanner({ hackathonDate, submissionDeadline, votingOpen 
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75" />
             <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-green-400" />
           </span>
-          <span className="font-space-grotesk text-xs font-bold uppercase tracking-[0.15em] text-green-400">
+          <span className="font-jetbrains-mono text-xs font-bold uppercase tracking-[0.15em] text-green-400">
             Hackathon trwa!
           </span>
         </>
       ) : (
         <>
-          <span className="font-space-grotesk text-[10px] uppercase tracking-[0.2em] text-on-surface-muted">
+          <span className="font-jetbrains-mono text-[10px] uppercase tracking-[0.2em] text-on-surface-muted">
             Hackathon za
           </span>
-          <span className="font-mono text-sm font-bold text-primary-dim">
+          <span className="font-jetbrains-mono text-sm font-bold text-primary-dim">
             {timeLeft}
           </span>
         </>

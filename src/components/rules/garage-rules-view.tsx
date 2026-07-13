@@ -72,15 +72,18 @@ export function GarageRulesView({ hackathonDate, content }: GarageRulesViewProps
     `${content.prizes.length} ${prizeCountLabel}, ${prizeWinnersLabel}.`;
 
   return (
-    <div className="mx-auto max-w-3xl space-y-16 pb-20">
+    <div className="mx-auto max-w-3xl space-y-14 pb-20">
       <section className="space-y-4 pt-4 text-center">
-        <h1 className="bg-gradient-to-r from-primary-dim to-secondary bg-clip-text font-space-grotesk text-5xl font-black uppercase tracking-wider text-transparent sm:text-6xl">
+        <h1
+          className="gos-gradient-text font-chakra-petch font-bold uppercase leading-[0.9]"
+          style={{ fontSize: "clamp(48px, 8vw, 110px)" }}
+        >
           Garage Rules
         </h1>
-        <p className="text-xl font-medium text-on-surface">{content.tagline}</p>
+        <p className="text-xl font-medium text-on-surface sm:text-2xl">{content.tagline}</p>
         {hackathonDate && (
-          <p className="font-space-grotesk text-sm uppercase tracking-widest text-on-surface-muted">
-            {formatDate(hackathonDate)} &bull; {content.time_range}
+          <p className="font-jetbrains-mono text-xs uppercase tracking-[0.2em] text-on-surface-dim">
+            {formatDate(hackathonDate)} · {content.time_range}
           </p>
         )}
       </section>
@@ -184,7 +187,7 @@ export function GarageRulesView({ hackathonDate, content }: GarageRulesViewProps
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <section>
-      <h2 className="mb-6 font-space-grotesk text-2xl font-bold uppercase tracking-wider text-on-surface">
+      <h2 className="mb-6 font-chakra-petch text-2xl font-bold uppercase tracking-wider text-on-surface">
         {title}
       </h2>
       {children}
@@ -194,10 +197,10 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 
 function RuleCard({ emoji, title, children }: { emoji: string; title: string; children: React.ReactNode }) {
   return (
-    <div className="group rounded-xl border border-outline bg-surface-low p-5 transition-colors hover:border-primary/30">
-      <p className="font-space-grotesk text-xs font-bold tracking-widest text-primary-dim">{emoji}</p>
-      <h3 className="mt-2 font-space-grotesk text-base font-bold text-on-surface">{title}</h3>
-      <p className="mt-1 text-sm leading-relaxed text-on-surface-muted">{children}</p>
+    <div className="rounded-[18px] border border-white/10 bg-[rgba(14,14,21,.6)] p-[26px] transition-colors hover:border-[rgba(139,140,245,.45)]">
+      <p className="font-jetbrains-mono text-[13px] tracking-[0.2em] text-primary-dim">{emoji}</p>
+      <h3 className="mb-2 mt-[10px] font-chakra-petch text-[22px] font-bold text-on-surface">{title}</h3>
+      <p className="text-[15px] leading-relaxed text-on-surface-muted">{children}</p>
     </div>
   );
 }
@@ -223,7 +226,7 @@ function CheckItem({ children, checked }: { children: React.ReactNode; checked?:
 
 function PrizeCard({ icon, title, description }: { icon: React.ReactNode; title: string; description: string }) {
   return (
-    <div className="flex flex-col items-center rounded-xl border border-outline bg-surface-low p-6 text-center transition-colors hover:border-secondary/30">
+    <div className="flex flex-col items-center rounded-[18px] border border-white/10 bg-[rgba(14,14,21,.6)] p-6 text-center transition-colors hover:border-[rgba(139,140,245,.45)]">
       <div className="text-secondary-dim">{icon}</div>
       <h3 className="mt-3 font-space-grotesk text-sm font-bold uppercase tracking-wider text-on-surface">{title}</h3>
       <p className="mt-2 text-xs leading-relaxed text-on-surface-muted">{description}</p>

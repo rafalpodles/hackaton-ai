@@ -70,7 +70,7 @@ export default async function HackathonMyProjectPage({ params }: Props) {
 
       return (
         <div className="mx-auto max-w-2xl space-y-8 py-8">
-          <h1 className="font-space-grotesk text-3xl font-bold text-on-surface">
+          <h1 className="font-chakra-petch text-4xl font-bold leading-[0.95] text-on-surface sm:text-5xl">
             Mój projekt
           </h1>
           <GlassCard>
@@ -122,7 +122,7 @@ export default async function HackathonMyProjectPage({ params }: Props) {
 
     return (
       <div className="mx-auto max-w-2xl space-y-8 py-8">
-        <h1 className="font-space-grotesk text-3xl font-bold text-on-surface">
+        <h1 className="font-chakra-petch text-4xl font-bold leading-[0.95] text-on-surface sm:text-5xl">
           Mój projekt
         </h1>
         <GlassCard>
@@ -181,7 +181,7 @@ export default async function HackathonMyProjectPage({ params }: Props) {
     return (
       <div className="mx-auto max-w-3xl space-y-8">
         <div className="flex items-center gap-4">
-          <h1 className="font-space-grotesk text-2xl font-bold text-on-surface">
+          <h1 className="font-chakra-petch text-2xl font-bold text-on-surface">
             Zgłoszenie projektu
           </h1>
           <span className="rounded-full bg-primary/20 px-3 py-1 text-xs font-bold uppercase tracking-wider text-primary-dim">

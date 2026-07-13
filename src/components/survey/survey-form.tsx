@@ -29,7 +29,7 @@ export function SurveyForm({
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
           </svg>
         </div>
-        <h2 className="font-space-grotesk text-2xl font-bold text-on-surface">
+        <h2 className="font-chakra-petch text-2xl font-bold text-on-surface">
           Dziękujemy za wypełnienie ankiety!
         </h2>
         <p className="text-on-surface-muted">Twoje odpowiedzi zostały zapisane.</p>

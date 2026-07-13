@@ -16,7 +16,7 @@ export function PendingRequestView({ request, isSolo }: PendingRequestViewProps)
 
   return (
     <div className="mx-auto max-w-2xl space-y-8">
-      <h1 className="font-space-grotesk text-3xl font-bold text-on-surface">
+      <h1 className="font-chakra-petch text-3xl font-bold text-on-surface">
         Zespół
       </h1>
 

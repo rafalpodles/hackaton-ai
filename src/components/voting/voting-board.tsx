@@ -57,7 +57,7 @@ export default function VotingBoard({
               />
             </svg>
           </div>
-          <h2 className="font-space-grotesk text-2xl font-bold text-on-surface">
+          <h2 className="font-chakra-petch text-2xl font-bold text-on-surface">
             Głosy oddane
           </h2>
           <p className="text-on-surface-muted">
