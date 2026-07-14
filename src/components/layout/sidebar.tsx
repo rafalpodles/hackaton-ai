@@ -244,6 +244,7 @@ function NavSection({
           <Link
             key={item.href}
             href={item.href}
+            data-active={active ? "true" : undefined}
             style={active ? ACTIVE_STYLE : undefined}
             className={`my-[3px] flex items-center justify-between gap-2 rounded-[11px] px-3 py-[11px] text-[14.5px] font-semibold transition-colors ${
               active ? "text-white" : "border border-transparent text-on-surface-muted hover:bg-white/5"

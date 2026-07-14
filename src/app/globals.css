@@ -47,38 +47,60 @@ h1, h2, h3, h4, h5, h6, .font-display {
    few overrides for surfaces that hardcode dark values.
    ========================================================== */
 [data-theme="poster"] {
-  --color-ink: #f4f0fb;
+  --color-ink: #ffffff;
   --color-surface: #ffffff;
-  --color-surface-low: #f3edfc;
-  --color-surface-high: #eae1f9;
-  --color-surface-bright: #ddd1f4;
-  --color-primary: #7c3aed;
-  --color-primary-dim: #9a5cf6;
-  --color-secondary: #2563eb;
-  --color-secondary-dim: #4f83f4;
+  --color-surface-low: #f7f5ff;
+  --color-surface-high: #efeaff;
+  --color-surface-bright: #e2daff;
+  --color-primary: #7b2ff7;
+  --color-primary-dim: #9d5cff;
+  --color-secondary: #2140e8;
+  --color-secondary-dim: #4f6bf0;
   --color-violet: #a855f7;
-  --color-coral: #ff5a4d;
-  --color-cyan: #0ea5b7;
-  --color-amber: #d98600;
-  --color-on-surface: #1c1330;
-  --color-on-surface-muted: #5b5470;
-  --color-on-surface-dim: #6f6786;
-  --color-on-surface-faint: #a49dba;
-  --color-outline: rgba(28, 19, 48, 0.16);
+  --color-coral: #ff3b0f;
+  --color-cyan: #1e8e3e;
+  --color-amber: #f5a623;
+  --color-on-surface: #0d0d0d;
+  --color-on-surface-muted: #4a4a55;
+  --color-on-surface-dim: #6b6b78;
+  --color-on-surface-faint: #9a9aa8;
+  --color-outline: rgba(13, 13, 13, 0.18);
 
   min-height: 100vh;
-  background:
-    radial-gradient(circle at 10% 6%, rgba(124, 58, 237, 0.09), transparent 40%),
-    radial-gradient(circle at 92% 96%, rgba(37, 99, 235, 0.08), transparent 42%),
-    #f7f3fd;
+  background: #ffffff;
+  font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
+}
+
+/* Poster body is typewriter-set: mono everywhere the sans would otherwise win */
+[data-theme="poster"] .font-space-grotesk,
+[data-theme="poster"] p,
+[data-theme="poster"] input,
+[data-theme="poster"] textarea,
+[data-theme="poster"] button {
+  font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
 }
 
 /* Pixel display headings */
 [data-theme="poster"] h1,
 [data-theme="poster"] h2,
+[data-theme="poster"] h3,
 [data-theme="poster"] .font-display {
-  font-family: var(--font-pixel), var(--font-chakra-petch), monospace;
+  font-family: var(--font-pixel), ui-monospace, monospace;
   letter-spacing: 0;
+}
+
+/* Signature: the poster's thick colour rule under a heading */
+[data-theme="poster"] h1 {
+  width: fit-content;
+  max-width: 100%;
+  padding-bottom: 12px;
+  border-bottom: 5px solid var(--color-primary);
+}
+[data-theme="poster"] h2 {
+  width: fit-content;
+  max-width: 100%;
+  padding-bottom: 7px;
+  border-bottom: 3px solid var(--color-secondary);
 }
 
 /* Selection → poster yellow */
@@ -108,16 +130,16 @@ h1, h2, h3, h4, h5, h6, .font-display {
   color: #6d28d9 !important;
 }
 
-/* Sidebar active nav item: inline gradient + white text is unreadable on the light sidebar.
-   Active links carry an inline style attribute; inactive ones do not. */
-[data-theme="poster"] aside nav a[style] {
-  background: linear-gradient(120deg, #7c3aed, #2563eb) !important;
+/* Sidebar active nav item: the dark theme's faint inline gradient + white text is
+   unreadable on the light sidebar, so repaint it. */
+[data-theme="poster"] aside nav a[data-active="true"] {
+  background: linear-gradient(120deg, #7b2ff7, #2140e8) !important;
   border-color: transparent !important;
-  box-shadow: inset 3px 0 0 #5b21b6 !important;
+  box-shadow: inset 3px 0 0 #4c1d95 !important;
   color: #ffffff !important;
 }
-[data-theme="poster"] aside nav a:not([style]):hover {
-  background: rgba(124, 58, 237, 0.08);
+[data-theme="poster"] aside nav a:not([data-active="true"]):hover {
+  background: rgba(123, 47, 247, 0.08);
 }
 
 /* Light accent texts with no dark-token equivalent → readable colors on white */
@@ -150,7 +172,7 @@ h1, h2, h3, h4, h5, h6, .font-display {
 }
 
 /* Active nav sublabel stays readable on the purple active gradient */
-[data-theme="poster"] aside nav a[style] span {
+[data-theme="poster"] aside nav a[data-active="true"] span {
   color: rgba(255, 255, 255, 0.72);
 }
 
