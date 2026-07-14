@@ -176,7 +176,7 @@ export function SubmissionForm({ project, hackathonId, submissionOpen = true, de
               </h2>
               <div className="group relative">
                 <input
-                  className="w-full border-none bg-black p-6 text-lg text-on-surface placeholder:text-on-surface-muted/30 focus:outline-none focus:ring-0"
+                  className="w-full border-none bg-ink p-6 text-lg text-on-surface placeholder:text-on-surface-muted/30 focus:outline-none focus:ring-0"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   onBlur={() => save({ name })}
@@ -193,7 +193,7 @@ export function SubmissionForm({ project, hackathonId, submissionOpen = true, de
               </h2>
               <div className="group relative">
                 <textarea
-                  className="min-h-[140px] w-full resize-none border-none bg-black p-6 text-lg leading-relaxed text-on-surface placeholder:text-on-surface-muted/30 focus:outline-none focus:ring-0"
+                  className="min-h-[140px] w-full resize-none border-none bg-ink p-6 text-lg leading-relaxed text-on-surface placeholder:text-on-surface-muted/30 focus:outline-none focus:ring-0"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   onBlur={() => save({ description })}
@@ -214,7 +214,7 @@ export function SubmissionForm({ project, hackathonId, submissionOpen = true, de
               </h2>
               <div className="group relative">
                 <textarea
-                  className="min-h-[140px] w-full resize-none border-none bg-black p-6 text-lg leading-relaxed text-on-surface placeholder:text-on-surface-muted/30 focus:outline-none focus:ring-0"
+                  className="min-h-[140px] w-full resize-none border-none bg-ink p-6 text-lg leading-relaxed text-on-surface placeholder:text-on-surface-muted/30 focus:outline-none focus:ring-0"
                   value={ideaOrigin}
                   onChange={(e) => setIdeaOrigin(e.target.value)}
                   onBlur={() => save({ idea_origin: ideaOrigin })}
@@ -231,7 +231,7 @@ export function SubmissionForm({ project, hackathonId, submissionOpen = true, de
               </h2>
               <div className="group relative">
                 <textarea
-                  className="min-h-[140px] w-full resize-none border-none bg-black p-6 text-lg leading-relaxed text-on-surface placeholder:text-on-surface-muted/30 focus:outline-none focus:ring-0"
+                  className="min-h-[140px] w-full resize-none border-none bg-ink p-6 text-lg leading-relaxed text-on-surface placeholder:text-on-surface-muted/30 focus:outline-none focus:ring-0"
                   value={journey}
                   onChange={(e) => setJourney(e.target.value)}
                   onBlur={() => save({ journey })}
@@ -247,7 +247,7 @@ export function SubmissionForm({ project, hackathonId, submissionOpen = true, de
                 Użyte AI toole
               </h2>
               <div
-                className="flex min-h-[4rem] flex-wrap items-center gap-3 bg-black p-6 cursor-text"
+                className="flex min-h-[4rem] flex-wrap items-center gap-3 bg-ink p-6 cursor-text"
                 onClick={(e) => {
                   if (e.target === e.currentTarget) {
                     e.currentTarget.querySelector("input")?.focus();
@@ -294,7 +294,7 @@ export function SubmissionForm({ project, hackathonId, submissionOpen = true, de
               <p className="text-xs text-on-surface-muted">Opcjonalne</p>
               <div className="group relative">
                 <input
-                  className="w-full border-none bg-black p-6 text-lg text-on-surface placeholder:text-on-surface-muted/30 focus:outline-none focus:ring-0"
+                  className="w-full border-none bg-ink p-6 text-lg text-on-surface placeholder:text-on-surface-muted/30 focus:outline-none focus:ring-0"
                   type="url"
                   value={repoUrl}
                   onChange={(e) => setRepoUrl(e.target.value)}
@@ -312,7 +312,7 @@ export function SubmissionForm({ project, hackathonId, submissionOpen = true, de
               <p className="text-xs text-on-surface-muted">Opcjonalne — link do działającej wersji</p>
               <div className="group relative">
                 <input
-                  className="w-full border-none bg-black p-6 text-lg text-on-surface placeholder:text-on-surface-muted/30 focus:outline-none focus:ring-0"
+                  className="w-full border-none bg-ink p-6 text-lg text-on-surface placeholder:text-on-surface-muted/30 focus:outline-none focus:ring-0"
                   type="url"
                   value={appUrl}
                   onChange={(e) => setAppUrl(e.target.value)}

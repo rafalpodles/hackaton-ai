@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { updateHackathon } from "@/lib/actions/hackathons";
-import type { Hackathon } from "@/lib/types";
+import { HACKATHON_THEMES, type Hackathon, type HackathonTheme } from "@/lib/types";
 
 type HackathonStatus = "upcoming" | "active" | "voting" | "finished";
 
@@ -21,6 +21,7 @@ export default function HackathonSettingsForm({ hackathon }: { hackathon: Hackat
   const [name, setName] = useState(hackathon.name);
   const [description, setDescription] = useState(hackathon.description ?? "");
   const [status, setStatus] = useState<HackathonStatus>(hackathon.status);
+  const [theme, setTheme] = useState<HackathonTheme>(hackathon.theme ?? "garage");
   const [supportChannel, setSupportChannel] = useState(hackathon.support_channel ?? "");
   const [apiKeyLimit, setApiKeyLimit] = useState<number>(hackathon.api_key_default_limit_usd ?? 5);
 
@@ -33,6 +34,7 @@ export default function HackathonSettingsForm({ hackathon }: { hackathon: Hackat
           name,
           description,
           status,
+          theme,
           support_channel: supportChannel.trim() || null,
           api_key_default_limit_usd: apiKeyLimit,
         });
@@ -140,6 +142,31 @@ export default function HackathonSettingsForm({ hackathon }: { hackathon: Hackat
             </button>
           ))}
         </div>
+      </div>
+
+      <div>
+        <label className="mb-1.5 block font-space-grotesk text-xs font-bold uppercase tracking-wider text-on-surface-muted">
+          Motyw wizualny
+        </label>
+        <div className="flex flex-wrap gap-2">
+          {HACKATHON_THEMES.map((opt) => (
+            <button
+              key={opt.value}
+              type="button"
+              onClick={() => setTheme(opt.value)}
+              className={`rounded-lg px-4 py-2 font-space-grotesk text-sm font-semibold transition-colors ${
+                theme === opt.value
+                  ? "bg-primary text-white"
+                  : "bg-surface-high text-on-surface-muted hover:bg-surface-bright"
+              }`}
+            >
+              {opt.label}
+            </button>
+          ))}
+        </div>
+        <p className="mt-1 text-[11px] text-on-surface-muted">
+          {HACKATHON_THEMES.find((t) => t.value === theme)?.description}
+        </p>
       </div>
 
       {error && (

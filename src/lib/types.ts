@@ -32,6 +32,13 @@ export interface RulesContent {
   closing_callout_md: string;
 }
 
+export type HackathonTheme = "garage" | "poster";
+
+export const HACKATHON_THEMES: { value: HackathonTheme; label: string; description: string }[] = [
+  { value: "garage", label: "Garage OS", description: "Domyślny ciemny motyw terminalowy" },
+  { value: "poster", label: "Poster", description: "Jasny, pikselowy motyw w stylu plakatu" },
+];
+
 export interface Hackathon {
   id: string;
   name: string;
@@ -43,6 +50,7 @@ export interface Hackathon {
   voting_open: boolean;
   survey_open: boolean;
   status: "upcoming" | "active" | "voting" | "finished";
+  theme: HackathonTheme;
   rules_content: RulesContent | null;
   support_channel: string | null;
   api_key_default_limit_usd: number;

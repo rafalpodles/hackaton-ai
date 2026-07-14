@@ -37,7 +37,7 @@ export default async function HackathonIdeasPage({ params }: Props) {
           {ideas.map((idea) => (
             <div
               key={idea.id}
-              className="relative overflow-hidden rounded-[18px] border border-white/10 bg-[rgba(14,14,21,.6)] p-[26px] transition-colors hover:border-[rgba(139,140,245,.45)]"
+              className="relative overflow-hidden rounded-[18px] border border-outline bg-surface/60 p-[26px] transition-colors hover:border-[rgba(139,140,245,.45)]"
             >
               <div
                 className="absolute inset-y-0 left-0 w-[3px]"

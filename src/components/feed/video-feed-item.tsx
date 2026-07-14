@@ -62,7 +62,7 @@ export function VideoFeedItem({
             src={project.video_url}
             autoPlay
             showMuteButton
-            className="aspect-video w-full bg-black"
+            className="aspect-video w-full bg-ink"
           />
         ) : (
           <div className="flex aspect-video w-full items-center justify-center rounded-xl bg-surface-high">

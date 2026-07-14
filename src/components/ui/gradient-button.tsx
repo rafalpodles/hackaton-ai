@@ -16,9 +16,9 @@ export const GradientButton = forwardRef<HTMLButtonElement, GradientButtonProps>
     const width = fullWidth ? "w-full" : "";
     const variants = {
       primary:
-        "bg-[linear-gradient(120deg,#6366f1,#a855f7,#ff5a4d)] text-white shadow-[0_12px_30px_-12px_rgba(129,90,241,.7)] hover:shadow-[0_16px_40px_-12px_rgba(129,90,241,.9)] disabled:opacity-50 disabled:cursor-not-allowed",
+        "bg-[linear-gradient(120deg,var(--color-primary),var(--color-violet),var(--color-secondary))] text-white shadow-[0_12px_30px_-12px_rgba(129,90,241,.7)] hover:shadow-[0_16px_40px_-12px_rgba(129,90,241,.9)] disabled:opacity-50 disabled:cursor-not-allowed",
       ghost:
-        "bg-white/[0.04] border border-white/[0.14] text-on-surface hover:border-white/40",
+        "gbtn-ghost bg-white/[0.04] border border-white/[0.14] text-on-surface hover:border-white/40",
     };
     return (
       <button

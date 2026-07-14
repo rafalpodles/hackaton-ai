@@ -227,7 +227,7 @@ function HeroHeader({
 }) {
   return (
     <div
-      className="relative overflow-hidden rounded-[22px] border border-white/10 p-8 pb-6"
+      className="relative overflow-hidden rounded-[22px] border border-outline p-8 pb-6"
       style={{ background: "linear-gradient(135deg, rgba(99,102,241,.14), rgba(255,90,77,.06))" }}
     >
       {/* Ambient glows */}

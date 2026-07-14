@@ -24,6 +24,7 @@
   --font-manrope: var(--font-manrope);
   --font-chakra-petch: var(--font-chakra-petch);
   --font-jetbrains-mono: var(--font-jetbrains-mono);
+  --font-pixel: var(--font-pixel);
 }
 
 body {
@@ -37,6 +38,120 @@ h1, h2, h3, h4, h5, h6, .font-display {
 ::selection {
   background: #ff5a4d;
   color: #07070b;
+}
+
+/* ==========================================================
+   THEME PRESET: POSTER — light, playful, pixel (per-hackathon)
+   Applied via data-theme="poster" on the /h/[slug] layout root.
+   Redefines color tokens so token-based utilities flip, plus a
+   few overrides for surfaces that hardcode dark values.
+   ========================================================== */
+[data-theme="poster"] {
+  --color-ink: #f4f0fb;
+  --color-surface: #ffffff;
+  --color-surface-low: #f3edfc;
+  --color-surface-high: #eae1f9;
+  --color-surface-bright: #ddd1f4;
+  --color-primary: #7c3aed;
+  --color-primary-dim: #9a5cf6;
+  --color-secondary: #2563eb;
+  --color-secondary-dim: #4f83f4;
+  --color-violet: #a855f7;
+  --color-coral: #ff5a4d;
+  --color-cyan: #0ea5b7;
+  --color-amber: #d98600;
+  --color-on-surface: #1c1330;
+  --color-on-surface-muted: #5b5470;
+  --color-on-surface-dim: #6f6786;
+  --color-on-surface-faint: #a49dba;
+  --color-outline: rgba(28, 19, 48, 0.16);
+
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 10% 6%, rgba(124, 58, 237, 0.09), transparent 40%),
+    radial-gradient(circle at 92% 96%, rgba(37, 99, 235, 0.08), transparent 42%),
+    #f7f3fd;
+}
+
+/* Pixel display headings */
+[data-theme="poster"] h1,
+[data-theme="poster"] h2,
+[data-theme="poster"] .font-display {
+  font-family: var(--font-pixel), var(--font-chakra-petch), monospace;
+  letter-spacing: 0;
+}
+
+/* Selection → poster yellow */
+[data-theme="poster"] ::selection {
+  background: #ffd400;
+  color: #1c1330;
+}
+
+/* Sidebar → light card (bg is hardcoded dark in the component) */
+[data-theme="poster"] aside {
+  background: rgba(255, 255, 255, 0.9) !important;
+  border-right: 2px solid rgba(28, 19, 48, 0.12) !important;
+  backdrop-filter: blur(14px);
+}
+
+/* Gradient-text helper → poster gradient, readable on light */
+[data-theme="poster"] .gos-gradient-text {
+  background: linear-gradient(115deg, #7c3aed, #2563eb);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Results vote-count pill: light-lavender text is unreadable on white */
+[data-theme="poster"] .vote-badge {
+  background: rgba(124, 58, 237, 0.12) !important;
+  color: #6d28d9 !important;
+}
+
+/* Sidebar active nav item: inline gradient + white text is unreadable on the light sidebar.
+   Active links carry an inline style attribute; inactive ones do not. */
+[data-theme="poster"] aside nav a[style] {
+  background: linear-gradient(120deg, #7c3aed, #2563eb) !important;
+  border-color: transparent !important;
+  box-shadow: inset 3px 0 0 #5b21b6 !important;
+  color: #ffffff !important;
+}
+[data-theme="poster"] aside nav a:not([style]):hover {
+  background: rgba(124, 58, 237, 0.08);
+}
+
+/* Light accent texts with no dark-token equivalent → readable colors on white */
+[data-theme="poster"] .text-\[\#b6b7ff\] { color: #6d28d9; }
+[data-theme="poster"] .text-\[\#a8ffe9\] { color: #0e7490; }
+[data-theme="poster"] .text-\[\#c9c9d6\] { color: #5b5470; }
+
+/* Tailwind semantic status colors → darker variants for contrast on light */
+[data-theme="poster"] .text-green-400 { color: #15803d; }
+[data-theme="poster"] .text-yellow-400 { color: #a16207; }
+[data-theme="poster"] .text-amber-400 { color: #b45309; }
+[data-theme="poster"] .text-red-400 { color: #b91c1c; }
+[data-theme="poster"] .text-gray-400 { color: #4b5563; }
+
+/* Ghost button: white-lift chrome is invisible on light (class kept a no-op in garage) */
+[data-theme="poster"] .gbtn-ghost {
+  background: rgba(28, 19, 48, 0.04);
+  border-color: rgba(28, 19, 48, 0.18);
+}
+[data-theme="poster"] .gbtn-ghost:hover {
+  border-color: rgba(124, 58, 237, 0.5);
+}
+
+/* Guide/terminal code block stays dark by design → keep its text light on poster */
+[data-theme="poster"] .bg-\[\#0a0a0f\] {
+  --color-on-surface: #f5f5fa;
+  --color-on-surface-muted: #a6a6b8;
+  --color-on-surface-dim: #8b8b9a;
+  --color-primary-dim: #8b8cf5;
+}
+
+/* Active nav sublabel stays readable on the purple active gradient */
+[data-theme="poster"] aside nav a[style] span {
+  color: rgba(255, 255, 255, 0.72);
 }
 
 /* ==========================================================

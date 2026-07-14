@@ -216,7 +216,7 @@ export default function ProfileView({
                         setLastNameValue(user.last_name ?? "");
                       }
                     }}
-                    className="w-full bg-black px-3 py-2 font-space-grotesk text-on-surface outline-none"
+                    className="w-full bg-ink px-3 py-2 font-space-grotesk text-on-surface outline-none"
                     autoFocus
                     disabled={isPending}
                     placeholder="Jan"
@@ -239,7 +239,7 @@ export default function ProfileView({
                         setLastNameValue(user.last_name ?? "");
                       }
                     }}
-                    className="w-full bg-black px-3 py-2 font-space-grotesk text-on-surface outline-none"
+                    className="w-full bg-ink px-3 py-2 font-space-grotesk text-on-surface outline-none"
                     disabled={isPending}
                     placeholder="Kowalski"
                   />
@@ -418,7 +418,7 @@ export default function ProfileView({
         {user.openrouter_api_key ? (
           <>
             <div className="flex items-center gap-3">
-              <code className="flex-1 overflow-x-auto rounded-lg bg-black px-4 py-3 font-mono text-sm text-primary-dim">
+              <code className="flex-1 overflow-x-auto rounded-lg bg-ink px-4 py-3 font-mono text-sm text-primary-dim">
                 {user.openrouter_api_key}
               </code>
               <button
@@ -474,7 +474,7 @@ export default function ProfileView({
                 Jak użyć klucza
               </p>
 
-              <div className="rounded-lg bg-black p-4">
+              <div className="rounded-lg bg-ink p-4">
                 <p className="mb-2 font-space-grotesk text-xs font-bold text-on-surface">
                   Claude Code
                 </p>
@@ -492,7 +492,7 @@ export ANTHROPIC_API_KEY=""`}
                 </p>
               </div>
 
-              <div className="rounded-lg bg-black p-4">
+              <div className="rounded-lg bg-ink p-4">
                 <p className="mb-2 font-space-grotesk text-xs font-bold text-on-surface">
                   Codex (OpenAI)
                 </p>

@@ -23,7 +23,7 @@ export function ProjectCard({ project, showAuthors = false, onClick }: ProjectCa
       onPointerMove={tilt.onPointerMove}
       onPointerLeave={tilt.onPointerLeave}
       style={tilt.style}
-      className="flex w-full flex-col overflow-hidden rounded-[18px] border border-white/10 bg-[rgba(14,14,21,.6)] text-left transition-[border-color] hover:border-[rgba(139,140,245,.5)]"
+      className="flex w-full flex-col overflow-hidden rounded-[18px] border border-outline bg-surface/60 text-left transition-[border-color] hover:border-[rgba(139,140,245,.5)]"
     >
       {/* Thumbnail */}
       <div

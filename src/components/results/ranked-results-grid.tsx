@@ -24,8 +24,9 @@ export function RankedResultsGrid({ categories, grouped }: RankedResultsGridProp
                 return (
                   <div
                     key={result.project_id}
-                    className="relative overflow-hidden rounded-[13px] border bg-[rgba(14,14,21,.55)]"
-                    style={{ borderColor: first ? "rgba(255,193,77,.4)" : "rgba(255,255,255,.09)" }}
+                    className={`relative overflow-hidden rounded-[13px] border bg-surface/55 ${
+                      first ? "border-amber/40" : "border-outline"
+                    }`}
                   >
                     <div
                       data-gos-anim
@@ -39,8 +40,9 @@ export function RankedResultsGrid({ categories, grouped }: RankedResultsGridProp
                     />
                     <div className="relative flex items-center gap-3 px-[18px] py-4">
                       <span
-                        className="w-[34px] shrink-0 text-center font-jetbrains-mono text-sm font-bold"
-                        style={{ color: first ? "#ffc14d" : "#8b8b9a" }}
+                        className={`w-[34px] shrink-0 text-center font-jetbrains-mono text-sm font-bold ${
+                          first ? "text-amber" : "text-on-surface-dim"
+                        }`}
                       >
                         #{index + 1}
                       </span>
@@ -54,7 +56,7 @@ export function RankedResultsGrid({ categories, grouped }: RankedResultsGridProp
                           </div>
                         )}
                       </div>
-                      <span className="shrink-0 rounded-lg bg-[rgba(139,140,245,.16)] px-3 py-[6px] font-jetbrains-mono text-[13px] font-bold text-[#c7c8ff]">
+                      <span className="vote-badge shrink-0 rounded-lg bg-[rgba(139,140,245,.16)] px-3 py-[6px] font-jetbrains-mono text-[13px] font-bold text-[#c7c8ff]">
                         {result.vote_count} {voteLabel(result.vote_count)}
                       </span>
                     </div>

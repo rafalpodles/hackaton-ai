@@ -23,7 +23,7 @@ function PromptCard({ prompt }: { prompt: UsefulPrompt }) {
   }
 
   return (
-    <div className="overflow-hidden rounded-[18px] border border-white/10 bg-[rgba(14,14,21,.6)]">
+    <div className="overflow-hidden rounded-[18px] border border-outline bg-surface/60">
       <div className="flex items-center gap-4 border-b border-white/[0.07] px-6 py-[22px]">
         <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[11px] bg-[rgba(139,140,245,.14)] font-jetbrains-mono text-base font-bold text-primary-dim">
           {prompt.number}

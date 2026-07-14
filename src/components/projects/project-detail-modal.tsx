@@ -109,7 +109,7 @@ export function ProjectDetailModal({
                 <VideoPlayer
                   src={project.video_url}
                   autoPlay
-                  className="max-h-full max-w-full rounded-lg bg-black"
+                  className="max-h-full max-w-full rounded-lg bg-ink"
                 />
               ) : (
                 <EmptyState icon="video" text="Brak wideo" />

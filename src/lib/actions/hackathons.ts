@@ -55,6 +55,7 @@ export async function updateHackathon(hackathonId: string, data: Partial<{
   voting_open: boolean;
   survey_open: boolean;
   status: string;
+  theme: string;
   support_channel: string | null;
   api_key_default_limit_usd: number;
   hidden_start_pages: string[];
@@ -71,6 +72,7 @@ export async function updateHackathon(hackathonId: string, data: Partial<{
     ...(data.voting_open !== undefined && { voting_open: data.voting_open }),
     ...(data.survey_open !== undefined && { survey_open: data.survey_open }),
     ...(data.status !== undefined && { status: data.status }),
+    ...(data.theme !== undefined && { theme: data.theme }),
     ...(data.support_channel !== undefined && { support_channel: data.support_channel }),
     ...(data.api_key_default_limit_usd !== undefined && { api_key_default_limit_usd: data.api_key_default_limit_usd }),
     ...(data.hidden_start_pages !== undefined && { hidden_start_pages: data.hidden_start_pages }),

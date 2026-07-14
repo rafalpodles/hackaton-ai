@@ -197,7 +197,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 
 function RuleCard({ emoji, title, children }: { emoji: string; title: string; children: React.ReactNode }) {
   return (
-    <div className="rounded-[18px] border border-white/10 bg-[rgba(14,14,21,.6)] p-[26px] transition-colors hover:border-[rgba(139,140,245,.45)]">
+    <div className="rounded-[18px] border border-outline bg-surface/60 p-[26px] transition-colors hover:border-[rgba(139,140,245,.45)]">
       <p className="font-jetbrains-mono text-[13px] tracking-[0.2em] text-primary-dim">{emoji}</p>
       <h3 className="mb-2 mt-[10px] font-chakra-petch text-[22px] font-bold text-on-surface">{title}</h3>
       <p className="text-[15px] leading-relaxed text-on-surface-muted">{children}</p>
@@ -226,7 +226,7 @@ function CheckItem({ children, checked }: { children: React.ReactNode; checked?:
 
 function PrizeCard({ icon, title, description }: { icon: React.ReactNode; title: string; description: string }) {
   return (
-    <div className="flex flex-col items-center rounded-[18px] border border-white/10 bg-[rgba(14,14,21,.6)] p-6 text-center transition-colors hover:border-[rgba(139,140,245,.45)]">
+    <div className="flex flex-col items-center rounded-[18px] border border-outline bg-surface/60 p-6 text-center transition-colors hover:border-[rgba(139,140,245,.45)]">
       <div className="text-secondary-dim">{icon}</div>
       <h3 className="mt-3 font-space-grotesk text-sm font-bold uppercase tracking-wider text-on-surface">{title}</h3>
       <p className="mt-2 text-xs leading-relaxed text-on-surface-muted">{description}</p>

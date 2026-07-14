@@ -58,7 +58,7 @@ export function CountdownBanner({ hackathonDate, submissionDeadline, votingOpen 
   if (timeLeft === "") return null; // initial render
 
   return (
-    <div className="flex items-center justify-center gap-3 border-b border-white/[0.08] bg-gradient-to-r from-primary/10 to-secondary/10 px-4 py-2 backdrop-blur-[10px]">
+    <div className="flex items-center justify-center gap-3 border-b border-outline bg-gradient-to-r from-primary/10 to-secondary/10 px-4 py-2 backdrop-blur-[10px]">
       {state === "voting" ? (
         <>
           <span className="relative flex h-2.5 w-2.5">

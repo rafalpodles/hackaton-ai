@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Space_Grotesk, Manrope, Chakra_Petch, JetBrains_Mono } from "next/font/google";
+import { Space_Grotesk, Manrope, Chakra_Petch, JetBrains_Mono, Pixelify_Sans } from "next/font/google";
 import "./globals.css";
 import { GeocitiesProvider } from "@/components/geocities/geocities-provider";
 import GeocitiesExtras from "@/components/geocities/geocities-extras";
@@ -26,6 +26,12 @@ const jetbrainsMono = JetBrains_Mono({
   variable: "--font-jetbrains-mono",
 });
 
+const pixelifySans = Pixelify_Sans({
+  subsets: ["latin", "latin-ext"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-pixel",
+});
+
 export const metadata: Metadata = {
   title: "Spyrosoft AI Hackathon",
   description: "Przeglądaj i głosuj na projekty hackathonowe",
@@ -39,7 +45,7 @@ export default function RootLayout({
   return (
     <html lang="pl" className="dark">
       <body
-        className={`${spaceGrotesk.variable} ${manrope.variable} ${chakraPetch.variable} ${jetbrainsMono.variable} font-space-grotesk bg-ink text-on-surface antialiased`}
+        className={`${spaceGrotesk.variable} ${manrope.variable} ${chakraPetch.variable} ${jetbrainsMono.variable} ${pixelifySans.variable} font-space-grotesk bg-ink text-on-surface antialiased`}
       >
         <GeocitiesProvider>
           {children}

@@ -125,7 +125,7 @@ export default function Sidebar({ user, votingOpen, surveyOpen, surveyResponded,
       )}
 
       <aside
-        className={`fixed left-0 top-0 z-50 flex h-screen w-72 flex-col overflow-y-auto border-r border-white/[0.08] bg-[rgba(9,9,14,.72)] px-[18px] py-[22px] backdrop-blur-[14px] transition-transform duration-300 lg:translate-x-0 ${
+        className={`fixed left-0 top-0 z-50 flex h-screen w-72 flex-col overflow-y-auto border-r border-outline bg-[rgba(9,9,14,.72)] px-[18px] py-[22px] backdrop-blur-[14px] transition-transform duration-300 lg:translate-x-0 ${
           open ? "translate-x-0" : "-translate-x-full"
         }`}
       >

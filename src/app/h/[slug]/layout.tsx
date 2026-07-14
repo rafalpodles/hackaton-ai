@@ -18,10 +18,12 @@ export default async function HackathonLayout({ children, params }: Props) {
   const hackathon = await getHackathonBySlug(slug);
   if (!hackathon) notFound();
 
+  const theme = hackathon.theme ?? "garage";
+
   // Unauth users get a simplified layout (no sidebar)
   if (!user) {
     return (
-      <div className="min-h-screen">
+      <div className="min-h-screen" data-theme={theme}>
         <header className="sticky top-0 z-40 flex items-center justify-between border-b border-outline bg-surface-low/80 px-6 py-4 backdrop-blur-md">
           <div className="flex items-center gap-4">
             <Link href="/" className="text-on-surface-muted hover:text-on-surface transition-colors">
@@ -76,7 +78,7 @@ export default async function HackathonLayout({ children, params }: Props) {
 
   return (
     <HackathonProvider hackathon={hackathon} participant={participant}>
-      <div className="min-h-screen">
+      <div className="min-h-screen" data-theme={theme}>
         <Sidebar
           user={user}
           votingOpen={hackathon.voting_open}
