@@ -48,19 +48,28 @@ export function GarageBackground() {
         }}
       />
       <div
-        data-gos-anim
-        className="absolute inset-0"
+        className="absolute inset-0 overflow-hidden"
         style={{
-          backgroundImage:
-            "linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px)",
-          backgroundSize: "64px 64px",
-          animation: "gridPan 40s linear infinite",
           maskImage:
             "radial-gradient(ellipse 90% 80% at 50% 30%, #000 40%, transparent 90%)",
           WebkitMaskImage:
             "radial-gradient(ellipse 90% 80% at 50% 30%, #000 40%, transparent 90%)",
         }}
-      />
+      >
+        <div
+          data-gos-anim
+          className="absolute inset-x-0"
+          style={{
+            top: "-832px",
+            bottom: "-832px",
+            backgroundImage:
+              "linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px)",
+            backgroundSize: "64px 64px",
+            willChange: "transform",
+            animation: "gridDrift 20s linear infinite",
+          }}
+        />
+      </div>
       <div
         className="absolute inset-0"
         style={{
